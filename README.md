@@ -1,10 +1,20 @@
 # Next Auth v5 and Next.js 15 - Starter Kit
 
 This repository provides a robust starter kit for implementing advanced authentication features using Next Auth v5 in a Next.js 15 application. It's designed to help developers quickly set up a secure, feature-rich authentication system.
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
-![Next Auth](https://img.shields.io/badge/NextAuth-000000?style=for-the-badge&logo=next.js&logoColor=white)
-![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
 
+## Technologies Used
+
+<p align="center">
+  <a href="https://nextjs.org/" target="_blank">
+    <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" width="160" height="40"/>
+  </a>
+  <a href="https://authjs.dev/" target="_blank">
+    <img src="https://camo.githubusercontent.com/02d9778d04c0ec14c520fd512e0033ab2413cbd17eee64bdff91da51b832628d/68747470733a2f2f617574686a732e6465762f696d672f6c6f676f2d736d2e706e67" alt="Auth.js" width="40" height="40"/>
+  </a>
+  <a href="https://www.prisma.io/" target="_blank">
+    <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma" width="160" height="40"/>
+  </a>
+</p>
 
 ## Key Features
 
@@ -46,22 +56,19 @@ This repository provides a robust starter kit for implementing advanced authenti
 ### Prerequisites
 
 - Node.js version 18.7.x or later
-- npm or yarn package manager
-- A database supported by Prisma (e.g., PostgreSQL, MySQL)
-- OAuth credentials (for Google and GitHub providers)
-- Resend API key for email functionality
+- pnpm package manager
 
 ### Installation
 
 1. Clone the repository:
    ```shell
    git clone https://github.com/priyankpatel40/next15-starter.git
-   cd next-auth-v5-advanced-guide
+   cd next15-starter
    ```
 
 2. Install dependencies:
    ```shell
-   npm install
+   pnpm install
    ```
 
 3. Set up environment variables:
@@ -80,23 +87,23 @@ This repository provides a robust starter kit for implementing advanced authenti
 
 4. Set up Prisma:
    ```shell
-   npx prisma generate
-   npx prisma db push
+   pnpm dlx prisma generate
+   pnpm dlx prisma db push
    ```
 
 5. Start the development server:
    ```shell
-   npm run dev
+   pnpm dev
    ```
 
 ## Available Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Starts the development server |
-| `npm run build` | Builds the production application |
-| `npm start` | Starts the production server |
-| `npm run lint` | Runs the linter |
+| `pnpm dev` | Starts the development server |
+| `pnpm build` | Builds the production application |
+| `pnpm start` | Starts the production server |
+| `pnpm lint` | Runs the linter |
 
 ## Contributing
 
