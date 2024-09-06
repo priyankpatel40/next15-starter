@@ -5,10 +5,10 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Speculum',
-    default: 'Speculum',
+    template: '%s | Company',
+    default: 'Company',
   },
-  description: 'Speculum',
+  description: 'Company',
 };
 interface ProtectedLayoutProps {
   children: React.ReactNode;

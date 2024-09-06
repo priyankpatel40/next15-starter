@@ -8,8 +8,8 @@ import Providers from '@/components/providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Speculum',
-  description: 'Speculum',
+  title: 'Company',
+  description: 'Company',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

@@ -8,10 +8,10 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    template: 'Super Admin | Speculum',
+    template: 'Super Admin | Company',
     default: 'Super Admin',
   },
-  description: 'Speculum',
+  description: 'Company',
 };
 interface ProtectedLayoutProps {
   children: React.ReactNode;

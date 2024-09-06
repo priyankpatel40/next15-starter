@@ -2,6 +2,19 @@
 
 This repository provides a robust starter kit for implementing advanced authentication features using Next Auth v5 in a Next.js 15 application. It's designed to help developers quickly set up a secure, feature-rich authentication system.
 
+## Table of Contents
+- [Demo](#demo)
+- [Technologies Used](#technologies-used)
+- [Key Features](#key-features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Available Scripts](#available-scripts)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+- [Troubleshooting](#troubleshooting)
+
 ## Technologies Used
 
 <p align="center">
@@ -13,6 +26,9 @@ This repository provides a robust starter kit for implementing advanced authenti
   </a>
   <a href="https://www.prisma.io/" target="_blank">
     <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma" width="160" height="40"/>
+  </a>
+  <a href="https://tailwindcss.com/" target="_blank">
+    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" width="160" height="40"/>
   </a>
 </p>
 
@@ -47,9 +63,27 @@ This repository provides a robust starter kit for implementing advanced authenti
 - 🏢 SuperAdmin dashboard for Company management
 - 📊 Basic reports for SuperAdmins
 - 📨 Email sending with Google SMTP
+- 🎭 End-to-end testing with Playwright
+- 🎨 Tailwind CSS for styling
+- 🌓 Dark and light theme support
 
+## Styling and Theming
 
-> **Note:** To use SuperAdmin role and features, you need to manually change the user role to "SUPERADMIN" in the database. This is for security reasons and is not available through the user interface.
+This project uses Tailwind CSS for styling, providing a utility-first CSS framework that makes it easy to create responsive and customizable user interfaces.
+
+### Dark and Light Themes
+
+The application supports both dark and light themes, allowing users to choose their preferred visual style. The theme can be toggled using the theme switcher component provided in the UI.
+
+To implement theme-specific styles, use Tailwind's dark mode classes:
+
+```jsx
+<div className="bg-white dark:bg-gray-800 text-black dark:text-white">
+  {/* Your content here */}
+</div>
+```
+
+The theme preference is stored in local storage, ensuring that the user's choice persists across sessions.
 
 ## Getting Started
 
@@ -96,6 +130,9 @@ This repository provides a robust starter kit for implementing advanced authenti
    pnpm dev
    ```
 
+6. Configure Tailwind CSS:
+   The project comes with a pre-configured `tailwind.config.js` file. You can customize this file to adjust the theme, extend the default configuration, or add plugin
+
 ## Available Scripts
 
 | Command | Description |
@@ -129,3 +166,23 @@ If you encounter any issues during setup or usage, please check the following:
 For more detailed troubleshooting, please refer to the [Next.js documentation](https://nextjs.org/docs) and [NextAuth.js documentation](https://next-auth.js.org/getting-started/introduction).
 
 If you're still experiencing problems, please open an issue in this repository.
+
+## Email Configuration
+
+This project uses Google SMTP for sending emails. To set up email functionality:
+
+1. Ensure you have a Google account
+2. Enable "Less secure app access" or use App Passwords if you have 2-factor authentication enabled
+3. Add the following to your `.env` file:
+   ```
+   SMTP_SERVER_HOST='smtp.gmail.com'
+   SMTP_SERVER_USERNAME="your-email@gmail.com"
+   SMTP_SERVER_PASSWORD="xxxx xxxx xxxx xxxx"
+   SMTP_SERVER_PORT=587
+   ```
+
+Replace the values with your actual Google account details.
+
+## Code Style
+
+This project uses ESLint and Prettier for code formatting. 
