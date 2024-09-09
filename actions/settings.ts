@@ -32,13 +32,14 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
       },
     });
 
-    unstable_update({
+    const updatedSession = await unstable_update({
       user: {
         name: updatedUser.name,
         email: updatedUser.email,
         isTwoFactorEnabled: updatedUser.isTwoFactorEnabled,
       },
     });
+    console.log('updatedSession', updatedSession);
     return { success: 'Profile settings updated!' };
   } catch (error) {
     return { error: 'Something went wrong!' };

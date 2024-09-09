@@ -3,9 +3,7 @@ import * as z from 'zod';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-
 import { CompanySchema } from '@/schemas';
 import { Input } from '@/components/ui/input';
 import {
@@ -29,7 +27,6 @@ export const CompanyForm = () => {
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
-  const { data: session, update } = useSession();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof CompanySchema>>({
@@ -54,20 +51,11 @@ export const CompanyForm = () => {
             createCompany(values).then((dataResponse) => {
               if (dataResponse?.success) {
                 if (dataResponse.company) {
-                  // Attempt to update the session
-                  update({ ...session?.user, cid: dataResponse?.company?.id })
-                    .then((res) => {
-                      console.log('Session updated:', session);
-                      showToast({
-                        message: dataResponse?.success,
-                        type: 'success',
-                      });
-                      router.push(DEFAULT_LOGIN_REDIRECT);
-                    })
-                    .catch((updateError) => {
-                      console.error('Session update failed:', updateError);
-                      setError('Failed to update your details');
-                    });
+                  showToast({
+                    message: dataResponse?.success,
+                    type: 'success',
+                  });
+                  router.push(DEFAULT_LOGIN_REDIRECT);
                 }
               } else {
                 setError('Failed to create company.');

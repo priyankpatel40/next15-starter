@@ -6,7 +6,7 @@ import { db } from '@/lib/db';
 import { RegisterSchema } from '@/schemas';
 import { getUserByEmail } from '@/data/user';
 import { Prisma, UserRole } from '@prisma/client';
-import { sendVerificationEmail } from '@/lib/mail';
+import { sendVerificationEmail } from '@/emails/mail';
 import { generateVerificationToken } from '@/lib/tokens';
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -19,7 +19,6 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await getUserByEmail(email);
-  console.log('🚀 ~ register ~ email:', email);
 
   if (existingUser) {
     return {
@@ -37,7 +36,14 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     });
     const verificationToken = await generateVerificationToken(email);
     console.log('verificationToken', verificationToken);
-    await sendVerificationEmail(verificationToken.email, verificationToken.token);
+    await sendVerificationEmail({
+      email: verificationToken.email,
+      token: verificationToken.token,
+      username: name,
+      invitedByUsername: '',
+      invitedByEmail: '',
+      company_name: '',
+    });
   } catch (e) {
     // Error handling
     let errorMessage: string = 'Something went wrong, unable to create your account.';

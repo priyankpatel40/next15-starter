@@ -12,14 +12,15 @@ import {
   superAdminRoute,
 } from '@/routes';
 import { UserRole } from '@prisma/client';
+import { NextResponse, NextRequest } from 'next/server';
 
 const { auth } = NextAuth(authConfig);
 
 export default auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  console.log('🚀 ~ file: middleware.ts:21 ~ auth ~ isLoggedIn:', isLoggedIn);
-  console.log('🚀 ~ auth ~ process.env.NODE_ENV:', process.env.NODE_ENV);
+  // console.log('🚀 ~ file: middleware.ts:21 ~ auth ~ isLoggedIn:', isLoggedIn);
+  // console.log('🚀 ~ auth ~ process.env.NODE_ENV:', process.env.NODE_ENV);
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
@@ -33,7 +34,8 @@ export default auth(async (req) => {
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      // return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
     return null;
   }
@@ -58,24 +60,27 @@ export default auth(async (req) => {
         ? '__Secure-authjs.session-token'
         : 'authjs.session-token',
   });
-  console.log('🚀 ~ auth ~ token:', token);
+  // console.log('🚀 ~ auth ~ token:', token);
   const userHasCompany = token?.cid;
 
   if (isLoggedIn) {
     if (isSuperAdminRoute) {
       if (token?.role !== UserRole.SUPERADMIN) {
-        return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+        // return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+        return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
       }
     }
     if (!isCreateCompanyRoute) {
       if (!userHasCompany) {
-        return Response.redirect(new URL(DEFAULT_SIGNUP_REDIRECT, nextUrl));
+        // return Response.redirect(new URL(DEFAULT_SIGNUP_REDIRECT, nextUrl));
+        return NextResponse.redirect(new URL(DEFAULT_SIGNUP_REDIRECT, nextUrl));
       } else {
         return null;
       }
     } else {
       if (userHasCompany) {
-        return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+        // return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+        return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
       }
     }
 

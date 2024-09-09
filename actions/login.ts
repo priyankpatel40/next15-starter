@@ -8,7 +8,7 @@ import { signIn } from '@/auth';
 import { LoginSchema } from '@/schemas';
 import { getUserByEmail } from '@/data/user';
 import { getTwoFactorTokenByEmail } from '@/data/two-factor-token';
-import { sendVerificationEmail, sendTwoFactorTokenEmail } from '@/lib/mail';
+import { sendVerificationEmail, sendTwoFactorTokenEmail } from '@/emails/mail';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import { generateVerificationToken, generateTwoFactorToken } from '@/lib/tokens';
 import { getTwoFactorConfirmationByUserId } from '@/data/two-factor-confirmation';
@@ -33,8 +33,14 @@ export const login = async (
 
   if (!existingUser.emailVerified) {
     const verificationToken = await generateVerificationToken(existingUser.email);
-
-    await sendVerificationEmail(verificationToken.email, verificationToken.token);
+    await sendVerificationEmail({
+      email: verificationToken.email,
+      token: verificationToken.token,
+      username: existingUser.name,
+      invitedByUsername: '',
+      invitedByEmail: '',
+      company_name: '',
+    });
 
     return { success: 'Confirmation email sent!' };
   }
@@ -78,7 +84,11 @@ export const login = async (
       });
     } else {
       const twoFactorToken = await generateTwoFactorToken(existingUser.email);
-      await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
+      await sendTwoFactorTokenEmail(
+        twoFactorToken.email,
+        twoFactorToken.token,
+        existingUser.name,
+      );
 
       return { twoFactor: true };
     }
@@ -101,5 +111,28 @@ export const login = async (
     }
 
     throw error;
+  }
+};
+
+export const resendCode = async (email: string) => {
+  const existingUser = await getUserByEmail(email);
+
+  if (!existingUser || !existingUser.email || !existingUser.password) {
+    return { error: 'Email does not exist!' };
+  }
+
+  if (existingUser.isTwoFactorEnabled && existingUser.email) {
+    try {
+      const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+      await sendTwoFactorTokenEmail(
+        twoFactorToken.email,
+        twoFactorToken.token,
+        existingUser.name,
+      );
+
+      return { success: 'Code sent!' };
+    } catch (error) {
+      return { error: 'Failed to send code!' };
+    }
   }
 };

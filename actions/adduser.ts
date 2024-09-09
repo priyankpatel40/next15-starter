@@ -6,9 +6,10 @@ import { db } from '@/lib/db';
 import { CreateUserSchema } from '@/schemas';
 import { getUserByEmail } from '@/data/user';
 import { Prisma, UserRole } from '@prisma/client';
-import { sendVerificationEmail } from '@/lib/mail';
+
 import { generateVerificationToken } from '@/lib/tokens';
 import { auth } from '@/auth';
+import { sendVerificationEmail } from '@/emails/mail';
 export const addUser = async (values: z.infer<typeof CreateUserSchema>) => {
   const validatedFields = CreateUserSchema.safeParse(values);
   const currentSession = await auth();
@@ -49,7 +50,14 @@ export const addUser = async (values: z.infer<typeof CreateUserSchema>) => {
     });
     const verificationToken = await generateVerificationToken(email);
     const typedToken = verificationToken as { email: string; token: string };
-    await sendVerificationEmail(typedToken.email, typedToken.token);
+    await sendVerificationEmail({
+      email: typedToken.email,
+      token: typedToken.token,
+      username: name,
+      invitedByUsername: currentSession?.user.name,
+      invitedByEmail: currentSession?.user.email,
+      company_name: currentSession?.user.company.company_name,
+    });
     const userWithCreatorName = {
       ...result,
       creatorName: currentSession?.user.name,

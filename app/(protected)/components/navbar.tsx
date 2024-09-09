@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import Image from 'next/image';
-import Logo from '@/public/smalllogo.png';
+import Logo from '@/public/small-light.png';
 import { ProfileDropDown } from './profile-dropdown';
 import { Session } from 'next-auth';
 import { usePathname } from 'next/navigation';
@@ -85,7 +85,10 @@ export const AdminNavBar = ({ session, contextType }: AdminNavBarProps) => {
 
   return (
     <div className="min-h-full">
-      <Disclosure as="nav" className="bg-gradient-to-r from-gray-900 to-black fixed top-0 w-full z-50 shadow-md">
+      <Disclosure
+        as="nav"
+        className="bg-gradient-to-r from-gray-900 to-black fixed top-0 w-full z-50 shadow-md"
+      >
         {({ open }) => (
           <>
             <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">

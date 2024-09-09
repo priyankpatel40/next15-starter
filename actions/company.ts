@@ -6,7 +6,7 @@ import { CompanySchema, EditCompanySchema } from '@/schemas';
 import { getUserByEmail } from '@/data/user';
 import { Prisma, UserRole } from '@prisma/client';
 import { randomBytes } from 'crypto';
-import { auth } from '@/auth';
+import { auth, unstable_update } from '@/auth';
 import { getCompanyByName } from '@/data/company';
 
 export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
@@ -21,7 +21,7 @@ export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
   const { company_name } = validatedFields.data;
   const existingUser = await getUserByEmail(currentSession?.user.email);
   let company = null;
-  if (existingUser) {
+  if (existingUser && existingUser.cid === null) {
     try {
       const apiKey = await randomBytes(16).toString('base64');
       console.error('apikey', apiKey);
@@ -47,6 +47,13 @@ export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
           data: { cid: company.id, role: UserRole.ADMIN },
         });
       });
+      const updatedSession = await unstable_update({
+        user: {
+          cid: company?.id,
+          company: company,
+        },
+      });
+      console.log('updatedSession', updatedSession);
     } catch (e) {
       // Error handling
       let errorMessage: string = 'Something went wrong, unable to create your account.';

@@ -74,7 +74,7 @@ export const {
       if (token.company) {
         session.user.company = token.company;
       }
-      console.log('🚀 ~ file: auth.ts:76 ~ session ~ session:', session);
+      // console.log('🚀 ~ file: auth.ts:76 ~ session ~ session:', session);
       return session;
     },
     async jwt({ token, trigger, session }) {
@@ -87,7 +87,7 @@ export const {
       if (trigger === 'update' && session?.email) {
         // Note, that `session` can be any arbitrary object, remember to validate it!
         token.cid = session.cid;
-        console.log('🚀 ~ jwt ~ token:', token);
+        // console.log('🚀 ~ jwt ~ token:', token);
       }
 
       token.isOAuth = !!existingAccount;
@@ -99,7 +99,7 @@ export const {
       if (existingUser.company) {
         token.company = existingUser.company;
       }
-      console.log('🚀 ~ jwt ~ token:', token);
+      // console.log('🚀 ~ jwt ~ token:', token);
       return token;
     },
   },
