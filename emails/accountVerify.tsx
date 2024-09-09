@@ -26,7 +26,7 @@ interface AccountVerifyEmailProps {
 }
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  ? `https://${process.env.NEXT_PUBLIC_APP_URL}`
+  ? `${process.env.NEXT_PUBLIC_APP_URL}`
   : 'http://localhost:3000';
 const app_name = process.env.APP_NAME || 'Your Company';
 const AccountVerifyEmail = ({
@@ -47,7 +47,7 @@ const AccountVerifyEmail = ({
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
             <Section className="mt-[32px]">
               <Img
-                src={`${baseUrl}/small-light.png`}
+                src={`${baseUrl}small-light.png`}
                 width="60"
                 height="60"
                 alt="Vercel"

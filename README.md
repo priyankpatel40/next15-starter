@@ -169,7 +169,7 @@ If you're still experiencing problems, please open an issue in this repository.
 
 ## Email Configuration
 
-This project uses Google SMTP for sending emails. To set up email functionality:
+This project uses Google SMTP for sending emails and react-email for creating email templates. To set up email functionality:
 
 1. Ensure you have a Google account
 2. Enable "Less secure app access" or use App Passwords if you have 2-factor authentication enabled
@@ -182,6 +182,20 @@ This project uses Google SMTP for sending emails. To set up email functionality:
    ```
 
 Replace the values with your actual Google account details.
+
+### Email Templates
+
+We use react-email to create and manage email templates. This allows us to build responsive and customizable email templates using React components. You can find the email templates in the `emails` directory.
+
+To preview and test email templates:
+
+1. Run the react-email development server:
+   ```
+   pnpm email dev
+   ```
+2. Open your browser and navigate to `http://localhost:3000` to view and interact with your email templates.
+
+For more information on creating and customizing email templates, refer to the [react-email documentation](https://react.email/docs/introduction).
 
 ## Code Style
 
