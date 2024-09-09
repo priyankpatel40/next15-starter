@@ -25,9 +25,7 @@ interface AccountVerifyEmailProps {
   invitedByEmail?: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  ? `${process.env.NEXT_PUBLIC_APP_URL}`
-  : 'http://localhost:3000';
+const baseUrl = `${process.env.NEXT_PUBLIC_APP_URL}`;
 const app_name = process.env.APP_NAME || 'Your Company';
 const AccountVerifyEmail = ({
   username,
