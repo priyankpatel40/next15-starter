@@ -19,19 +19,20 @@ enum UserRole {
 }
 
 model Company {
-  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  company_name String    @db.VarChar(255)
-  owner_id     String?   @db.Uuid
-  api_key      String    @db.VarChar(32)
-  created_at   DateTime  @default(now()) @db.Timestamptz(6)
-  created_by   String?   @db.Uuid
-  expire_date  DateTime? @db.Timestamptz(6)
-  logo         String?   @db.VarChar(255)
-  is_active    Boolean   @default(true)
-  is_deleted   Boolean   @default(false)
-  is_pending   Boolean   @default(false)
-  is_trial     Boolean   @default(true)
-  updated_at   DateTime  @default(now()) @db.Timestamptz(6)
+  id           String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  company_name String        @db.VarChar(255)
+  owner_id     String?       @db.Uuid
+  api_key      String        @db.VarChar(32)
+  created_at   DateTime      @default(now()) @db.Timestamptz(6)
+  created_by   String?       @db.Uuid
+  expire_date  DateTime?     @db.Timestamptz(6)
+  logo         String?       @db.VarChar(255)
+  is_active    Boolean       @default(true)
+  is_deleted   Boolean       @default(false)
+  is_pending   Boolean       @default(false)
+  is_trial     Boolean       @default(true)
+  updated_at   DateTime      @default(now()) @db.Timestamptz(6)
+  subscription Subscription?
 
   @@unique([company_name])
 }
@@ -124,4 +125,15 @@ model LoginActivity {
   cpu             String?
   isMobile        Boolean?
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id               String   @id @default(cuid())
+  cid              String   @unique @db.Uuid
+  stripeCustomerId String?  @unique
+  createdAt        DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime @updatedAt @db.Timestamptz(6)
+  isActive         Boolean  @default(true)
+
+  company Company @relation(fields: [cid], references: [id], onDelete: Cascade)
 }
