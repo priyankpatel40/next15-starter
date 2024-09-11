@@ -4,7 +4,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 
 import { db } from '@/lib/db';
 import authConfig from '@/auth.config';
-import { getUserById } from '@/data/user';
+import { getUserById, getUserLoginStatus, saveLoginActivity } from '@/data/user';
 import { getTwoFactorConfirmationByUserId } from '@/data/two-factor-confirmation';
 import { getAccountByUserId } from './data/account';
 
@@ -25,6 +25,10 @@ export const {
         where: { id: user.id },
         data: { emailVerified: new Date() },
       });
+    },
+    async signIn(message) {
+      console.log('🚀 ~ signIn ~ message:', message);
+      await saveLoginActivity(message.user.id);
     },
   },
   callbacks: {
@@ -70,10 +74,15 @@ export const {
         session.user.email = token.email;
         session.user.isOAuth = token.isOAuth as boolean;
         session.user.cid = token.cid;
+        const loginActivity = await getUserLoginStatus(session.user.id);
+
+        session.user.loginId = loginActivity?.id;
+        console.log('🚀 ~ session ~ loginActivity:', session);
       }
       if (token.company) {
         session.user.company = token.company;
       }
+
       // console.log('🚀 ~ file: auth.ts:76 ~ session ~ session:', session);
       return session;
     },
@@ -99,6 +108,7 @@ export const {
       if (existingUser.company) {
         token.company = existingUser.company;
       }
+
       // console.log('🚀 ~ jwt ~ token:', token);
       return token;
     },

@@ -97,14 +97,15 @@ export const getAllCompanyUsersForReports = async ({
     whereClause.is_active = filter === 'active';
   }
 
-  const [totalCount, statusCounts, dailyActiveUsers] = await Promise.all([
-    db.user.count({ where: whereClause }),
-    db.user.groupBy({
-      by: ['is_active'],
-      where: whereClause,
-      _count: true,
-    }),
-    db.$queryRaw`
+  const [totalCount, statusCounts, dailyActiveUsers, dailyLoginActivity] =
+    await Promise.all([
+      db.user.count({ where: whereClause }),
+      db.user.groupBy({
+        by: ['is_active'],
+        where: whereClause,
+        _count: true,
+      }),
+      db.$queryRaw`
         SELECT 
           TO_CHAR(DATE(created_at), 'YYYY-MM-DD') as date, 
           CAST(COUNT(*) AS INTEGER) as users
@@ -112,7 +113,16 @@ export const getAllCompanyUsersForReports = async ({
         GROUP BY DATE(created_at)
         ORDER BY DATE(created_at)
       ` as Promise<Array<{ date: string; users: number }>>,
-  ]);
+      db.$queryRaw`
+        SELECT 
+          TO_CHAR(DATE(logged_in), 'YYYY-MM-DD') as date, 
+          CAST(COUNT(*) AS INTEGER) as users
+        FROM "User" 
+         JOIN "LoginActivity" ON "User".id = "LoginActivity"."userId"
+        GROUP BY DATE(logged_in)
+        ORDER BY DATE(logged_in)
+      ` as Promise<Array<{ date: string; users: number }>>,
+    ]);
 
   const activeCount = statusCounts.find((r) => r.is_active)?._count ?? 0;
   const inactiveCount = statusCounts.find((r) => !r.is_active)?._count ?? 0;
@@ -122,6 +132,7 @@ export const getAllCompanyUsersForReports = async ({
     activeCount,
     inactiveCount,
     dailyActiveUsers,
+    dailyLoginActivity,
   };
 };
 export const getAllCompaniesforDashboard = async ({

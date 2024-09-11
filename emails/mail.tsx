@@ -29,7 +29,7 @@ export const sendTwoFactorTokenEmail = async (
 
     await sendEmail({
       sendTo: email,
-      subject: 'Two Factor Authentication code',
+      subject: `${token} - Your two factor authentication code`,
       html: emailContent,
     });
   } catch (error) {

@@ -19,8 +19,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import Cookies from 'js-cookie';
 import { CardWrapper } from '@/components/auth/card-wrapper';
 import { Button } from '@/components/ui/button';
+import UAParser from 'ua-parser-js';
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -37,6 +39,7 @@ export const LoginForm = () => {
   const [resetCode, setResetCode] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [isValidating, setIsValidating] = useState(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -81,25 +84,29 @@ export const LoginForm = () => {
     });
   };
 
-  const onCodeSubmit = (code: string) => {
+  const onCodeSubmit = async (code: string) => {
+    if (isValidating) return; // Prevent multiple submissions
+
     setError('');
     setSuccess('');
+    setIsValidating(true); // Set this early to block subsequent submissions
 
-    startTransition(() => {
-      login({ ...form.getValues(), code }, callbackUrl)
-        .then((data) => {
-          if (data?.error) {
-            setError(data.error);
-            setResetCode(true);
-          }
+    try {
+      const data = await login({ ...form.getValues(), code }, callbackUrl);
 
-          if (data?.success) {
-            setSuccess(data.success);
-          }
-        })
-        .catch(() => setError('Something went wrong'));
-    });
+      if (data?.error) {
+        setError(data.error);
+        setResetCode(true); // Reset the code input field if needed
+      } else if (data?.success) {
+        setSuccess(data.success);
+      }
+    } catch (error) {
+      setError('Something went wrong');
+    } finally {
+      setIsValidating(false); // Ensure this runs in every exit path
+    }
   };
+
   const handleResendCode = () => {
     setError('');
     setSuccess('');
@@ -118,6 +125,18 @@ export const LoginForm = () => {
       .catch(() => setError('Failed to resend code'))
       .finally(() => setIsResending(false));
   };
+  useEffect(() => {
+    const parser = new UAParser();
+    const userAgentInfo = parser.getResult();
+    console.log(
+      '🚀 ~ file: login-form.tsx:131 ~ useEffect ~ userAgentInfo:',
+      userAgentInfo,
+    );
+
+    // Save user agent info in a cookie
+    Cookies.set('userAgent', JSON.stringify(userAgentInfo), { expires: 1 }); // Expires in 7 days
+  }, []);
+
   return (
     <section className="flex items-center justify-center min-h-screen p-4 ">
       <CardWrapper
@@ -147,16 +166,17 @@ export const LoginForm = () => {
                         <EnterCode
                           callback={onCodeSubmit}
                           reset={resetCode}
-                          isLoading={isPending}
+                          isLoading={isValidating}
                         />
                       </FormControl>
                       <FormMessage className="text-xs text-red-500" />
+
                       <Button
                         type="button"
                         variant="link"
                         size="sm"
                         onClick={handleResendCode}
-                        disabled={isResending || cooldown > 0}
+                        disabled={isResending || cooldown > 0 || isValidating}
                         className="mt-2 px-0 font-normal text-xs text-primary hover:text-primary/80 dark:text-blue-400 dark:hover:text-blue-300"
                       >
                         {isResending
