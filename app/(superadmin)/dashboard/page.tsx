@@ -34,6 +34,7 @@ export default async function DashboardPage() {
   const activeCompanies = companiesresult.activeCount;
   const inactiveCompanies = companiesresult.inactiveCount;
   const dailyActiveCompanies = companiesresult.dailyActiveCompanies;
+  const dailyLoginActivity = users.dailyLoginActivity;
   const activeSubscriptions = companiesresult.activeSubscriptions;
   const inactiveSubscriptions = companiesresult.inactiveSubscriptions;
   const totalSubscriptions = activeSubscriptions + inactiveSubscriptions;
@@ -66,7 +67,7 @@ export default async function DashboardPage() {
 
         <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Daily Active Companies
+            Daily Newly Created Companies
           </h2>
           <div className="h-80">
             <DailyCompaniesChart dailyActiveCompanies={dailyActiveCompanies} />
@@ -74,10 +75,19 @@ export default async function DashboardPage() {
         </Card>
         <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Daily Active Users
+            Daily Newly Created Users
           </h2>
           <div className="h-80">
             <DailyUsersChart dailyActiveUsers={dailyActiveUsers} />
+          </div>
+        </Card>
+        <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            Daily Logged In Users
+          </h2>
+
+          <div className="h-80">
+            <DailyUsersChart dailyActiveUsers={dailyLoginActivity} />
           </div>
         </Card>
 

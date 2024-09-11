@@ -2,6 +2,7 @@
 import { db } from '@/lib/db';
 import { EditUserSchema } from '@/schemas';
 import { z } from 'zod';
+import { cookies } from 'next/headers';
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -162,12 +163,13 @@ export const getCompanyUsersForReports = async ({
         }),
         db.$queryRaw`
         SELECT 
-          TO_CHAR(DATE(created_at), 'YYYY-MM-DD') as date, 
+          TO_CHAR(DATE(logged_in), 'YYYY-MM-DD') as date, 
           CAST(COUNT(*) AS INTEGER) as users
-        FROM "User"
+        FROM "User" 
+         JOIN "LoginActivity" ON "User".id = "LoginActivity"."userId"
         WHERE cid = ${id}::uuid
-        GROUP BY DATE(created_at)
-        ORDER BY DATE(created_at)
+        GROUP BY DATE(logged_in)
+        ORDER BY DATE(logged_in)
       ` as Promise<Array<{ date: string; users: number }>>,
       ]);
 
@@ -238,4 +240,125 @@ export const toggleUserStatusById = async (id: string) => {
     throw error;
   }
   return { success: true };
+};
+
+export const saveLoginActivity = async (userId: string) => {
+  try {
+    const cookieStore = cookies();
+    const userAgent = JSON.parse(cookieStore.get('userAgent')?.value || '{}');
+    console.log('🚀 ~ file: user.ts:247 ~ saveLoginActivity ~ userAgent:', userAgent);
+    const loginActivity = await db.loginActivity.create({
+      data: {
+        userId,
+        logged_in: new Date(),
+        device: userAgent.device.model,
+        browser: userAgent.browser.name,
+        os: userAgent.os.name,
+        cpu: userAgent.cpu.architecture,
+        isMobile: userAgent.device.type === 'mobile',
+        device_vendor: userAgent.device.vendor,
+        browser_version: userAgent.browser.version,
+        os_version: userAgent.os.version,
+      },
+    });
+    cookieStore.delete('userAgent');
+    return loginActivity.id;
+  } catch (error) {
+    console.error('Error saving login activity:', error);
+    return false;
+  }
+};
+
+export const getBrowserData = async () => {
+  try {
+    const browserData = (
+      await db.loginActivity.groupBy({
+        by: ['browser'],
+        _count: true,
+      })
+    ).map((item) => ({
+      name: item.browser, // Rename the device column to name
+      value: item._count, // Rename the count column to value
+    }));
+    return browserData;
+  } catch (error) {
+    console.error('Error getting browser data:', error);
+    return null;
+  }
+};
+export const getOsData = async () => {
+  try {
+    const osData = (
+      await db.loginActivity.groupBy({
+        by: ['os'],
+        _count: true,
+      })
+    ).map((item) => ({
+      name: item.os, // Rename the device column to name
+      value: item._count, // Rename the count column to value
+    }));
+    return osData;
+  } catch (error) {
+    console.error('Error getting OS data:', error);
+    return null;
+  }
+};
+export const getDeviceData = async () => {
+  try {
+    const deviceData = (
+      await db.loginActivity.groupBy({
+        by: ['device'],
+        _count: true,
+      })
+    ).map((item) => ({
+      name: item.device, // Rename the device column to name
+      value: item._count, // Rename the count column to value
+    }));
+    return deviceData;
+  } catch (error) {
+    console.error('Error getting device data:', error);
+    return null;
+  }
+};
+export const getCpuData = async () => {
+  try {
+    const cpuData = (
+      await db.loginActivity.groupBy({
+        by: ['cpu'],
+        _count: true,
+      })
+    ).map((item) => ({
+      name: item.cpu, // Rename the device column to name
+      value: item._count, // Rename the count column to value
+    }));
+    return cpuData;
+  } catch (error) {
+    console.error('Error getting CPU data:', error);
+    return null;
+  }
+};
+export const updateUserLoginStatus = async (id: string) => {
+  try {
+    if (id) {
+      await db.loginActivity.update({
+        where: { id },
+        data: { logged_out: new Date() },
+      });
+    }
+  } catch (error) {
+    console.error('Error setting logout:', error);
+  }
+  return true;
+};
+export const getUserLoginStatus = async (id: string) => {
+  try {
+    const user = await db.loginActivity.findFirst({
+      where: { userId: id },
+      orderBy: { logged_in: 'desc' }, // Order by logged_in in descending order
+    });
+    return user;
+  } catch (error) {
+    console.error('Error getting user login status:', error);
+    return null;
+  }
 };

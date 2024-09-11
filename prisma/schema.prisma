@@ -52,6 +52,7 @@ model User {
   is_active             Boolean                @default(true)
   is_deleted            Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
+  LoginActivity         LoginActivity[]
 }
 
 model Account {
@@ -107,4 +108,20 @@ model TwoFactorConfirmation {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
+}
+
+model LoginActivity {
+  id              String    @id @default(cuid())
+  userId          String    @db.Uuid
+  logged_in       DateTime  @default(now()) @db.Timestamptz(6)
+  logged_out      DateTime? @db.Timestamptz(6)
+  device          String?
+  device_vendor   String?
+  browser         String?
+  browser_version String?
+  os              String?
+  os_version      String?
+  cpu             String?
+  isMobile        Boolean?
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
