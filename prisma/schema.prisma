@@ -128,12 +128,18 @@ model LoginActivity {
 }
 
 model Subscription {
-  id               String   @id @default(cuid())
-  cid              String   @unique @db.Uuid
-  stripeCustomerId String?  @unique
-  createdAt        DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt        DateTime @updatedAt @db.Timestamptz(6)
-  isActive         Boolean  @default(true)
+  id                   String    @id @default(cuid())
+  cid                  String    @unique @db.Uuid
+  userId               String    @db.Uuid
+  stripeSubscriptionId String
+  productId            String
+  priceId              String
+  status               String?
+  created_at           DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime  @default(now()) @db.Timestamptz(6)
+  expires_at           DateTime? @db.Timestamptz(6)
+  is_active            Boolean   @default(true)
+  interval             String?
 
   company Company @relation(fields: [cid], references: [id], onDelete: Cascade)
 }

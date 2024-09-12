@@ -31,6 +31,10 @@ export default auth(async (req) => {
   if (isApiAuthRoute) {
     return null;
   }
+  // Exclude the Stripe webhook endpoint from authentication
+  if (nextUrl.pathname.startsWith('/api/webhook')) {
+    return NextResponse.next();
+  }
 
   if (isAuthRoute) {
     if (isLoggedIn) {
