@@ -19,12 +19,15 @@ export default function ThemeSwitch() {
       <button
         onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
         aria-label={tooltipText}
-        className="p-1.5 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        className="p-2 rounded-full dark:border-gray-600  dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
       >
         {resolvedTheme === 'dark' ? (
-          <FiSun size={20} className="text-yellow-500" />
+          <FiSun size={20} className="h-5 w-5 text-yellow-500" />
         ) : (
-          <FiMoon size={20} className="text-gray-600 dark:text-gray-300" />
+          <FiMoon
+            size={20}
+            className=" h-5 w-5 text-gray-400 dark:text-gray-300 hover:text-gray-800"
+          />
         )}
       </button>
       <span className="absolute hidden group-hover:inline-block bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 text-xs rounded py-1 px-2 top-full left-1/2 transform -translate-x-1/2 mt-2 whitespace-nowrap">

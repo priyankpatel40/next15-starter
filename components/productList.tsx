@@ -1,16 +1,31 @@
 'use client';
-import { loadStripe } from '@stripe/stripe-js';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
-import { Form } from '@/components/ui/form';
-import { useEffect, useMemo, useState } from 'react'; // Import useState
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { useMemo, useState } from 'react'; // Import useState
 import * as Tabs from '@radix-ui/react-tabs'; // Import Tabs
 import { Input } from '@/components/ui/input';
-import { stripe } from '@/utils/stripe';
-import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/utils/helpers';
-import { areIntervalsOverlapping } from 'date-fns';
+import { SubscriptionSchema } from '@/schemas';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createSession } from '@/actions/subscribe';
+import { showToast } from './ui/toast';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'; // Import Select components
 
 interface Price {
   id: string;
@@ -56,40 +71,30 @@ const ProductList: React.FC<PricingTabsProps> = ({
     return intervalsArray; // Return the array
   }, [products]);
 
-  const form = useForm();
+  const form = useForm<z.infer<typeof SubscriptionSchema>>({
+    resolver: zodResolver(SubscriptionSchema),
+    defaultValues: {
+      quantity: 1, // Set default quantity to 1
+    },
+  });
 
-  const onSubmit = async (formData: Record<string, any>) => {
-    console.log('🚀 ~ file: productList.tsx:54 ~ onSubmit ~ formData:', formData);
-    const { priceId, cid, userId, productId, email } = formData; // Destructure form values
-    const baseurl = process.env.NEXT_PUBLIC_APP_URL;
+  const handleValueChange = (value: number) => {
+    // Handle the value change logic here
+    console.log('Selected quantity:', value);
+    // You can also set the value in the form if needed
+    form.setValue('quantity', value); // Assuming you want to set the quantity in the form
+  };
 
-    if (!priceId) {
-      throw new Error('Price ID is required');
-    }
-    try {
-      const session = await stripe.checkout.sessions.create({
-        allow_promotion_codes: true,
-        customer_email: email,
-        line_items: [
-          {
-            price: priceId,
-            quantity: 1,
-          },
-        ],
-        mode: 'subscription',
-        success_url: `${baseurl}/admin/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${baseurl}/admin/subscription/cancel`,
-        metadata: {
-          userId: currentSession.user.id,
-          cid: currentSession.user.cid,
-          productId: productId,
-          priceId: priceId,
-        },
-      });
+  const onSubmit = async (values: z.infer<typeof SubscriptionSchema>) => {
+    console.log('🚀 ~ file: productList.tsx:72 ~ onSubmit ~ values:', values);
+    const session = await createSession(values);
+    if (session.success) {
       router.push(session.url);
-    } catch (error: any) {
-      console.error(error.message);
-      throw new Error('Failed to create a checkout session');
+    } else {
+      showToast({
+        message: session.message,
+        type: 'error',
+      });
     }
   };
 
@@ -134,6 +139,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
                     currency: price.currency!,
                     minimumFractionDigits: 0,
                   }).format((price?.unit_amount || 0) / 100);
+
                   return (
                     <div
                       key={product.id}
@@ -154,6 +160,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
                           </div>
                         </div>
                       )}
+
                       <div className="p-6 text-black dark:text-white">
                         <h2 className="text-2xl font-semibold leading-6 text-black dark:text-white">
                           {product.name}
@@ -161,14 +168,87 @@ const ProductList: React.FC<PricingTabsProps> = ({
                         <p className="mt-4 text-gray-600 dark:text-gray-100">
                           {product.description}
                         </p>
-                        <p className="mt-8">
-                          <span className="text-5xl font-extrabold white">
-                            {priceString}
-                          </span>
-                          <span className="text-base font-medium text-gray-800 dark:text-gray-100">
-                            /{interval}
-                          </span>
-                        </p>
+                        {product.marketing_features.length > 0 && (
+                          <ul className="mt-4 space-y-2">
+                            {product.marketing_features.map((feature, index) => (
+                              <li
+                                key={index}
+                                className="flex items-center text-gray-600 dark:text-gray-100"
+                              >
+                                <svg
+                                  className="w-4 h-4 mr-2 text-green-500" // Icon for each feature
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                <span>{feature.name}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        <div className="flex items-center justify-between mt-8">
+                          {' '}
+                          {/* Flex container for side by side layout */}
+                          <FormField
+                            control={form.control}
+                            name="quantity" // Register the quantity field
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Quantity</FormLabel>
+                                <Select
+                                  onValueChange={(value) =>
+                                    handleValueChange(Number(value))
+                                  } // Convert value to number
+                                  defaultValue="1" // Set default value to "1"
+                                >
+                                  <FormControl>
+                                    <SelectTrigger className="w-24">
+                                      {' '}
+                                      {/* Moved className here */}
+                                      <SelectValue placeholder="Select quantity" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {Array.from(
+                                      { length: 10 },
+                                      (_, index) => index + 1,
+                                    ).map(
+                                      // Generate numbers from 1 to 100
+                                      (qty) => (
+                                        <SelectItem key={qty} value={qty.toString()}>
+                                          {qty}
+                                        </SelectItem>
+                                      ),
+                                    )}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <p className="text-3xl font-extrabold">
+                            {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: price.currency!,
+                              minimumFractionDigits: 0,
+                            }).format(
+                              (parseFloat(priceString.replace(/[^0-9.-]+/g, '')) || 0) *
+                                form.watch('quantity') || 0,
+                            )}{' '}
+                            {/* Multiply priceString with selected quantity */}
+                            <span className="text-base font-medium text-gray-800 dark:text-gray-100">
+                              /{interval}
+                            </span>
+                          </p>
+                        </div>
                         <Input
                           type="hidden"
                           value={currentSession.user.cid}

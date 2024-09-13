@@ -159,3 +159,26 @@ export const ChangePasswordSchema = z
     path: ['confirmPassword'],
     message: 'Passwords does not match',
   });
+
+export const SubscriptionSchema = z.object({
+  cid: z.string({
+    required_error: 'Company id is required!',
+  }),
+  userId: z.string({
+    required_error: 'User id is required!',
+  }),
+  productId: z.string({
+    required_error: 'Product is required!',
+  }),
+  priceId: z.string({
+    required_error: 'Pricing id is required!',
+  }),
+  email: z.string({
+    required_error: 'Email id is required!',
+  }),
+  quantity: z
+    .number()
+    .int() // Ensures it's an integer
+    .min(1) // Optional: Ensures it is at least 1 (or any other minimum constraint you want)
+    .default(1),
+});

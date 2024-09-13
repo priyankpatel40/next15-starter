@@ -22,8 +22,11 @@ import { BackButton } from './back-button';
 import { Social } from './social';
 import { Header } from './header';
 import { Card } from '../ui/card';
+import { useTranslations } from 'next-intl';
 
 export const RegisterForm = () => {
+  const t = useTranslations('RegistrationPage');
+  const g = useTranslations('General');
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
@@ -56,7 +59,7 @@ export const RegisterForm = () => {
     <section className="flex items-center justify-center min-h-screen p-4 ">
       <Card className="w-full min-w-[360px] sm:min-w-[380px] md:min-w-[448px] max-w-lg p-8 shadow-lg rounded-xl bg-white dark:bg-gray-800">
         <Form {...form}>
-          <Header label="Create your account" />
+          <Header label={t('headerLabel')} />
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             method="POST"
@@ -68,7 +71,7 @@ export const RegisterForm = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>{g('name')}</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -86,7 +89,7 @@ export const RegisterForm = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{g('email')}</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -105,7 +108,7 @@ export const RegisterForm = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{g('password')}</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -129,7 +132,7 @@ export const RegisterForm = () => {
                 type="submit"
                 className="w-full mt-5 py-2.5 text-sm font-semibold"
               >
-                Create an account
+                {t('btn')}
               </Button>
               <div className="flex items-center justify-center my-6 relative">
                 <hr className="w-full h-px bg-gray-200 dark:bg-gray-700 border-0" />
@@ -139,8 +142,8 @@ export const RegisterForm = () => {
               </div>
               <div className="space-y-4">
                 <Social
-                  googleText="Sign up with Google"
-                  githubText="Sign up with Github"
+                  googleText={t('googleText')}
+                  githubText={t('gitHubText')}
                   isSignIn={false}
                 />
               </div>
@@ -149,7 +152,7 @@ export const RegisterForm = () => {
         </Form>
 
         <div className="mt-6">
-          <BackButton label="Already have an account?" href="/login" />
+          <BackButton label={t('backButtonLabel')} href="/login" />
         </div>
       </Card>
     </section>

@@ -147,6 +147,7 @@ export const getAllCompaniesforDashboard = async ({
   if (filter !== 'all') {
     whereClause.is_active = filter === 'active';
   }
+
   const [companies, totalCount, statusCounts, dailyActiveCompanies] = await Promise.all([
     db.company.findMany({
       where: whereClause,

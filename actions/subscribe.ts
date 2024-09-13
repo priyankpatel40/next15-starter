@@ -1,10 +1,19 @@
+import { SubscriptionSchema } from '@/schemas';
 import { stripe } from '@/utils/stripe';
-import { redirect } from 'next/navigation';
+import { z } from 'zod';
 
-export const createSubscription = async () => {
+export const createSession = async (values: z.infer<typeof SubscriptionSchema>) => {
+  const validatedFields = SubscriptionSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields!' };
+  }
+  let result = null;
+  const { cid, userId, priceId, productId, email, quantity } = validatedFields.data;
+  console.log(
+    '🚀 ~ file: subscribe.ts:12 ~ createSession ~ validatedFields.data:',
+    validatedFields.data,
+  );
   const baseurl = process.env.NEXT_PUBLIC_APP_URL;
-
-  const priceId = formData.get('priceId') as string;
 
   if (!priceId) {
     throw new Error('Price ID is required');
@@ -12,20 +21,27 @@ export const createSubscription = async () => {
 
   try {
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      allow_promotion_codes: true,
+      customer_email: email,
       line_items: [
         {
           price: priceId,
-          quantity: 1,
+          quantity: quantity,
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/subscription/cancel`,
+      success_url: `${baseurl}/admin/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseurl}/admin/subscription/cancel`,
+      metadata: {
+        userId: userId,
+        cid: cid,
+        productId: productId,
+        priceId: priceId,
+      },
     });
-    redirect(session.url!);
+    return { success: true, url: session.url };
   } catch (error: any) {
     console.error(error.message);
-    throw new Error('Failed to create a checkout session');
+    return { error: true, message: error.message };
   }
 };
