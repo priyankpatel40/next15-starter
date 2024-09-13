@@ -106,10 +106,6 @@ const ProductList: React.FC<PricingTabsProps> = ({
   };
   console.log('🚀 ~ file: productList.tsx:108 ~ subscription:', subscription);
 
-  if (subscription.quantity) {
-    console.log('🚀 ~ file: productList.tsx:108 ~ subscription:', subscription);
-    // setQuantity(subscription.quantity);
-  }
   return (
     <Form {...form}>
       <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
