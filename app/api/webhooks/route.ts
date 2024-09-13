@@ -39,6 +39,7 @@ export async function POST(req: Request) {
             const cid = subscription.metadata?.cid;
             const productId = subscription.metadata?.productId;
             const priceId = subscription.metadata?.priceId;
+            const quantity = parseInt(subscription.metadata?.quantity || '1');
             await createSubscription({
               userId,
               subscriptionId,
@@ -46,6 +47,7 @@ export async function POST(req: Request) {
               status,
               productId,
               priceId,
+              quantity,
             });
           }
           break;

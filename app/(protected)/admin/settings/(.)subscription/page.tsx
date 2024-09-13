@@ -24,7 +24,8 @@ const SubscriptionPage = async () => {
   );
 
   return (
-    <div className="m-auto w-fit flex flex-col justify-center">
+    <div className="m-auto  flex flex-col justify-center">
+      <h2 className="mx:auto items-center text-center p-4">Your Subscription</h2>
       <Suspense key={products.data.length} fallback={<ProductListSkeleton />}>
         <ProductList
           currentSession={session}

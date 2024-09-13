@@ -2,6 +2,12 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Stripe: Webhooks listen",
+      "type": "stripe",
+      "request": "launch",
+      "command": "listen"
+    },
+    {
       "name": "Next.js: debug server-side",
       "type": "node-terminal",
       "request": "launch",

@@ -30,13 +30,14 @@ export const createSession = async (values: z.infer<typeof SubscriptionSchema>) 
         },
       ],
       mode: 'subscription',
-      success_url: `${baseurl}/admin/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseurl}/admin/subscription/cancel`,
+      success_url: `${baseurl}/admin/settings/?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseurl}/admin/settings/`,
       metadata: {
         userId: userId,
         cid: cid,
         productId: productId,
         priceId: priceId,
+        quantity: quantity,
       },
     });
     return { success: true, url: session.url };

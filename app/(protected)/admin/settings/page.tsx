@@ -1,15 +1,13 @@
-import { Metadata } from 'next';
+'use server';
 
-export const metadata: Metadata = {
-  title: 'Settings',
-};
+import SettingsTab from '../../components/settingsTab';
 
-const DomainSettingsPage = () => {
+const SettingsPage = async () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <h1 className="text-2xl font-bold">Domain Settings</h1>
-    </div>
+    <section className="h-full py-0">
+      <SettingsTab />
+    </section>
   );
 };
 
-export default DomainSettingsPage;
+export default SettingsPage;
