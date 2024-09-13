@@ -7,6 +7,7 @@ export const createSubscription = async ({
   status,
   productId,
   priceId,
+  quantity,
 }: {
   userId: string;
   subscriptionId: string;
@@ -14,6 +15,7 @@ export const createSubscription = async ({
   status: string;
   productId: string;
   priceId: string;
+  quantity: number;
 }) => {
   try {
     const result = await db.subscription.create({
@@ -24,6 +26,7 @@ export const createSubscription = async ({
         userId: userId,
         productId: productId,
         priceId: priceId,
+        quantity: quantity,
       },
     });
     console.log('🚀 ~ result:', result);
@@ -76,4 +79,3 @@ export const getSubscription = (cid: string) => {
     return error;
   }
 };
-

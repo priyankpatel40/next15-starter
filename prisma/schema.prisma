@@ -134,6 +134,7 @@ model Subscription {
   stripeSubscriptionId String
   productId            String
   priceId              String
+  quantity             Int       @default(1)
   status               String?
   created_at           DateTime  @default(now()) @db.Timestamptz(6)
   updated_at           DateTime  @default(now()) @db.Timestamptz(6)

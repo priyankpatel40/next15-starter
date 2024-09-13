@@ -9,8 +9,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useMemo, useState } from 'react'; // Import useState
-import * as Tabs from '@radix-ui/react-tabs'; // Import Tabs
+import { useMemo, useState } from 'react';
+import * as Tabs from '@radix-ui/react-tabs';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/utils/helpers';
@@ -25,7 +25,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'; // Import Select components
+} from '@/components/ui/select';
 
 interface Price {
   id: string;
@@ -55,10 +55,8 @@ const ProductList: React.FC<PricingTabsProps> = ({
   currentSession,
   subscription,
 }) => {
-  console.log('🚀 ~ currentSession:', currentSession);
   const router = useRouter();
-  console.log('🚀 ~ file: productList.tsx:19 ~ ProductList ~ products:', products);
-  const [tab, setTab] = useState(''); // State for tab selection
+  const [tab, setTab] = useState('');
   const pricingIntervals = useMemo(() => {
     const intervals = new Set<string>();
     products.forEach((product) => {
@@ -66,28 +64,37 @@ const ProductList: React.FC<PricingTabsProps> = ({
         intervals.add(price.recurring.interval);
       });
     });
-    const intervalsArray = Array.from(intervals).sort(); // Convert Set to Array
-    setTab(intervalsArray[0]); // Access the first element of the array
-    return intervalsArray; // Return the array
+    const intervalsArray = Array.from(intervals).sort();
+    setTab(intervalsArray[0]);
+    return intervalsArray;
   }, [products]);
+
+  const [quantity, setQuantity] = useState(subscription?.quantity || 1); // Set initial quantity from subscription
 
   const form = useForm<z.infer<typeof SubscriptionSchema>>({
     resolver: zodResolver(SubscriptionSchema),
     defaultValues: {
-      quantity: 1, // Set default quantity to 1
+      quantity: subscription?.quantity || 1, // Updated to use optional chaining
     },
   });
 
   const handleValueChange = (value: number) => {
-    // Handle the value change logic here
-    console.log('Selected quantity:', value);
-    // You can also set the value in the form if needed
-    form.setValue('quantity', value); // Assuming you want to set the quantity in the form
+    setQuantity(value);
+    form.setValue('quantity', value); // Ensure form value is also updated
   };
 
-  const onSubmit = async (values: z.infer<typeof SubscriptionSchema>) => {
-    console.log('🚀 ~ file: productList.tsx:72 ~ onSubmit ~ values:', values);
-    const session = await createSession(values);
+  const handleProductSubmit = async (product: Product, price: Price) => {
+    const values = form.getValues();
+    const submissionData = {
+      ...values,
+      productId: product.id,
+      priceId: price.id,
+      cid: currentSession.user.cid,
+      email: currentSession.user.email,
+      userId: currentSession.user.id,
+    };
+
+    const session = await createSession(submissionData);
     if (session.success) {
       router.push(session.url);
     } else {
@@ -97,37 +104,81 @@ const ProductList: React.FC<PricingTabsProps> = ({
       });
     }
   };
+  console.log('🚀 ~ file: productList.tsx:108 ~ subscription:', subscription);
 
+  if (subscription.quantity) {
+    console.log('🚀 ~ file: productList.tsx:108 ~ subscription:', subscription);
+    // setQuantity(subscription.quantity);
+  }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <h2 className="text-2xl p-4 text-center font-bold">Choose your plan</h2>
-        {/* Tabs for Monthly and Yearly */}
-        <Tabs.Root defaultValue={pricingIntervals[0]} className="">
-          <Tabs.List
-            className="flex w-1/3 border-2 p-1 mx-auto rounded-md justify-center items-center  border-gray-300 dark:border-gray-600 mb-4" // Adjusted border color and added margin
-            aria-label="Select Plan"
-          >
-            {pricingIntervals.map((interval) => (
-              <Tabs.Trigger
-                key={interval}
-                value={interval}
-                onClick={() => setTab(interval)}
-                className={`flex-1 justify-center items-center px-3 py-3 text-sm font-semibold transition-colors duration-200 
-                  ${tab === interval ? 'text-black rounded-md bg-gray-300' : 'text-gray-500 hover:text-black dark:hover:text-white border-gray-300'}`} // Enhanced hover and active styles
+      <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
+        <Tabs.Root
+          defaultValue={pricingIntervals[0]}
+          className="flex flex-col items-center space-y-6"
+        >
+          <div className="flex flex-wrap items-center justify-between w-full mb-6">
+            <div className="flex flex-wrap items-center justify-center w-full md:justify-center space-y-4 md:space-y-0 md:space-x-8">
+              <div className="flex items-center space-x-4">
+                <FormField
+                  control={form.control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center space-x-2">
+                      <FormLabel className="text-sm mt-1.5">
+                        Required User licenses
+                      </FormLabel>
+                      <Select
+                        onValueChange={(value) => handleValueChange(Number(value))}
+                        defaultValue={quantity.toString()} // Set default value to current quantity
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-24">
+                            <SelectValue placeholder="Select quantity" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Array.from({ length: 10 }, (_, index) => index + 1).map(
+                            (qty) => (
+                              <SelectItem key={qty} value={qty.toString()}>
+                                {qty}
+                              </SelectItem>
+                            ),
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <Tabs.List
+                className="flex w-full md:w-auto border p-1 rounded-md justify-around items-center bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-sm"
+                aria-label="Select Plan"
               >
-                Per {interval.charAt(0).toUpperCase() + interval.slice(1)}
-              </Tabs.Trigger>
-            ))}
-          </Tabs.List>
+                {pricingIntervals.map((interval) => (
+                  <Tabs.Trigger
+                    key={interval}
+                    value={interval}
+                    onClick={() => setTab(interval)}
+                    className={`px-4 py-2 text-center text-sm font-semibold rounded-md transition-colors duration-200 
+                ${tab === interval ? 'bg-gray-300 dark:bg-gray-700' : 'text-gray-500 hover:text-black dark:hover:text-white'}`}
+                  >
+                    Per {interval.charAt(0).toUpperCase() + interval.slice(1)}
+                  </Tabs.Trigger>
+                ))}
+              </Tabs.List>
+            </div>
+          </div>
 
           {pricingIntervals.map((interval) => (
             <Tabs.Content
               key={interval}
               value={interval}
-              className=" w-full mx-auto rounded-md justify-center items-center flex flex-col" // Updated width to full width on small screens and flex column layout
+              className="w-full flex flex-col items-center justify-center space-y-6"
             >
-              <div className=" space-y-0  flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 lg:max-w-4xl mx-auto">
                 {products.map((product) => {
                   const price = product?.prices?.find(
                     (price) => price.recurring.interval === interval,
@@ -144,28 +195,27 @@ const ProductList: React.FC<PricingTabsProps> = ({
                     <div
                       key={product.id}
                       className={cn(
-                        'flex flex-col rounded-lg shadow-sm divide-y text-black border-2',
+                        'flex flex-col relative justify-start rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md p-6 transition-transform duration-200 hover:scale-105',
                         {
-                          'border-black': price.id === subscription.priceId,
+                          'border-black border-2':
+                            subscription && price.id === subscription.priceId,
                         },
-                        'flex-1', // This makes the flex item grow to fill the space
-                        'basis-1/3', // Assuming you want each card to take up roughly a third of the container's width
-                        'max-w-xs', // Sets a maximum width to the cards to prevent them from getting too large
+                        'flex-1',
                       )}
                     >
-                      {price.id === subscription.priceId && (
+                      {subscription && price.id === subscription.priceId && (
                         <div className="relative">
-                          <div className="absolute top-2 right-0 bg-gray-500 text-white px-3 py-1  text-xs">
+                          <div className="absolute top-0 right-0 bg-green-700 rounded-md text-white px-3 py-1 text-xs">
                             Current
                           </div>
                         </div>
                       )}
 
-                      <div className="p-6 text-black dark:text-white">
-                        <h2 className="text-2xl font-semibold leading-6 text-black dark:text-white">
+                      <div className="text-black dark:text-white">
+                        <h2 className="text-xl font-semibold leading-6">
                           {product.name}
                         </h2>
-                        <p className="mt-4 text-gray-600 dark:text-gray-100">
+                        <p className="mt-4 text-gray-600 dark:text-gray-300">
                           {product.description}
                         </p>
                         {product.marketing_features.length > 0 && (
@@ -173,10 +223,10 @@ const ProductList: React.FC<PricingTabsProps> = ({
                             {product.marketing_features.map((feature, index) => (
                               <li
                                 key={index}
-                                className="flex items-center text-gray-600 dark:text-gray-100"
+                                className="flex items-center text-gray-600 dark:text-gray-300"
                               >
                                 <svg
-                                  className="w-4 h-4 mr-2 text-green-500" // Icon for each feature
+                                  className="w-4 h-4 mr-2 text-green-500"
                                   xmlns="http://www.w3.org/2000/svg"
                                   fill="none"
                                   viewBox="0 0 24 24"
@@ -194,46 +244,8 @@ const ProductList: React.FC<PricingTabsProps> = ({
                             ))}
                           </ul>
                         )}
+
                         <div className="flex items-center justify-between mt-8">
-                          {' '}
-                          {/* Flex container for side by side layout */}
-                          <FormField
-                            control={form.control}
-                            name="quantity" // Register the quantity field
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Quantity</FormLabel>
-                                <Select
-                                  onValueChange={(value) =>
-                                    handleValueChange(Number(value))
-                                  } // Convert value to number
-                                  defaultValue="1" // Set default value to "1"
-                                >
-                                  <FormControl>
-                                    <SelectTrigger className="w-24">
-                                      {' '}
-                                      {/* Moved className here */}
-                                      <SelectValue placeholder="Select quantity" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {Array.from(
-                                      { length: 10 },
-                                      (_, index) => index + 1,
-                                    ).map(
-                                      // Generate numbers from 1 to 100
-                                      (qty) => (
-                                        <SelectItem key={qty} value={qty.toString()}>
-                                          {qty}
-                                        </SelectItem>
-                                      ),
-                                    )}
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
                           <p className="text-3xl font-extrabold">
                             {new Intl.NumberFormat('en-US', {
                               style: 'currency',
@@ -241,41 +253,19 @@ const ProductList: React.FC<PricingTabsProps> = ({
                               minimumFractionDigits: 0,
                             }).format(
                               (parseFloat(priceString.replace(/[^0-9.-]+/g, '')) || 0) *
-                                form.watch('quantity') || 0,
-                            )}{' '}
-                            {/* Multiply priceString with selected quantity */}
-                            <span className="text-base font-medium text-gray-800 dark:text-gray-100">
+                                quantity || 0,
+                            )}
+                            <span className="text-base font-medium text-gray-800 dark:text-gray-400">
                               /{interval}
                             </span>
                           </p>
                         </div>
-                        <Input
-                          type="hidden"
-                          value={currentSession.user.cid}
-                          {...form.register('cid')}
-                        />
-                        <Input
-                          type="hidden"
-                          value={currentSession.user.email}
-                          {...form.register('email')}
-                        />
-                        <Input
-                          type="hidden"
-                          value={currentSession.user.id}
-                          {...form.register('userId')}
-                        />
-                        <Input
-                          type="hidden"
-                          value={product.id}
-                          {...form.register('productId')}
-                        />
-                        <Input
-                          type="hidden"
-                          value={price.id}
-                          {...form.register('priceId')}
-                        />
-                        <Button className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white dark:text-black rounded-md">
-                          {subscription ? 'Manage' : 'Subscribe'}
+
+                        <Button
+                          className="block w-full py-2 mt-8 text-sm font-medium text-white bg-black dark:bg-white dark:text-black rounded-lg hover:bg-gray-900 dark:hover:bg-gray-200 transition"
+                          onClick={() => handleProductSubmit(product, price)}
+                        >
+                          Subscribe
                         </Button>
                       </div>
                     </div>
