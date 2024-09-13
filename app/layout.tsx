@@ -4,6 +4,8 @@ import { SessionProvider } from 'next-auth/react';
 import { auth } from '@/auth';
 import './globals.css';
 import Providers from '@/components/providers';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,10 +16,12 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
+  const locale = await getLocale();
+  const messages = await getMessages();
 
   return (
     <SessionProvider session={session}>
-      <html lang="en">
+      <html lang={locale}>
         <head>
           <meta
             name="viewport"
@@ -25,7 +29,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           />
         </head>
         <body className={inter.className}>
-          <Providers>{children}</Providers>
+          <NextIntlClientProvider messages={messages}>
+            <Providers>{children}</Providers>
+          </NextIntlClientProvider>
         </body>
       </html>
     </SessionProvider>

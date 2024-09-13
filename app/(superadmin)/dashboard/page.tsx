@@ -14,6 +14,8 @@ import {
   DailyCompaniesChart,
   DailyUsersChart,
 } from '@/app/(protected)/components/users/charts';
+import { Suspense } from 'react';
+import { CardCountSkeleton } from '@/components/ui/skeletons';
 
 export default async function DashboardPage() {
   const users = await getAllCompanyUsersForReports({
@@ -29,6 +31,7 @@ export default async function DashboardPage() {
     orderBy: 'asc',
     filter: 'all',
   });
+
   const companies = companiesresult.companies;
   const totalCompanies = companiesresult.totalCount;
   const activeCompanies = companiesresult.activeCount;
@@ -47,11 +50,13 @@ export default async function DashboardPage() {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <CompaniesCard
-            totalCompanies={totalCompanies}
-            activeCompanies={activeCompanies}
-            inactiveCompanies={inactiveCompanies}
-          />
+          <Suspense key={companiesresult} fallback={<CardCountSkeleton />}>
+            <CompaniesCard
+              totalCompanies={totalCompanies}
+              activeCompanies={activeCompanies}
+              inactiveCompanies={inactiveCompanies}
+            />
+          </Suspense>
 
           <SubscriptionsCard
             activeSubscriptions={activeSubscriptions}
@@ -70,7 +75,12 @@ export default async function DashboardPage() {
             Daily Newly Created Companies
           </h2>
           <div className="h-80">
-            <DailyCompaniesChart dailyActiveCompanies={dailyActiveCompanies} />
+            <Suspense
+              key={dailyActiveCompanies}
+              fallback={<p>Loading companies data...</p>}
+            >
+              <DailyCompaniesChart dailyActiveCompanies={dailyActiveCompanies} />
+            </Suspense>
           </div>
         </Card>
         <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
@@ -78,7 +88,9 @@ export default async function DashboardPage() {
             Daily Newly Created Users
           </h2>
           <div className="h-80">
-            <DailyUsersChart dailyActiveUsers={dailyActiveUsers} />
+            <Suspense key={dailyActiveUsers} fallback={<p>Loading users data...</p>}>
+              <DailyUsersChart dailyActiveUsers={dailyActiveUsers} />
+            </Suspense>
           </div>
         </Card>
         <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
@@ -87,7 +99,9 @@ export default async function DashboardPage() {
           </h2>
 
           <div className="h-80">
-            <DailyUsersChart dailyActiveUsers={dailyLoginActivity} />
+            <Suspense key={dailyLoginActivity} fallback={<p>Loading login data...</p>}>
+              <DailyUsersChart dailyActiveUsers={dailyLoginActivity} />
+            </Suspense>
           </div>
         </Card>
 

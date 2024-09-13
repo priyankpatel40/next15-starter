@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { Avatar } from '@/components/ui/avatar';
 import ThemeSwitch from '@/components/themeSwtich';
 import { signOut } from 'next-auth/react';
+import LocaleSwitcher from '@/components/ui/localSwitcher';
 
 const navigation = [
   {
@@ -124,6 +125,7 @@ export const AdminNavBar = ({ session, contextType }: AdminNavBarProps) => {
                 </div>
                 <div className="flex items-center space-x-4">
                   <ThemeSwitch />
+                  <LocaleSwitcher />
                   <ProfileDropDown session={session} />
                 </div>
               </div>

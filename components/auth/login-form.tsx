@@ -23,8 +23,11 @@ import Cookies from 'js-cookie';
 import { CardWrapper } from '@/components/auth/card-wrapper';
 import { Button } from '@/components/ui/button';
 import UAParser from 'ua-parser-js';
+import { useTranslations } from 'next-intl';
 
 export const LoginForm = () => {
+  const t = useTranslations('LoginPage');
+  const g = useTranslations('General');
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl');
   const urlError =
@@ -141,13 +144,13 @@ export const LoginForm = () => {
     <section className="flex items-center justify-center min-h-screen p-4 ">
       <CardWrapper
         cardClasses="w-full min-w-[360px] sm:min-w-[380px] md:min-w-[448px] max-w-lg shadow-lg rounded-xl bg-white dark:bg-gray-800 transition-colors duration-200"
-        headerLabel="Welcome back"
-        backButtonLabel="Don't have an account?"
+        headerLabel={t('headerLabel')}
+        backButtonLabel={t('backButtonLabel')}
         backButtonHref="/register"
         showSocial={{
           isVisible: true,
-          googleText: 'Login with Google',
-          gitHubText: 'Login with Github',
+          googleText: t('googleText'),
+          gitHubText: t('gitHubText'),
         }}
       >
         <Form {...form}>
@@ -160,7 +163,7 @@ export const LoginForm = () => {
                   render={() => (
                     <FormItem>
                       <FormLabel className="text-sm pb-2 font-medium text-gray-700 dark:text-gray-300">
-                        Enter your two factor code
+                        {t('enterCode')}
                       </FormLabel>
                       <FormControl>
                         <EnterCode
@@ -180,10 +183,10 @@ export const LoginForm = () => {
                         className="mt-2 px-0 font-normal text-xs text-primary hover:text-primary/80 dark:text-blue-400 dark:hover:text-blue-300"
                       >
                         {isResending
-                          ? 'Resending...'
+                          ? t('resendTxt')
                           : cooldown > 0
-                            ? `Resend code (${cooldown}s)`
-                            : 'Resend code'}
+                            ? `${t('resendBtn')} (${cooldown}s)`
+                            : t('resendBtn')}
                       </Button>
                     </FormItem>
                   )}
@@ -196,7 +199,7 @@ export const LoginForm = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Email
+                          {g('email')}
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -217,7 +220,7 @@ export const LoginForm = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Password
+                          {g('password')}
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -234,7 +237,7 @@ export const LoginForm = () => {
                           asChild
                           className="px-0 font-normal text-xs text-primary hover:text-primary/80 dark:text-blue-400 dark:hover:text-blue-300"
                         >
-                          <Link href="/reset">Forgot password?</Link>
+                          <Link href="/reset">{t('forgotpwd')}</Link>
                         </Button>
                         <FormMessage className="text-xs text-red-500" />
                       </FormItem>
@@ -252,7 +255,7 @@ export const LoginForm = () => {
                 className="w-full py-2.5 text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-200 rounded-md"
                 isLoading={isPending}
               >
-                Login
+                {t('btn')}
               </Button>
             )}
           </form>

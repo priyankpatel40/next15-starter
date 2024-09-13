@@ -9,5 +9,5 @@ export async function GET() {
     return new NextResponse(null, { status: 200 });
   }
 
-  return new NextResponse(null, { status: 403 });
+  return new NextResponse({ success: true, message: 'success' }, { status: 403 });
 }

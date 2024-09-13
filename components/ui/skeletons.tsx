@@ -1,31 +1,11 @@
+import { Card } from './card';
+
 const shimmer =
   'relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 
 export const UserTableSkeleton = () => {
   return (
     <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-      {/* <thead className="text-sm text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-          <th scope="col" className="p-4">
-            User
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Role
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Status
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Last Login
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Added by
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Actions
-          </th>
-        </tr>
-      </thead> */}
       <tbody>
         {[...Array(5)].map((_, index) => (
           <tr
@@ -64,5 +44,42 @@ export const UserTableSkeleton = () => {
         ))}
       </tbody>
     </table>
+  );
+};
+
+export const ProductListSkeleton = () => {
+  return (
+    <div className="flex justify-center">
+      <div className="animate-pulse space-y-4">
+        <div className="h-6 bg-gray-300 rounded w-1/3"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/5"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/6"></div>
+      </div>
+    </div>
+  );
+};
+export const CardCountSkeleton = () => {
+  return (
+    <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+      <div className="flex items-center mb-4">
+        <div className="h-12 w-12 bg-gray-300 rounded animate-pulse mr-4" />
+        <div className="h-6 w-32 bg-gray-300 rounded animate-pulse" />
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg text-center">
+          <div className="h-4 w-20 bg-gray-300 rounded animate-pulse mb-1" />
+          <div className="h-10 w-24 bg-gray-300 rounded animate-pulse" />
+        </div>
+        <div className="bg-green-100 dark:bg-green-400 p-4 rounded-lg text-center">
+          <div className="h-4 w-20 bg-gray-300 rounded animate-pulse mb-1" />
+          <div className="h-10 w-24 bg-gray-300 rounded animate-pulse" />
+        </div>
+        <div className="bg-red-100 dark:bg-red-400 p-4 rounded-lg text-center">
+          <div className="h-4 w-20 bg-gray-300 rounded animate-pulse mb-1" />
+          <div className="h-10 w-24 bg-gray-300 rounded animate-pulse" />
+        </div>
+      </div>
+    </Card>
   );
 };

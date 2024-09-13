@@ -77,7 +77,7 @@ export const {
         const loginActivity = await getUserLoginStatus(session.user.id);
 
         session.user.loginId = loginActivity?.id;
-        console.log('🚀 ~ session ~ loginActivity:', session);
+        //console.log('🚀 ~ session ~ loginActivity:', session);
       }
       if (token.company) {
         session.user.company = token.company;

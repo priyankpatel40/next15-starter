@@ -1,0 +1,44 @@
+{
+  "AppLayout": {
+    "home": "Home",
+    "logout": "Logout",
+    "profile": "Profile"
+  },
+  "HomePage": {
+    "title": "Home",
+    "tabLine": "A simple authentication service"
+  },
+  "LocaleSwitcher": {
+    "de": "Deutsch",
+    "en": "English",
+    "label": "Language"
+  },
+  "LoginPage": {
+    "headerLabel": "Welcome back",
+    "backButtonLabel": "Don't have an account?",
+    "googleText": "Login with Google",
+    "gitHubText": "Login with Github",
+    "enterCode": "Enter your two factor code",
+    "resendBtn": "Resend code",
+    "resendTxt": "Resending...",
+    "forgotpwd": "Forgot password?",
+    "btn": "Login"
+  },
+  "RegistrationPage": {
+    "headerLabel": "Create your account",
+    "backButtonLabel": "Already have an account?",
+    "googleText": "Signup with Google",
+    "gitHubText": "Signup with Github",
+    "enterCode": "Enter your two factor code",
+    "btn": "Create an account"
+  },
+  "ProfilePage": {
+    "title": "Profile"
+  },
+  "General": {
+    "email": "Email",
+    "password": "Password",
+    "submitbtn": "Submit",
+    "name": "Name"
+  }
+}
