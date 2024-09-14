@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { stripe } from '@/utils/stripe';
-import { updateSubscription, createSubscription } from '@/data/subscription';
+import {
+  updateSubscriptionData,
+  createSubscription,
+  deleteSubscription,
+} from '@/data/subscription';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 
@@ -33,7 +37,7 @@ export async function POST(req: Request) {
           const subscription = event.data.object as Stripe.Checkout.Session;
           if (subscription.mode === 'subscription') {
             console.log('🚀 ~ POST ~ session:', subscription);
-            const subscriptionId = subscription.id;
+            const subscriptionId = subscription.subscription;
             const status = subscription.payment_status;
             const userId = subscription.metadata?.userId;
             const cid = subscription.metadata?.cid;
@@ -51,13 +55,32 @@ export async function POST(req: Request) {
             });
           }
           break;
-        case 'customer.subscription.deleted':
-          const deletedsubscription = event.data.object as Stripe.Subscription;
-          console.log('🚀 ~ POST ~ session:', deletedsubscription);
+        case 'customer.subscription.updated':
+          const updatedSubscription = event.data.object as Stripe.Subscription;
+          const subscriptionId = updatedSubscription.id;
+          const status = updatedSubscription.status;
+          const productId = updatedSubscription.items.data[0].plan.product;
+          const priceId = updatedSubscription.items.data[0].plan.id;
+          const quantity = updatedSubscription.items.data[0].quantity || 1;
+          console.log('🚀 ~ POST ~ session:', updatedSubscription);
 
-          await await updateSubscription({
-            subscriptionId: deletedsubscription.id,
-            status: deletedsubscription.status,
+          const updateResult = await updateSubscriptionData({
+            subscriptionId,
+            status,
+            productId,
+            priceId,
+            quantity,
+          });
+          console.log('🚀 ~ file: route.ts:82 ~ POST ~ updateResult:', updateResult);
+          break;
+        case 'customer.subscription.deleted':
+          const deletedSubscription = event.data.object as Stripe.Subscription;
+          console.log('🚀 ~ POST ~ session:', deletedSubscription);
+
+          await await deleteSubscription({
+            subscriptionId: deletedSubscription.id,
+            status: deletedSubscription.status,
+            is_active: false,
           });
           break;
         default:
