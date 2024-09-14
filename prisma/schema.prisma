@@ -131,7 +131,7 @@ model Subscription {
   id                   String    @id @default(cuid())
   cid                  String    @unique @db.Uuid
   userId               String    @db.Uuid
-  stripeSubscriptionId String
+  stripeSubscriptionId String    @unique
   productId            String
   priceId              String
   quantity             Int       @default(1)

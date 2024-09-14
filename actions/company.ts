@@ -33,7 +33,7 @@ export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
             company_name,
             api_key: apiKey,
             is_trial: true,
-            expire_date: new Date(),
+            expire_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
           },
         });
         console.log('company', company);

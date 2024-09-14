@@ -1,5 +1,5 @@
 'use server';
-const CompanySettingsPage = async () => {
+const CompanySettingsPage = async (currentSession) => {
   return (
     <section className="h-full py-0">
       <h1 className="item-center justify-center text-center text-4xl">

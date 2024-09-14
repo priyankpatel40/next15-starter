@@ -1,3 +1,5 @@
+'use server';
+import { updateSubscriptionData } from '@/data/subscription';
 import { SubscriptionSchema } from '@/schemas';
 import { stripe } from '@/utils/stripe';
 import { z } from 'zod';
@@ -44,5 +46,59 @@ export const createSession = async (values: z.infer<typeof SubscriptionSchema>) 
   } catch (error: any) {
     console.error(error.message);
     return { error: true, message: error.message };
+  }
+};
+export const updateStripeSubscription = async (
+  values: z.infer<typeof SubscriptionSchema>,
+  subscription,
+) => {
+  const validatedFields = SubscriptionSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { error: 'Invalid fields!' };
+  }
+  let result = null;
+  const { cid, userId, priceId, productId, email, quantity } = validatedFields.data;
+  console.log(
+    '🚀 ~ file: subscribe.ts:12 ~ createSession ~ validatedFields.data:',
+    validatedFields.data,
+  );
+  try {
+    const currentSubscription = await stripe.subscriptions.retrieve(
+      subscription.stripeSubscriptionId,
+    );
+
+    const updatedSubscription = await stripe.subscriptions.update(
+      currentSubscription.id,
+      {
+        items: [
+          {
+            id: currentSubscription.items.data[0].id,
+            price: priceId,
+            quantity: quantity,
+          },
+        ],
+        proration_behavior: 'create_prorations',
+      },
+    );
+    if (updatedSubscription) {
+      try {
+        const update = await updateSubscriptionData({
+          userId: userId,
+          subscriptionId: currentSubscription.id,
+          status: updatedSubscription.status,
+          priceId: priceId,
+          productId: productId,
+          quantity: quantity,
+        });
+
+        return { success: true };
+      } catch (error) {
+        console.log('Error in updating subscription', error);
+        return null;
+      }
+    }
+  } catch (error) {
+    console.log('🚀 ~ file: subscribe.ts:83 ~ error:', error);
+    return null;
   }
 };

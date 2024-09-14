@@ -9,15 +9,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useTransition } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
-import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/utils/helpers';
 import { SubscriptionSchema } from '@/schemas';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createSession } from '@/actions/subscribe';
+import { createSession, updateStripeSubscription } from '@/actions/subscribe';
 import { showToast } from './ui/toast';
 import {
   Select,
@@ -55,8 +54,11 @@ const ProductList: React.FC<PricingTabsProps> = ({
   currentSession,
   subscription,
 }) => {
+  console.log("🚀 ~ file: productList.tsx:57 ~ products:", products);
   const router = useRouter();
   const [tab, setTab] = useState('');
+  const [isPending, startTransition] = useTransition();
+
   const pricingIntervals = useMemo(() => {
     const intervals = new Set<string>();
     products.forEach((product) => {
@@ -84,27 +86,45 @@ const ProductList: React.FC<PricingTabsProps> = ({
   };
 
   const handleProductSubmit = async (product: Product, price: Price) => {
-    const values = form.getValues();
-    const submissionData = {
-      ...values,
-      productId: product.id,
-      priceId: price.id,
-      cid: currentSession.user.cid,
-      email: currentSession.user.email,
-      userId: currentSession.user.id,
-    };
+    startTransition(async () => {
+      const values = form.getValues();
 
-    const session = await createSession(submissionData);
-    if (session.success) {
-      router.push(session.url);
-    } else {
-      showToast({
-        message: session.message,
-        type: 'error',
-      });
-    }
+      const submissionData = {
+        ...values,
+        productId: product.id,
+        priceId: price.id,
+        cid: currentSession.user.cid,
+        email: currentSession.user.email,
+        userId: currentSession.user.id,
+      };
+      if (subscription?.stripeSubscriptionId) {
+        if (
+          product.id !== subscription.productId ||
+          price.id !== subscription.priceId ||
+          quantity !== subscription.quantity
+        ) {
+          const result = await updateStripeSubscription(submissionData, subscription);
+          if (result?.success) {
+            showToast({
+              message: 'Subscription updated successfully!',
+              type: 'success',
+            });
+            router.refresh();
+          }
+        }
+      } else {
+        const session = await createSession(submissionData);
+        if (session.success) {
+          router.push(session.url);
+        } else {
+          showToast({
+            message: session.message,
+            type: 'error',
+          });
+        }
+      }
+    });
   };
-  console.log('🚀 ~ file: productList.tsx:108 ~ subscription:', subscription);
 
   return (
     <Form {...form}>
@@ -121,9 +141,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
                   name="quantity"
                   render={({ field }) => (
                     <FormItem className="flex items-center space-x-2">
-                      <FormLabel className="text-sm mt-1.5">
-                        Required User licenses
-                      </FormLabel>
+                      <FormLabel className="text-sm mt-1.5">User licenses</FormLabel>
                       <Select
                         onValueChange={(value) => handleValueChange(Number(value))}
                         defaultValue={quantity.toString()} // Set default value to current quantity
@@ -258,10 +276,12 @@ const ProductList: React.FC<PricingTabsProps> = ({
                         </div>
 
                         <Button
-                          className="block w-full py-2 mt-8 text-sm font-medium text-white bg-black dark:bg-white dark:text-black rounded-lg hover:bg-gray-900 dark:hover:bg-gray-200 transition"
+                          className=" items-center justify-center align-middle px-8 mt-8 text-sm font-medium text-white bg-black dark:bg-white dark:text-black rounded-lg hover:bg-gray-900 dark:hover:bg-gray-200 transition"
                           onClick={() => handleProductSubmit(product, price)}
+                          disabled={isPending}
+                          isLoading={isPending}
                         >
-                          Subscribe
+                          {subscription && subscription.priceId ? 'Update' : 'Subscribe'}
                         </Button>
                       </div>
                     </div>
