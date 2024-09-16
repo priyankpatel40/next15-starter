@@ -15,8 +15,8 @@ const ProfileSettingsPage = async () => {
   const userId = session?.user?.id;
   const user = await getUserById(userId);
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4 sm:p-8">
-      <div className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+    <div className="flex justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 md:p-8">
+      <div className="w-full max-w-md sm:max-w-lg md:max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
         <Tabs.Root defaultValue="tab1">
           <Tabs.List
             className="flex border-b border-gray-200 dark:border-gray-700"

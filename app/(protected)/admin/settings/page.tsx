@@ -1,6 +1,8 @@
-'use server';
-
 import SettingsTab from '../../components/settingsTab';
+import { Metadata } from 'next';
+export const metadata: Metadata = {
+  title: 'Settings',
+};
 
 const SettingsPage = async () => {
   return (

@@ -77,11 +77,11 @@ export async function POST(req: Request) {
           const deletedSubscription = event.data.object as Stripe.Subscription;
           console.log('🚀 ~ POST ~ session:', deletedSubscription);
 
-          await await deleteSubscription({
-            subscriptionId: deletedSubscription.id,
-            status: deletedSubscription.status,
-            is_active: false,
-          });
+          // await deleteSubscription({
+          //   subscriptionId: deletedSubscription.id,
+          //   status: deletedSubscription.status,
+          //   is_active: false,
+          // });
           break;
         default:
           console.warn(`🤷‍♀️ Unhandled event type: ${event.type}`);

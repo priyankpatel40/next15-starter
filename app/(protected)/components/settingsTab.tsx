@@ -11,7 +11,7 @@ const SettingsTab = () => (
     >
       {/* Sidebar List */}
       <Tabs.List
-        className="flex fixed z-50 flex-col p-4 space-y-2 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-auto md:h-screen md:w-1/6 w-full lg:w-1/6" // Updated for responsiveness
+        className="flex fixed z-40 flex-col p-4 space-y-2 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-auto md:h-screen md:w-1/6 w-full lg:w-1/6" // Updated for responsiveness
         aria-label="Manage your account"
       >
         <Tabs.Trigger
@@ -29,7 +29,7 @@ const SettingsTab = () => (
       </Tabs.List>
 
       {/* Content Area */}
-      <div className="flex-1 lg:ml-[17%] p-4 md:p-6 bg-white dark:bg-gray-900 transition-colors duration-300 h-auto md:h-screen overflow-y-auto md:ml-1/6 lg:ml-1/6">
+      <div className="flex-1 lg:ml-[17%] p-4 md:p-6 bg-white dark:bg-gray-900 transition-colors duration-300 h-auto md:h-screen overflow-y-auto md:ml-1/6 lg:ml-1/6  max-sm:mt-[10%]">
         <Tabs.Content value="tab2">
           <CompanySettingsPage />
         </Tabs.Content>

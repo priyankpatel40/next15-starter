@@ -54,7 +54,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
   currentSession,
   subscription,
 }) => {
-  console.log("🚀 ~ file: productList.tsx:57 ~ products:", products);
+  // console.log('🚀 ~ file: productList.tsx:57 ~ products:', products);
   const router = useRouter();
   const [tab, setTab] = useState('');
   const [isPending, startTransition] = useTransition();
@@ -103,7 +103,10 @@ const ProductList: React.FC<PricingTabsProps> = ({
           price.id !== subscription.priceId ||
           quantity !== subscription.quantity
         ) {
-          const result = await updateStripeSubscription(submissionData, subscription);
+          const result = await updateStripeSubscription(
+            submissionData,
+            subscription.stripeSubscriptionId,
+          );
           if (result?.success) {
             showToast({
               message: 'Subscription updated successfully!',

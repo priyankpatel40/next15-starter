@@ -1,3 +1,4 @@
+import { cancelStripeSubscription } from '@/actions/subscribe';
 import { db } from '@/lib/db';
 
 export const createSubscription = async ({
@@ -90,7 +91,7 @@ export const deleteSubscription = async ({
   is_active,
 }: {
   subscriptionId: string;
-  status: string;
+  status?: string;
   is_active?: boolean;
 }) => {
   try {
@@ -101,16 +102,17 @@ export const deleteSubscription = async ({
       data: {
         stripeSubscriptionId: subscriptionId,
         status: status,
-        is_active: is_active || true,
+        is_active: is_active || false,
         updated_at: new Date(),
       },
     });
-    return 'Subscription updated successfully';
+
+    return { success: true, message: 'Subscription updated successfully' };
   } catch (e) {
     console.error('Error updating subscription:', e);
     //throw new Error('Failed to update subscription');
+    return { error: true, message: 'Failed to update subscription details' };
   }
-  return 'Failed to update subscription';
 };
 
 export const getSubscription = (cid: string) => {
