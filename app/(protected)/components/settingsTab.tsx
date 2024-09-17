@@ -15,13 +15,13 @@ const SettingsTab = () => (
         aria-label="Manage your account"
       >
         <Tabs.Trigger
-          className="flex items-center justify-between p-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 ease-in-out data-[state=active]:bg-gray-300 dark:data-[state=active]:bg-gray-600"
+          className="flex font-bold  items-center justify-between p-3 text-sm  text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 ease-in-out data-[state=active]:bg-gray-300 dark:data-[state=active]:bg-gray-600"
           value="tab1"
         >
           Subscription
         </Tabs.Trigger>
         <Tabs.Trigger
-          className="flex items-center justify-between p-3 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 ease-in-out data-[state=active]:bg-gray-300 dark:data-[state=active]:bg-gray-600"
+          className="flex items-center justify-between p-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 ease-in-out data-[state=active]:bg-gray-300 dark:data-[state=active]:bg-gray-600"
           value="tab2"
         >
           Domain Settings

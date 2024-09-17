@@ -2,5 +2,7 @@
     "i18n-ally.localesPaths": [
         "i18n",
         "messages"
-    ]
+    ],
+    "WillLuke.nextjs.addTypesOnSave": true,
+    "WillLuke.nextjs.hasPrompted": true
 }

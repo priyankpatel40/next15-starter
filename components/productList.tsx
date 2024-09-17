@@ -71,12 +71,15 @@ const ProductList: React.FC<PricingTabsProps> = ({
     return intervalsArray;
   }, [products]);
 
-  const [quantity, setQuantity] = useState(subscription?.quantity || 1); // Set initial quantity from subscription
+  const [quantity, setQuantity] = useState(
+    subscription && subscription?.status !== 'canceled' ? subscription?.quantity : 1,
+  );
 
   const form = useForm<z.infer<typeof SubscriptionSchema>>({
     resolver: zodResolver(SubscriptionSchema),
     defaultValues: {
-      quantity: subscription?.quantity || 1, // Updated to use optional chaining
+      quantity:
+        subscription && subscription?.status !== 'canceled' ? subscription?.quantity : 1,
     },
   });
 
@@ -97,7 +100,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
         email: currentSession.user.email,
         userId: currentSession.user.id,
       };
-      if (subscription?.stripeSubscriptionId) {
+      if (subscription?.stripeSubscriptionId && subscription?.status !== 'canceled') {
         if (
           product.id !== subscription.productId ||
           price.id !== subscription.priceId ||
@@ -215,18 +218,22 @@ const ProductList: React.FC<PricingTabsProps> = ({
                         'flex flex-col relative justify-start rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md p-6 transition-transform duration-200 hover:scale-105',
                         {
                           'border-black border-2':
-                            subscription && price.id === subscription.priceId,
+                            subscription &&
+                            price.id === subscription.priceId &&
+                            subscription.status !== 'canceled',
                         },
                         'flex-1',
                       )}
                     >
-                      {subscription && price.id === subscription.priceId && (
-                        <div className="relative">
-                          <div className="absolute top-0 right-0 bg-green-700 rounded-md text-white px-3 py-1 text-xs">
-                            Current
+                      {subscription &&
+                        price.id === subscription.priceId &&
+                        subscription.status !== 'canceled' && (
+                          <div className="relative">
+                            <div className="absolute top-0 right-0 bg-green-700 rounded-md text-white px-3 py-1 text-xs">
+                              Current
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
 
                       <div className="text-black dark:text-white">
                         <h2 className="text-xl font-semibold leading-6">
@@ -284,7 +291,9 @@ const ProductList: React.FC<PricingTabsProps> = ({
                           disabled={isPending}
                           isLoading={isPending}
                         >
-                          {subscription && subscription.priceId ? 'Update' : 'Subscribe'}
+                          {subscription && subscription.status !== 'canceled'
+                            ? 'Update'
+                            : 'Subscribe'}
                         </Button>
                       </div>
                     </div>
