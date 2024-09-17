@@ -2,12 +2,13 @@
 import { Avatar } from '@/components/ui/avatar';
 import clsx from 'clsx';
 import { EnvelopeIcon, UserIcon } from '@heroicons/react/24/outline';
-import { CalendarIcon } from '@radix-ui/react-icons';
+import { CalendarIcon, OpenInNewWindowIcon } from '@radix-ui/react-icons';
 import { calculateRemainingDays, formatDate } from '@/utils/helpers';
 import Pagination from '../pagination';
 import { EditLink, StatusLink } from './tableLinks';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface FormattedCompaniesTable {
   id: string;
@@ -153,8 +154,17 @@ export default function AllCompaniesTable({
                     ) : (
                       <div className="flex items-center">
                         <span className="flex-shrink-0 w-2 h-2 rounded-full bg-blue-500 mr-2"></span>
-                        <span className="text-sm font-medium text-blue-700 dark:text-blue-400">
-                          Subscribed
+                        <span className="text-sm font-medium text-blue-700 dark:text-blue-400 flex items-center space-x-1">
+                          <span>Subscribed</span>
+                          {company.subscription && (
+                            <a
+                              href={`https://dashboard.stripe.com/subscriptions/${company.subscription.stripeSubscriptionId}`} // Fixed template literal syntax and used company.subscriptionId
+                              className="text-blue-500 hover:text-blue-700 hover:underline ml-3 transition-colors"
+                              target="_blank"
+                            >
+                              <OpenInNewWindowIcon className="w-4 h-4" />
+                            </a>
+                          )}
                         </span>
                       </div>
                     )}
@@ -162,7 +172,10 @@ export default function AllCompaniesTable({
                   <td className="p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     <div className="flex space-x-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <div className="relative">
-                        <EditLink id={company.id} onCompanyUpdated={handleCompanyUpdated} />
+                        <EditLink
+                          id={company.id}
+                          onCompanyUpdated={handleCompanyUpdated}
+                        />
                       </div>
 
                       <div className="relative">

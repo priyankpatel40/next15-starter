@@ -70,7 +70,14 @@ export const getAllCompanies = async ({
     creators.map((creator) => [creator.id, { name: creator.name, email: creator.email }]),
   );
 
-  const companiesWithCreatorInfo = companies.map((company) => ({
+  // Fetch subscriptions
+  const cIds = companies.map((company) => company.id);
+  const subscription = await db.subscription.findMany({
+    where: { cid: { in: cIds } },
+  });
+  const subscriptionMap = new Map(subscription.map((sub) => [sub.cid, { sub }]));
+
+  const companiesWithInfo = companies.map((company) => ({
     ...company,
     creatorName: company.created_by
       ? creatorMap.get(company.created_by)?.name || null
@@ -78,10 +85,13 @@ export const getAllCompanies = async ({
     creatorEmail: company.created_by
       ? creatorMap.get(company.created_by)?.email || null
       : null,
+    subscription: company.created_by
+      ? subscriptionMap.get(company.id)?.sub || null // Fixed to access the correct property
+      : null,
   }));
 
   return {
-    companies: companiesWithCreatorInfo,
+    companies: companiesWithInfo,
   };
 };
 export const getAllCompanyUsersForReports = async ({

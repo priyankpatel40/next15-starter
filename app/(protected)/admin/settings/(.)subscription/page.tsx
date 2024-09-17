@@ -111,11 +111,11 @@ const SubscriptionPage = async () => {
         subscription.stripeSubscriptionId !== null &&
         subscription.status !== 'canceled' && (
           <div className="my-4">
-            <div className="bg-white shadow-md rounded-lg p-4">
-              <h3 className="text-lg font-semibold text-gray-800">
+            <div className="shadow-md rounded-lg p-4 bg-white dark:bg-gray-800"> {/* Added background color for light and dark themes */}
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200"> {/* Adjusted text color for dark theme */}
                 Current Subscription Details
               </h3>
-              <div className="mt-2 bg-gray-100 border-l-4 border-gray-500 text-gray-700 rounded-md">
+              <div className="mt-2 bg-gray-100 dark:bg-gray-700 border-l-4 border-gray-500 dark:border-gray-400 text-gray-700 dark:text-gray-300 rounded-md"> {/* Adjusted background and text colors */}
                 <div className="p-3 pb-1">
                   <strong>Current Period:</strong>{' '}
                   {formatDate(

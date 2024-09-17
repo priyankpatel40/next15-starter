@@ -40,7 +40,7 @@ export default async function AllCompaniesPage({
     filter,
     search,
   });
-
+  console.log('🚀 ~ file: page.tsx:59 ~ result:', result);
   const companies = result.companies;
   const totalCount = companies.length;
   // Calculate counts based on the fetched companies
@@ -89,7 +89,7 @@ export default async function AllCompaniesPage({
               <div className="relative">
                 <TextSearch placeholder="Search by name" />
               </div>
-                <FilterSelect filter={filter} />
+              <FilterSelect filter={filter} />
             </div>
           </div>
           <div className="overflow-x-auto">
