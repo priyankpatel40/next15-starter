@@ -13,7 +13,6 @@ import { Session } from 'next-auth';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { logout } from '@/actions/logout';
 import Link from 'next/link';
-import { useEffect } from 'react';
 
 interface ProfileDropDownProps {
   session: Session;

@@ -1,5 +1,5 @@
 'use server';
-import { updateSubscriptionData } from '@/data/subscription';
+import { deleteSubscription, updateSubscriptionData } from '@/data/subscription';
 import { SubscriptionSchema } from '@/schemas';
 import { stripe } from '@/utils/stripe';
 import { z } from 'zod';
@@ -43,14 +43,15 @@ export const createSession = async (values: z.infer<typeof SubscriptionSchema>) 
       },
     });
     return { success: true, url: session.url };
-  } catch (error: any) {
-    console.error(error.message);
-    return { error: true, message: error.message };
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
+    console.log('Error in creating the subscription:', errorMessage);
+    return { error: true };
   }
 };
 export const updateStripeSubscription = async (
   values: z.infer<typeof SubscriptionSchema>,
-  subscription,
+  subscriptionId: string,
 ) => {
   const validatedFields = SubscriptionSchema.safeParse(values);
   if (!validatedFields.success) {
@@ -63,9 +64,7 @@ export const updateStripeSubscription = async (
     validatedFields.data,
   );
   try {
-    const currentSubscription = await stripe.subscriptions.retrieve(
-      subscription.stripeSubscriptionId,
-    );
+    const currentSubscription = await stripe.subscriptions.retrieve(subscriptionId);
 
     const updatedSubscription = await stripe.subscriptions.update(
       currentSubscription.id,
@@ -93,12 +92,37 @@ export const updateStripeSubscription = async (
 
         return { success: true };
       } catch (error) {
-        console.log('Error in updating subscription', error);
-        return null;
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
+        console.log('Error in updating the subscription:', errorMessage);
+        return { error: true };
       }
     }
   } catch (error) {
-    console.log('🚀 ~ file: subscribe.ts:83 ~ error:', error);
-    return null;
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
+    console.log('Error in updating the subscription:', errorMessage);
+    return { error: true };
+  }
+};
+export const cancelStripeSubscription = async (subscriptionId: string) => {
+  try {
+    const subscription = await stripe.subscriptions.cancel(subscriptionId);
+    if (subscription) {
+      try {
+        const update = await deleteSubscription({
+          subscriptionId: subscription.id,
+          status: subscription.status,
+        });
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
+        console.log('Error in updating the subscription data:', errorMessage);
+        return { error: true };
+      }
+    }
+
+    return { success: true };
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
+    console.log('Error in cancelling the subscription:', errorMessage);
+    return { error: true };
   }
 };

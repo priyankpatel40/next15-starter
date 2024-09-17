@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server';
 import { stripe } from '@/utils/stripe';
-import {
-  updateSubscriptionData,
-  createSubscription,
-  deleteSubscription,
-} from '@/data/subscription';
+import { updateSubscriptionData, createSubscription } from '@/data/subscription';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 
@@ -44,6 +40,9 @@ export async function POST(req: Request) {
             const productId = subscription.metadata?.productId;
             const priceId = subscription.metadata?.priceId;
             const quantity = parseInt(subscription.metadata?.quantity || '1');
+            const currentSubscription =
+              await stripe.subscriptions.retrieve(subscriptionId);
+            const data = JSON.stringify(currentSubscription);
             await createSubscription({
               userId,
               subscriptionId,
@@ -52,8 +51,10 @@ export async function POST(req: Request) {
               productId,
               priceId,
               quantity,
+              data,
             });
           }
+
           break;
         case 'customer.subscription.updated':
           const updatedSubscription = event.data.object as Stripe.Subscription;
@@ -63,13 +64,15 @@ export async function POST(req: Request) {
           const priceId = updatedSubscription.items.data[0].plan.id;
           const quantity = updatedSubscription.items.data[0].quantity || 1;
           console.log('🚀 ~ POST ~ session:', updatedSubscription);
-
+          const currentSubscription = await stripe.subscriptions.retrieve(subscriptionId);
+          const data = JSON.stringify(currentSubscription);
           const updateResult = await updateSubscriptionData({
             subscriptionId,
             status,
             productId,
             priceId,
             quantity,
+            data,
           });
           console.log('🚀 ~ file: route.ts:82 ~ POST ~ updateResult:', updateResult);
           break;
@@ -77,11 +80,11 @@ export async function POST(req: Request) {
           const deletedSubscription = event.data.object as Stripe.Subscription;
           console.log('🚀 ~ POST ~ session:', deletedSubscription);
 
-          await await deleteSubscription({
-            subscriptionId: deletedSubscription.id,
-            status: deletedSubscription.status,
-            is_active: false,
-          });
+          // await deleteSubscription({
+          //   subscriptionId: deletedSubscription.id,
+          //   status: deletedSubscription.status,
+          //   is_active: false,
+          // });
           break;
         default:
           console.warn(`🤷‍♀️ Unhandled event type: ${event.type}`);

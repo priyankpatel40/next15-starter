@@ -132,7 +132,7 @@ export const AdminNavBar = ({ session, contextType }: AdminNavBarProps) => {
             </div>
 
             <DisclosurePanel className="md:hidden">
-              <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+              <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3 z-50">
                 {filteredNavigation.map((item) => (
                   <DisclosureButton
                     key={item.name}
@@ -176,7 +176,7 @@ export const AdminNavBar = ({ session, contextType }: AdminNavBarProps) => {
                       {session.user.name}
                     </div>
                     {
-                      <div className="text-sm font-medium leading-none text-gray-400">
+                      <div className="text-sm pt-2 font-medium leading-none text-gray-400">
                         {session.user.role}
                       </div>
                     }
@@ -195,7 +195,7 @@ export const AdminNavBar = ({ session, contextType }: AdminNavBarProps) => {
                       as={item.href ? 'a' : 'button'}
                       href={item.href}
                       onClick={item.onClick}
-                      className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                      className="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
                     >
                       {item.name}
                     </DisclosureButton>

@@ -141,6 +141,7 @@ model Subscription {
   expires_at           DateTime? @db.Timestamptz(6)
   is_active            Boolean   @default(true)
   interval             String?
+  subscriptionObj      String?
 
   company Company @relation(fields: [cid], references: [id], onDelete: Cascade)
 }

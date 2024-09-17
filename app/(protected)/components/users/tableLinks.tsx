@@ -6,7 +6,16 @@ import { deleteCompanyById } from '@/data/company';
 import { XCircleIcon } from '@heroicons/react/24/outline';
 import { CheckCircledIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { EditUserModal } from './edituserModal';
 import { User } from '@prisma/client';
 import { toggleUserStatusById } from '@/data/user';
@@ -90,7 +99,10 @@ export function UserStatusLink({
   id: string;
   onStatusChange: (id: string, newStatus: boolean) => void;
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const handleClick = async () => {
+    setIsLoading(true);
     const newStatus = !status;
     const success = await toggleUserStatusById(id);
     if (success) {
@@ -112,25 +124,56 @@ export function UserStatusLink({
         type: 'error',
       });
     }
+    setIsLoading(false);
+    setIsOpen(false);
   };
 
   return (
-    <Button
-      variant="link"
-      className="rounded-md p-1 transition-transform duration-200 transform hover:scale-105"
-      onClick={handleClick}
-    >
-      {status ? (
-        <>
-          <XCircleIcon className="w-7 h-7 text-red-600 hover:text-red-800  rounded-md p-1" />
-          Deactivate
-        </>
-      ) : (
-        <>
-          <CheckCircledIcon className="w-7 h-7 text-green-600 hover:text-green-800  rounded-md p-1" />
-          Activate
-        </>
-      )}
-    </Button>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button
+          variant="link"
+          className="rounded-md p-1 transition-transform duration-200 transform hover:scale-105"
+        >
+          {status ? (
+            <>
+              <XCircleIcon className="w-7 h-7 text-red-600 hover:text-red-800  rounded-md p-1" />
+              Deactivate
+            </>
+          ) : (
+            <>
+              <CheckCircledIcon className="w-7 h-7 text-green-600 hover:text-green-800  rounded-md p-1" />
+              Activate
+            </>
+          )}
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Confirm {status ? 'Deactivation' : 'Activation'}</DialogTitle>
+          <DialogDescription>
+            {status
+              ? 'This user will be deactivated immediately, and will loose the access to all the features as per the assigned role.'
+              : 'This user will be activated immediately, and will get the access to all the features as per the assigned role.'}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              type="button"
+              disabled={isLoading}
+              isLoading={isLoading}
+              onClick={handleClick}
+              className="p-4"
+            >
+              Confirm
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button variant="link">Cancel</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

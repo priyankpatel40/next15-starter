@@ -1,4 +1,5 @@
 import { db } from '@/lib/db';
+import { stripe } from '@/utils/stripe';
 
 export const createSubscription = async ({
   userId,
@@ -8,6 +9,7 @@ export const createSubscription = async ({
   productId,
   priceId,
   quantity,
+  data,
 }: {
   userId: string;
   subscriptionId: string;
@@ -16,19 +18,44 @@ export const createSubscription = async ({
   productId: string;
   priceId: string;
   quantity: number;
+  data: string;
 }) => {
   try {
-    const result = await db.subscription.create({
-      data: {
+    const existingSubscription = await db.subscription.findFirst({
+      where: {
         cid: cid,
-        stripeSubscriptionId: subscriptionId,
-        status: status,
-        userId: userId,
-        productId: productId,
-        priceId: priceId,
-        quantity: quantity,
       },
     });
+    if (existingSubscription) {
+      const result = await db.subscription.update({
+        where: {
+          cid: cid,
+        },
+        data: {
+          stripeSubscriptionId: subscriptionId,
+          status: status,
+          updated_at: new Date(),
+          userId: userId,
+          productId: productId,
+          priceId: priceId,
+          quantity: quantity,
+          subscriptionObj: data,
+        },
+      });
+    } else {
+      const result = await db.subscription.create({
+        data: {
+          cid: cid,
+          stripeSubscriptionId: subscriptionId,
+          status: status,
+          userId: userId,
+          productId: productId,
+          priceId: priceId,
+          quantity: quantity,
+          subscriptionObj: data,
+        },
+      });
+    }
     await db.company.update({
       where: {
         id: cid,
@@ -39,7 +66,6 @@ export const createSubscription = async ({
         updated_at: new Date(),
       },
     });
-    console.log('🚀 ~ result:', result);
 
     return 'Subscription created successfully';
   } catch (e) {
@@ -54,6 +80,7 @@ export const updateSubscriptionData = async ({
   productId,
   priceId,
   quantity,
+  data,
 }: {
   userId?: string;
   subscriptionId: string;
@@ -61,6 +88,7 @@ export const updateSubscriptionData = async ({
   productId: string;
   priceId: string;
   quantity: number;
+  data: string;
 }) => {
   try {
     await db.subscription.update({
@@ -74,6 +102,7 @@ export const updateSubscriptionData = async ({
         productId: productId,
         priceId: priceId,
         quantity: quantity,
+        subscriptionObj: data,
       },
     });
 
@@ -90,7 +119,7 @@ export const deleteSubscription = async ({
   is_active,
 }: {
   subscriptionId: string;
-  status: string;
+  status?: string;
   is_active?: boolean;
 }) => {
   try {
@@ -101,21 +130,22 @@ export const deleteSubscription = async ({
       data: {
         stripeSubscriptionId: subscriptionId,
         status: status,
-        is_active: is_active || true,
+        is_active: is_active || false,
         updated_at: new Date(),
       },
     });
-    return 'Subscription updated successfully';
+
+    return { success: true, message: 'Subscription updated successfully' };
   } catch (e) {
     console.error('Error updating subscription:', e);
     //throw new Error('Failed to update subscription');
+    return { error: true, message: 'Failed to update subscription details' };
   }
-  return 'Failed to update subscription';
 };
 
-export const getSubscription = (cid: string) => {
+export const getSubscription = async (cid: string) => {
   try {
-    const result = db.subscription.findFirst({
+    const result = await db.subscription.findFirst({
       where: { cid: cid },
     });
     if (result) {
@@ -125,6 +155,8 @@ export const getSubscription = (cid: string) => {
     }
   } catch (error) {
     console.log(error);
-    return error;
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
+    console.log('Error in updating the subscription:', errorMessage);
+    return { error: true, message: errorMessage };
   }
 };
