@@ -1,10 +1,7 @@
 'use server';
-import { Card } from '@/components/ui/card';
 
-import {
-  getAllCompaniesforDashboard,
-  getAllCompanyUsersForReports,
-} from '@/data/company';
+import { Suspense } from 'react';
+
 import {
   CompaniesCard,
   SubscriptionsCard,
@@ -14,43 +11,46 @@ import {
   DailyCompaniesChart,
   DailyUsersChart,
 } from '@/app/(protected)/components/users/charts';
-import { Suspense } from 'react';
+import { Card } from '@/components/ui/card';
 import { CardCountSkeleton } from '@/components/ui/skeletons';
+import {
+  getAllCompaniesforDashboard,
+  getAllCompanyUsersForReports,
+} from '@/data/company';
 
 export default async function DashboardPage() {
   const users = await getAllCompanyUsersForReports({
-    orderBy: 'desc',
     filter: 'all',
   });
   const totalUsers = users.totalCount;
   const activeUsers = users.activeCount;
   const inactiveUsers = users.inactiveCount;
-  const dailyActiveUsers = users.dailyActiveUsers;
+  const { dailyActiveUsers } = users;
 
   const companiesresult = await getAllCompaniesforDashboard({
     orderBy: 'asc',
     filter: 'all',
   });
 
-  const companies = companiesresult.companies;
+  const { companies } = companiesresult;
   const totalCompanies = companiesresult.totalCount;
   const activeCompanies = companiesresult.activeCount;
   const inactiveCompanies = companiesresult.inactiveCount;
-  const dailyActiveCompanies = companiesresult.dailyActiveCompanies;
-  const dailyLoginActivity = users.dailyLoginActivity;
-  const activeSubscriptions = companiesresult.activeSubscriptions;
-  const inactiveSubscriptions = companiesresult.inactiveSubscriptions;
+  const { dailyActiveCompanies } = companiesresult;
+  const { dailyLoginActivity } = users;
+  const { activeSubscriptions } = companiesresult;
+  const { inactiveSubscriptions } = companiesresult;
   const totalSubscriptions = activeSubscriptions + inactiveSubscriptions;
 
   return (
-    <section className="h-full py-6 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+    <section className="h-full px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full">
+        <h1 className="mb-6 text-3xl font-bold text-gray-900 dark:text-white">
           Dashboard
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Suspense key={companiesresult} fallback={<CardCountSkeleton />}>
+        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <Suspense key={companies.length} fallback={<CardCountSkeleton />}>
             <CompaniesCard
               totalCompanies={totalCompanies}
               activeCompanies={activeCompanies}
@@ -70,48 +70,54 @@ export default async function DashboardPage() {
           />
         </div>
 
-        <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        <Card className="mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
             Daily Newly Created Companies
           </h2>
           <div className="h-80">
             <Suspense
-              key={dailyActiveCompanies}
+              key={dailyActiveCompanies.length}
               fallback={<p>Loading companies data...</p>}
             >
               <DailyCompaniesChart dailyActiveCompanies={dailyActiveCompanies} />
             </Suspense>
           </div>
         </Card>
-        <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        <Card className="mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
             Daily Newly Created Users
           </h2>
           <div className="h-80">
-            <Suspense key={dailyActiveUsers} fallback={<p>Loading users data...</p>}>
+            <Suspense
+              key={dailyActiveUsers.length}
+              fallback={<p>Loading users data...</p>}
+            >
               <DailyUsersChart dailyActiveUsers={dailyActiveUsers} />
             </Suspense>
           </div>
         </Card>
-        <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        <Card className="mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
             Daily Logged In Users
           </h2>
 
           <div className="h-80">
-            <Suspense key={dailyLoginActivity} fallback={<p>Loading login data...</p>}>
+            <Suspense
+              key={dailyLoginActivity.length}
+              fallback={<p>Loading login data...</p>}
+            >
               <DailyUsersChart dailyActiveUsers={dailyLoginActivity} />
             </Suspense>
           </div>
         </Card>
 
-        <Card className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        <Card className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
             Recent Companies
           </h2>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
+            <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+              <thead className="bg-gray-300 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-6 py-3">
                     Company Name
@@ -128,22 +134,22 @@ export default async function DashboardPage() {
                 {companies
                   .sort(
                     (a, b) =>
-                      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+                      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
                   )
                   .slice(0, 5)
                   .map((company) => (
                     <tr
                       key={company.id}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                      className="border-b bg-white dark:border-gray-700 dark:bg-gray-800"
                     >
-                      <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                        {company.company_name}
+                      <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">
+                        {company.companyName}
                       </td>
                       <td className="px-6 py-4">
-                        {company.is_active ? 'Active' : 'Inactive'}
+                        {company.isActive ? 'Active' : 'Inactive'}
                       </td>
                       <td className="px-6 py-4">
-                        {new Date(company.created_at).toLocaleDateString()}
+                        {new Date(company.createdAt).toLocaleDateString()}
                       </td>
                     </tr>
                   ))}

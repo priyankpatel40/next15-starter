@@ -1,6 +1,6 @@
-# Next Auth v5 and Next.js 15 - Comprehensive Starter Kit
+# Next Auth v5 and Next.js 15 - Comprehensive Enterprise ready Starter Kit with Typescript and Tailwind CSS
 
-This repository serves as a robust starter kit for implementing advanced authentication features using Next Auth v5 within a Next.js 15 application. It is meticulously designed to enable developers to swiftly establish a secure and feature-rich authentication system.
+This repository serves as a robust starter kit for implementing advanced authentication features using Next Auth v5 within a Next.js 15 application. It is meticulously designed to enable developers to swiftly establish a secure and feature-rich authentication system for any enterprise software.
 
 ## Table of Contents
 
@@ -42,42 +42,45 @@ This repository serves as a robust starter kit for implementing advanced authent
 
 ## Key Features
 
-- 🔒 Advanced authentication with Next-auth v5 (Auth.js)
-- ⚡ Seamless integration with Next.js 15 and server actions
-- 🔑 Support for Credentials Provider
-- 🌍 OAuth integration with Google & GitHub
-- 🔐 Forgot password functionality
-- 📨 Email verification process
-- 🛡️ Two-factor authentication support
-- 👤 Role-based access control (Admin & User)
-- 🚪 Versatile login component (modal or redirect)
-- 📝 User registration component
-- 🤔 Forgot password component
-- ✅ Verification component
-- ❗ Comprehensive error handling component
-- 🔘 Login/Logout functionality
-- 🚫 Role Gate for content access
+- 🔒 Advanced authentication with NextAuth v5 (Auth.js)
+- 🔥 Type checking TypeScript
+- ⚡ Seamless integration with Next.js 15 App Router and server actions
+- 📦 Type-safe ORM with Prisma and PostgreSQL
+- 🔴 Validation library with Zod
+- 🔑 Support for Credentials Provider and OAuth integration (Google & GitHub)
+- 📨 Email verification and change functionality
+- 🛡️ Two-factor authentication support with configurable settings
+- 👤 Role-based access control (Admin & User) with Admin-only content rendering
+- 🚪 Versatile login component (modal or redirect) and user registration component
+- 🤔 Forgot password and verification components
+- ✅ Comprehensive error handling and login/logout functionality
+- 🚫 Role Gate for content access and protected API routes
 - 🔍 Middleware exploration in Next.js
-- 🔗 Extended session management with Next-auth
-- 🔄 Customizable Next-auth callbacks
+- 🔗 Extended session management with customizable NextAuth callbacks
 - 💻 Examples for server & client components
-- 👑 Admin-only content rendering capabilities
-- 🔒 Protected API routes and server actions
-- 📧 Email change functionality with verification
-- 🔏 Password change with confirmation
-- ⚙️ Configurable two-factor authentication settings
-- 🏢 SuperAdmin dashboard for company management
 - 📊 Basic reporting features for SuperAdmins
-- 📨 Email dispatching using Google SMTP
 - 🎭 Comprehensive end-to-end testing with Playwright
-- 🎨 Tailwind CSS for responsive styling
-- 🌓 Support for dark and light themes
-- 💳 Stripe integration for payment processing with webhook
-- 🌐 Internationalization support via Next Intl
+- 🎨 Tailwind CSS for responsive styling with support for dark and light themes
+- 💳 Stripe integration for payment processing, including subscription management
+- 🌐 Internationalization support via Next-Intl
 
 ## Styling and Theming
 
 This project utilizes Tailwind CSS, a utility-first CSS framework, to facilitate the creation of responsive and customizable user interfaces. The application supports both dark and light themes, allowing users to select their preferred visual style. Theme-specific styles can be implemented using Tailwind's dark mode classes.
+
+### Translation (i18n) Setup
+
+This project utilizes next-intl in conjunction with Crowdin for translation management. As a developer, you primarily need to manage the English (or default language) version. Other languages are automatically generated and handled by Crowdin. You can collaborate with your translation team on Crowdin or use machine translation for assistance.
+
+To set up translation (i18n):
+
+1. Create an account at Crowdin.com and initiate a new project. You will find the project ID in the project settings.
+2. Generate Personal Access Tokens by navigating to Account Settings > API.
+3. In your GitHub Actions, define the following environment variables:
+   - `CROWDIN_PROJECT_ID`
+   - `CROWDIN_PERSONAL_TOKEN`
+
+Once these environment variables are set, your localization files will sync with Crowdin automatically whenever you push a new commit to the main branch.
 
 ## Getting Started
 
@@ -199,3 +202,7 @@ For more information on creating and customizing email templates, refer to the [
 ## Code Style
 
 This project employs ESLint and Prettier for consistent code formatting.
+
+Made with ♥ 
+
+[![Sponsor Next-15 starter](https://cdn.buymeacoffee.com/buttons/default-red.png)](https://github.com/sponsors/ppriyank40)

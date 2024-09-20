@@ -1,7 +1,8 @@
 import { db } from '@/lib/db';
+import logger from '@/lib/logger';
 
 export const getVerificationTokenByToken = async (token: string) => {
-  console.log('🚀 ~ token:', token);
+  logger.info('🚀 ~ token:', token);
   try {
     const verificationToken = await db.verificationToken.findUnique({
       where: { token },

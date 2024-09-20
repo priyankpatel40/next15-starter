@@ -2,6 +2,8 @@
 
 import { logout } from '@/actions/logout';
 
+import { Button } from '../ui/button';
+
 interface LogoutButtonProps {
   children?: React.ReactNode;
 }
@@ -12,8 +14,8 @@ export const LogoutButton = ({ children }: LogoutButtonProps) => {
   };
 
   return (
-    <span onClick={onClick} className="cursor-pointer">
+    <Button onClick={onClick} className="cursor-pointer">
       {children}
-    </span>
+    </Button>
   );
 };

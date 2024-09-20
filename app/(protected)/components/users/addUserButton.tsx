@@ -1,12 +1,15 @@
 'use client';
-import { Button } from '@/components/ui/button';
+
+import type { User } from '@prisma/client';
 import { PlusIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import AddUserModal from './addusermodal';
-import { User } from '@prisma/client';
 
-export function AddUserButton({ onUserAdded }: { onUserAdded: (user: User) => void }) {
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+
+import AddUserModal from './addusermodal';
+
+const AddUserButton = ({ onUserAdded }: { onUserAdded: (user: User) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleUserAdded = (user: User) => {
     onUserAdded(user);
@@ -15,17 +18,14 @@ export function AddUserButton({ onUserAdded }: { onUserAdded: (user: User) => vo
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full sm:w-auto flex items-center justify-center">
-          <PlusIcon className="h-5 w-5 mr-2" /> Add new user
+        <Button className="flex w-full items-center justify-center sm:w-auto">
+          <PlusIcon className="mr-2 size-5" /> Add new user
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <AddUserModal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          onUserAdded={handleUserAdded}
-        />
+        <AddUserModal onClose={() => setIsOpen(false)} onUserAdded={handleUserAdded} />
       </DialogContent>
     </Dialog>
   );
-}
+};
+export default AddUserButton;

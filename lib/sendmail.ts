@@ -1,13 +1,13 @@
 import nodemailer from 'nodemailer';
 
-const SMTP_SERVER_HOST = process.env.SMTP_SERVER_HOST;
-const SMTP_SERVER_USERNAME = process.env.SMTP_SERVER_USERNAME;
-const SMTP_SERVER_PASSWORD = process.env.SMTP_SERVER_PASSWORD;
-const SMTP_SERVER_PORT = process.env.SMTP_SERVER_PORT;
+import logger from './logger';
+
+const { SMTP_SERVER_HOST, SMTP_SERVER_USERNAME, SMTP_SERVER_PASSWORD } = process.env;
+const SMTP_SERVER_PORT = Number(process.env.SMTP_SERVER_PORT); // Ensure port is a number
 const FROM = 'getCompany@gmail.com';
 
 const transporter = nodemailer.createTransport({
-  host: SMTP_SERVER_HOST,
+  host: SMTP_SERVER_HOST as string, // Assert type if necessary
   port: SMTP_SERVER_PORT,
   secure: false,
   auth: {
@@ -23,26 +23,24 @@ export const sendEmail = async ({
 }: {
   sendTo: string;
   subject: string;
-  html?: any;
-}) => {
+  html?: string; // Adjusted to string for better type safety
+}): Promise<void> => {
   try {
-    const isVerified = await transporter.verify();
+    await transporter.verify();
   } catch (error) {
-    console.error(
-      'Something Went Wrong',
-      SMTP_SERVER_USERNAME,
-      SMTP_SERVER_PASSWORD,
-      error,
-    );
+    logger.error('Error in Sending Email:', error);
     return;
   }
-  const info = await transporter.sendMail({
-    from: FROM,
-    to: sendTo,
-    subject: subject,
-    html: html ? html : '',
-  });
-  console.log('Message Sent', info.messageId);
-  console.log('Mail sent to', sendTo);
-  return info;
+
+  try {
+    await transporter.sendMail({
+      from: FROM,
+      to: sendTo,
+      subject,
+      html: html || '',
+    });
+    logger.info('Mail sent to:', sendTo);
+  } catch (error) {
+    logger.error('Mail sending failed:', error);
+  }
 };

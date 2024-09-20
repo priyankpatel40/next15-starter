@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
-import dotenv from 'dotenv';
 import { faker } from '@faker-js/faker';
+import { expect, test } from '@playwright/test';
+import dotenv from 'dotenv';
 
 dotenv.config();
 

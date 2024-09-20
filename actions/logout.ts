@@ -1,8 +1,10 @@
 'use server';
 
+import { redirect } from 'next/navigation';
+
 import { auth, signOut } from '@/auth';
 import { updateUserLoginStatus } from '@/data/user';
-import { redirect } from 'next/navigation';
+import logger from '@/lib/logger';
 
 export const logout = async () => {
   // This is due to NextAuth V5 has some redirect issue with NextJs 15
@@ -12,7 +14,7 @@ export const logout = async () => {
     await signOut();
     redirect('/login');
   } catch (error) {
-    console.error('Logout error:', error);
+    logger.error('Logout error:', error);
     redirect('/login');
   }
 };

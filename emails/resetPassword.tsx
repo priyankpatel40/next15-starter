@@ -2,7 +2,6 @@ import {
   Body,
   Button,
   Container,
-  Column,
   Head,
   Heading,
   Hr,
@@ -10,10 +9,9 @@ import {
   Img,
   Link,
   Preview,
-  Row,
   Section,
-  Text,
   Tailwind,
+  Text,
 } from '@react-email/components';
 import * as React from 'react';
 
@@ -23,56 +21,75 @@ interface ResetPasswordProps {
 }
 
 const baseUrl = `${process.env.NEXT_PUBLIC_APP_URL}`;
-const app_name = process.env.APP_NAME || 'Your Company';
 const ResetPasswordEmail = ({ username, link }: ResetPasswordProps) => {
   const previewText = `Reset your password`;
 
   return (
     <Html>
-      <Head />
       <Preview>{previewText}</Preview>
       <Tailwind>
-        <Body className="bg-white my-auto mx-auto font-sans px-2">
-          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
+        <Head>
+          <style>
+            {`
+            @media (prefers-color-scheme: dark) {
+              .dark\\:block {
+                display: block !important;
+              }
+              .dark\\:hidden {
+                display: none !important;
+              }
+            }
+          `}
+          </style>
+        </Head>
+        <Body className="m-auto bg-white px-2 font-sans">
+          <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Section className="mt-[32px]">
               <Img
                 src={`${baseUrl}small-light.png`}
                 width="60"
                 height="60"
-                alt="Vercel"
-                className="my-0 mx-auto"
+                alt="Your company"
+                className="mx-auto my-0 dark:hidden"
+              />
+              <Img
+                src={`${baseUrl}small-dark.png`}
+                width="60"
+                height="60"
+                alt="Your company"
+                className="mx-auto my-0 hidden dark:block"
               />
             </Section>
 
             <Section>
-              <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
+              <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
                 Trouble signing in?
               </Heading>
-              <Text className="text-black text-[14px] leading-[24px]">
+              <Text className="text-[14px] leading-[24px] text-black">
                 Hello {username},
               </Text>
-              <Text className="text-black text-[14px] leading-[24px]">
+              <Text className="text-[14px] leading-[24px] text-black">
                 You recently requested to reset the password for your account. Click the
                 button below to proceed.
               </Text>
             </Section>
 
-            <Section className="text-center mt-[32px] mb-[32px]">
+            <Section className="my-[32px] text-center">
               <Button
-                className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
+                className="rounded bg-[#000000] px-5 py-3 text-center text-[12px] font-semibold text-white no-underline"
                 href={link}
               >
                 Reset my password
               </Button>
             </Section>
-            <Text className="text-black text-[14px] leading-[24px]">
+            <Text className="text-[14px] leading-[24px] text-black">
               or copy and paste this URL into your browser:{' '}
               <Link href={link} className="text-blue-600 no-underline">
                 {link}
               </Link>
             </Text>
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-[#666666] text-[12px] leading-[24px]">
+            <Hr className="mx-0 my-[26px] w-full border border-solid border-[#eaeaea]" />
+            <Text className="text-[12px] leading-[24px] text-[#666666]">
               This was intended for <span className="text-black">{username}</span>. If you
               did not request a password reset, please ignore this email or reply to let
               us know. This password reset link is only valid for the next 60 minutes.

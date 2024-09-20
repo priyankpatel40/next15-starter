@@ -1,7 +1,14 @@
+import type { ExtendedUser } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
-export const useCurrentRole = () => {
-  const session = useSession();
+const useCurrentRole = () => {
+  const { data: session } = useSession();
 
-  return session.data?.user?.role;
+  if (session && session.user) {
+    return (session.user as ExtendedUser).role || null; // Use the ExtendedUser type
+  }
+
+  return null;
 };
+
+export default useCurrentRole;

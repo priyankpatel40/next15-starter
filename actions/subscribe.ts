@@ -1,24 +1,28 @@
 'use server';
+
+import type { z } from 'zod';
+
 import { deleteSubscription, updateSubscriptionData } from '@/data/subscription';
+import logger from '@/lib/logger';
 import { SubscriptionSchema } from '@/schemas';
 import { stripe } from '@/utils/stripe';
-import { z } from 'zod';
 
+// Create a session for Stripe Checkout
 export const createSession = async (values: z.infer<typeof SubscriptionSchema>) => {
   const validatedFields = SubscriptionSchema.safeParse(values);
   if (!validatedFields.success) {
     return { error: 'Invalid fields!' };
   }
-  let result = null;
+
   const { cid, userId, priceId, productId, email, quantity } = validatedFields.data;
-  console.log(
+  logger.info(
     '🚀 ~ file: subscribe.ts:12 ~ createSession ~ validatedFields.data:',
     validatedFields.data,
   );
-  const baseurl = process.env.NEXT_PUBLIC_APP_URL;
 
+  const baseurl = process.env.NEXT_PUBLIC_APP_URL;
   if (!priceId) {
-    throw new Error('Price ID is required');
+    return { error: 'Price ID is required' }; // Returning an error instead of throwing one
   }
 
   try {
@@ -28,27 +32,31 @@ export const createSession = async (values: z.infer<typeof SubscriptionSchema>) 
       line_items: [
         {
           price: priceId,
-          quantity: quantity,
+          quantity,
         },
       ],
       mode: 'subscription',
       success_url: `${baseurl}/admin/settings/?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseurl}/admin/settings/`,
       metadata: {
-        userId: userId,
-        cid: cid,
-        productId: productId,
-        priceId: priceId,
-        quantity: quantity,
+        userId,
+        cid,
+        productId,
+        priceId,
+        quantity,
       },
     });
+
     return { success: true, url: session.url };
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
-    console.log('Error in creating the subscription:', errorMessage);
-    return { error: true };
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error && error.message ? error.message : 'Unknown error';
+    logger.error('Error in creating the subscription:', errorMessage);
+    return { error: errorMessage };
   }
 };
+
+// Update a Stripe subscription
 export const updateStripeSubscription = async (
   values: z.infer<typeof SubscriptionSchema>,
   subscriptionId: string,
@@ -57,12 +65,13 @@ export const updateStripeSubscription = async (
   if (!validatedFields.success) {
     return { error: 'Invalid fields!' };
   }
-  let result = null;
-  const { cid, userId, priceId, productId, email, quantity } = validatedFields.data;
-  console.log(
-    '🚀 ~ file: subscribe.ts:12 ~ createSession ~ validatedFields.data:',
+
+  const { userId, priceId, productId, quantity } = validatedFields.data;
+  logger.info(
+    '🚀 ~ file: subscribe.ts:12 ~ updateStripeSubscription ~ validatedFields.data:',
     validatedFields.data,
   );
+
   try {
     const currentSubscription = await stripe.subscriptions.retrieve(subscriptionId);
 
@@ -71,58 +80,65 @@ export const updateStripeSubscription = async (
       {
         items: [
           {
-            id: currentSubscription.items.data[0].id,
+            id: currentSubscription.items.data[0]?.id,
             price: priceId,
-            quantity: quantity,
+            quantity,
           },
         ],
         proration_behavior: 'create_prorations',
       },
     );
+
     if (updatedSubscription) {
       try {
-        const update = await updateSubscriptionData({
-          userId: userId,
+        await updateSubscriptionData({
+          userId,
           subscriptionId: currentSubscription.id,
           status: updatedSubscription.status,
-          priceId: priceId,
-          productId: productId,
-          quantity: quantity,
+          priceId,
+          productId,
+          quantity,
         });
 
         return { success: true };
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
-        console.log('Error in updating the subscription:', errorMessage);
-        return { error: true };
-      }
-    }
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
-    console.log('Error in updating the subscription:', errorMessage);
-    return { error: true };
-  }
-};
-export const cancelStripeSubscription = async (subscriptionId: string) => {
-  try {
-    const subscription = await stripe.subscriptions.cancel(subscriptionId);
-    if (subscription) {
-      try {
-        const update = await deleteSubscription({
-          subscriptionId: subscription.id,
-          status: subscription.status,
-        });
       } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
-        console.log('Error in updating the subscription data:', errorMessage);
-        return { error: true };
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        logger.error('Error in updating the subscription:', errorMessage);
+        return { error: errorMessage };
       }
     }
 
-    return { success: true };
+    return { error: 'Failed to update subscription' };
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
-    console.log('Error in cancelling the subscription:', errorMessage);
-    return { error: true };
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    logger.error('Error in updating the subscription:', errorMessage);
+    return { error: errorMessage };
+  }
+};
+
+// Cancel a Stripe subscription
+export const cancelStripeSubscription = async (subscriptionId: string) => {
+  try {
+    const subscription = await stripe.subscriptions.cancel(subscriptionId);
+
+    if (subscription) {
+      try {
+        await deleteSubscription({
+          subscriptionId: subscription.id,
+          status: subscription.status,
+        });
+        return { success: true };
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        logger.error('Error in deleting the subscription data:', errorMessage);
+        return { error: errorMessage };
+      }
+    }
+
+    return { error: 'Failed to cancel subscription' };
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    logger.error('Error in cancelling the subscription:', errorMessage);
+    return { error: errorMessage };
   }
 };

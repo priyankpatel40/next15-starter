@@ -1,12 +1,13 @@
 'use server';
 
-import { db } from '@/lib/db';
 import { getUserByEmail } from '@/data/user';
 import { getVerificationTokenByToken } from '@/data/verificiation-token';
+import { db } from '@/lib/db';
+import logger from '@/lib/logger';
 
 export const newVerification = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);
-  console.log('🚀 ~ newVerification ~ existingToken:', existingToken);
+  logger.info('🚀 ~ newVerification ~ existingToken:', existingToken);
 
   if (!existingToken) {
     return {
@@ -20,7 +21,7 @@ export const newVerification = async (token: string) => {
   }
 
   const existingUser = await getUserByEmail(existingToken.email);
-  console.log('🚀 ~ newVerification ~ existingUser:', existingUser);
+  logger.info('🚀 ~ newVerification ~ existingUser:', existingUser);
 
   if (!existingUser) {
     return { error: 'Email does not exist!' };

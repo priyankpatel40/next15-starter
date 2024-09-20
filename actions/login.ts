@@ -1,17 +1,18 @@
 'use server';
 
-import * as z from 'zod';
-import { AuthError } from 'next-auth';
+import type { User } from '@prisma/client';
+import type * as z from 'zod';
 
-import { db } from '@/lib/db';
 import { signIn } from '@/auth';
-import { LoginSchema } from '@/schemas';
-import { getUserByEmail } from '@/data/user';
-import { getTwoFactorTokenByEmail } from '@/data/two-factor-token';
-import { sendVerificationEmail, sendTwoFactorTokenEmail } from '@/emails/mail';
-import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
-import { generateVerificationToken, generateTwoFactorToken } from '@/lib/tokens';
 import { getTwoFactorConfirmationByUserId } from '@/data/two-factor-confirmation';
+import { getTwoFactorTokenByEmail } from '@/data/two-factor-token';
+import { getUserByEmail } from '@/data/user';
+import { sendTwoFactorTokenEmail, sendVerificationEmail } from '@/emails/mail';
+import { db } from '@/lib/db';
+import logger from '@/lib/logger';
+import { generateTwoFactorToken, generateVerificationToken } from '@/lib/tokens';
+import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
+import { LoginSchema } from '@/schemas';
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -20,29 +21,33 @@ export const login = async (
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: 'Invalid fields!' };
+    return { error: true, message: 'Invalid fields!' };
   }
 
   const { email, password, code } = validatedFields.data;
 
-  const existingUser = await getUserByEmail(email);
+  const existingUser = (await getUserByEmail(email)) as User;
+  logger.info('🚀 ~ existingUser:', existingUser);
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
-    return { error: 'Email does not exist!' };
+    return { error: true, message: 'Invalid credentials!' };
   }
 
   if (!existingUser.emailVerified) {
-    const verificationToken = await generateVerificationToken(existingUser.email);
+    const verificationToken = (await generateVerificationToken(existingUser.email)) as {
+      email: string;
+      token: string;
+    };
     await sendVerificationEmail({
       email: verificationToken.email,
       token: verificationToken.token,
       username: existingUser.name,
       invitedByUsername: '',
       invitedByEmail: '',
-      company_name: '',
+      companyName: '',
     });
 
-    return { success: 'Confirmation email sent!' };
+    return { success: true, message: 'Confirmation email sent!' };
   }
 
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
@@ -50,17 +55,17 @@ export const login = async (
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
       if (!twoFactorToken) {
-        return { error: 'Invalid code!' };
+        return { error: true, message: 'Invalid code!' };
       }
 
       if (twoFactorToken.token !== code) {
-        return { error: 'Invalid code!' };
+        return { error: true, message: 'Invalid code!' };
       }
 
       const hasExpired = new Date(twoFactorToken.expires) < new Date();
 
       if (hasExpired) {
-        return { error: 'Code expired!' };
+        return { error: true, message: 'Code expired!' };
       }
 
       await db.twoFactorToken.delete({
@@ -87,29 +92,23 @@ export const login = async (
       await sendTwoFactorTokenEmail(
         twoFactorToken.email,
         twoFactorToken.token,
-        existingUser.name,
+        existingUser.name || '',
       );
 
-      return { twoFactor: true };
+      return { success: true, twoFactor: true };
     }
   }
 
   try {
+    logger.info('insingin');
     await signIn('credentials', {
       email,
       password,
       redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
+    return null;
   } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return { error: 'Invalid credentials!' };
-        default:
-          return { error: 'Something went wrong!' };
-      }
-    }
-
+    logger.info('🚀 ~ error:', error);
     throw error;
   }
 };
@@ -118,7 +117,7 @@ export const resendCode = async (email: string) => {
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
-    return { error: 'Email does not exist!' };
+    return { error: true, message: 'Email does not exist!' };
   }
 
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
@@ -127,12 +126,14 @@ export const resendCode = async (email: string) => {
       await sendTwoFactorTokenEmail(
         twoFactorToken.email,
         twoFactorToken.token,
-        existingUser.name,
+        existingUser.name || '',
       );
 
-      return { success: 'Code sent!' };
+      return { success: true, message: 'Code sent!' };
     } catch (error) {
-      return { error: 'Failed to send code!' };
+      return { error: true, message: 'Failed to send code!' };
     }
+  } else {
+    return { error: true, message: 'Something went wrong!' };
   }
 };

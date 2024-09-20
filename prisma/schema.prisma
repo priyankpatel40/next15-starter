@@ -1,40 +1,30 @@
-// prisma/schema.prisma
-datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
-
-  extensions = [uuid_ossp(map: "uuid-ossp")]
-}
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions", "relationJoins"]
 }
 
-enum UserRole {
-  ADMIN
-  USER
-  SUPERADMIN
+datasource db {
+  provider   = "postgresql"
+  url        = env("POSTGRES_PRISMA_URL")
+  directUrl  = env("POSTGRES_URL_NON_POOLING")
+  extensions = [uuid_ossp(map: "uuid-ossp")]
 }
 
 model Company {
   id           String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  company_name String        @db.VarChar(255)
-  owner_id     String?       @db.Uuid
-  api_key      String        @db.VarChar(32)
-  created_at   DateTime      @default(now()) @db.Timestamptz(6)
-  created_by   String?       @db.Uuid
-  expire_date  DateTime?     @db.Timestamptz(6)
+  companyName  String        @unique() @db.VarChar(255)
+  ownerId      String?       @db.Uuid
+  apiKey       String?       @db.VarChar(32)
+  createdAt    DateTime      @default(now()) @db.Timestamptz(6)
+  createdBy    String?       @db.Uuid
+  expireDate   DateTime?     @db.Timestamptz(6)
   logo         String?       @db.VarChar(255)
-  is_active    Boolean       @default(true)
-  is_deleted   Boolean       @default(false)
-  is_pending   Boolean       @default(false)
-  is_trial     Boolean       @default(true)
-  updated_at   DateTime      @default(now()) @db.Timestamptz(6)
+  isActive     Boolean       @default(true)
+  isDeleted    Boolean       @default(false)
+  isPending    Boolean       @default(false)
+  isTrial      Boolean       @default(true)
+  updatedAt    DateTime      @default(now()) @db.Timestamptz(6)
   subscription Subscription?
-
-  @@unique([company_name])
 }
 
 model User {
@@ -46,14 +36,14 @@ model User {
   image                 String?
   password              String?
   role                  UserRole               @default(USER)
-  accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
-  created_at            DateTime               @default(now()) @db.Timestamptz(6)
-  created_by            String?                @db.Uuid
-  is_active             Boolean                @default(true)
-  is_deleted            Boolean                @default(false)
-  twoFactorConfirmation TwoFactorConfirmation?
+  createdAt             DateTime               @default(now()) @db.Timestamptz(6)
+  createdBy             String?                @db.Uuid
+  isActive              Boolean                @default(true)
+  isDeleted             Boolean                @default(false)
+  accounts              Account[]
   LoginActivity         LoginActivity[]
+  twoFactorConfirmation TwoFactorConfirmation?
 }
 
 model Account {
@@ -61,16 +51,15 @@ model Account {
   userId            String  @db.Uuid
   type              String
   provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
+  providerAccountId String 
+  refresh_token      String? 
+  access_token       String? 
+  token_type         String? 
   scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id_token           String? 
+  session_token      String? 
+  expires_at         Int?  
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -103,45 +92,47 @@ model TwoFactorToken {
 }
 
 model TwoFactorConfirmation {
-  id String @id @default(cuid())
-
-  userId String @db.Uuid
+  id     String @id @default(cuid())
+  userId String @unique @db.Uuid
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId])
 }
 
 model LoginActivity {
-  id              String    @id @default(cuid())
-  userId          String    @db.Uuid
-  logged_in       DateTime  @default(now()) @db.Timestamptz(6)
-  logged_out      DateTime? @db.Timestamptz(6)
-  device          String?
-  device_vendor   String?
-  browser         String?
-  browser_version String?
-  os              String?
-  os_version      String?
-  cpu             String?
-  isMobile        Boolean?
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String    @id @default(cuid())
+  userId         String    @db.Uuid
+  loggedIn       DateTime  @default(now()) @db.Timestamptz(6)
+  loggedOut      DateTime? @db.Timestamptz(6)
+  browser        String?
+  cpu            String?
+  device         String?
+  isMobile       Boolean?
+  os             String?
+  browserVersion String?
+  deviceVendor   String?
+  osVersion      String?
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Subscription {
   id                   String    @id @default(cuid())
   cid                  String    @unique @db.Uuid
-  userId               String    @db.Uuid
-  stripeSubscriptionId String    @unique
-  productId            String
-  priceId              String
-  quantity             Int       @default(1)
   status               String?
-  created_at           DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at           DateTime  @default(now()) @db.Timestamptz(6)
-  expires_at           DateTime? @db.Timestamptz(6)
-  is_active            Boolean   @default(true)
+  stripeSubscriptionId String    @unique
+  createdAt            DateTime  @default(now()) @db.Timestamptz(6)
+  expiresAt            DateTime? @db.Timestamptz(6)
   interval             String?
+  isActive             Boolean   @default(true)
+  updatedAt            DateTime  @default(now()) @db.Timestamptz(6)
+  userId               String    @db.Uuid
+  priceId              String
+  productId            String
+  quantity             Int       @default(1)
   subscriptionObj      String?
+  company              Company   @relation(fields: [cid], references: [id], onDelete: Cascade)
+}
 
-  company Company @relation(fields: [cid], references: [id], onDelete: Cascade)
+enum UserRole {
+  ADMIN
+  USER
+  SUPERADMIN
 }

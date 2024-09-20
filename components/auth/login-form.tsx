@@ -1,16 +1,19 @@
 'use client';
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { useState, useTransition, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoginSchema } from '@/schemas';
-import { login, resendCode } from '@/actions/login';
-import { FormError } from '../form-error';
-import { FormSuccess } from '../form-success';
+import Cookies from 'js-cookie';
 import Link from 'next/link';
-import { Input } from '@/components/ui/input';
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useEffect, useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
+import UAParser from 'ua-parser-js';
+import type * as z from 'zod';
+
+import { login, resendCode } from '@/actions/login';
+import { CardWrapper } from '@/components/auth/card-wrapper';
 import { EnterCode } from '@/components/auth/enter-code';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -19,13 +22,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import Cookies from 'js-cookie';
-import { CardWrapper } from '@/components/auth/card-wrapper';
-import { Button } from '@/components/ui/button';
-import UAParser from 'ua-parser-js';
-import { useTranslations } from 'next-intl';
+import { Input } from '@/components/ui/input';
+import logger from '@/lib/logger';
+import { LoginSchema } from '@/schemas';
 
-export const LoginForm = () => {
+import { FormError } from '../form-error';
+import { FormSuccess } from '../form-success';
+
+const LoginForm = () => {
   const t = useTranslations('LoginPage');
   const g = useTranslations('General');
   const searchParams = useSearchParams();
@@ -70,12 +74,12 @@ export const LoginForm = () => {
         .then((data) => {
           if (data?.error) {
             form.reset();
-            setError(data.error);
+            setError(data.message);
           }
 
           if (data?.success) {
             form.reset();
-            setSuccess(data.success);
+            setSuccess(data.message);
           }
 
           if (data?.twoFactor) {
@@ -98,16 +102,25 @@ export const LoginForm = () => {
       const data = await login({ ...form.getValues(), code }, callbackUrl);
 
       if (data?.error) {
-        setError(data.error);
+        setError(data.message);
         setResetCode(true); // Reset the code input field if needed
       } else if (data?.success) {
-        setSuccess(data.success);
+        setSuccess(data.message);
       }
-    } catch (error) {
+    } catch (err) {
       setError('Something went wrong');
     } finally {
       setIsValidating(false); // Ensure this runs in every exit path
     }
+  };
+  const getResendButtonText = () => {
+    if (isResending) {
+      return t('resendTxt');
+    }
+    if (cooldown > 0) {
+      return `${t('resendBtn')} (${cooldown}s)`;
+    }
+    return t('resendBtn');
   };
 
   const handleResendCode = () => {
@@ -117,10 +130,10 @@ export const LoginForm = () => {
     resendCode(form.getValues().email)
       .then((data) => {
         if (data?.error) {
-          setError(data.error);
+          setError(data.message);
         }
         if (data?.success) {
-          setSuccess(data.success);
+          setSuccess(data.message);
           setResetCode(true);
           setCooldown(60); // Start the 60-second cooldown
         }
@@ -131,7 +144,7 @@ export const LoginForm = () => {
   useEffect(() => {
     const parser = new UAParser();
     const userAgentInfo = parser.getResult();
-    console.log(
+    logger.info(
       '🚀 ~ file: login-form.tsx:131 ~ useEffect ~ userAgentInfo:',
       userAgentInfo,
     );
@@ -141,7 +154,7 @@ export const LoginForm = () => {
   }, []);
 
   return (
-    <section className="flex items-center justify-center min-h-screen p-4 ">
+    <section className="flex min-h-screen items-center justify-center p-4 ">
       <CardWrapper
         cardClasses="w-full min-w-[360px] sm:min-w-[380px] md:min-w-[448px] max-w-lg shadow-lg rounded-xl bg-white dark:bg-gray-800 transition-colors duration-200"
         headerLabel={t('headerLabel')}
@@ -162,7 +175,7 @@ export const LoginForm = () => {
                   name="code"
                   render={() => (
                     <FormItem>
-                      <FormLabel className="text-sm pb-2 font-medium text-gray-700 dark:text-gray-300">
+                      <FormLabel className="pb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                         {t('enterCode')}
                       </FormLabel>
                       <FormControl>
@@ -180,13 +193,9 @@ export const LoginForm = () => {
                         size="sm"
                         onClick={handleResendCode}
                         disabled={isResending || cooldown > 0 || isValidating}
-                        className="mt-2 px-0 font-normal text-xs text-primary hover:text-primary/80 dark:text-blue-400 dark:hover:text-blue-300"
+                        className="mt-2 px-0 text-xs font-normal text-primary hover:text-primary/80 dark:text-blue-400 dark:hover:text-blue-300"
                       >
-                        {isResending
-                          ? t('resendTxt')
-                          : cooldown > 0
-                            ? `${t('resendBtn')} (${cooldown}s)`
-                            : t('resendBtn')}
+                        {getResendButtonText()}
                       </Button>
                     </FormItem>
                   )}
@@ -207,7 +216,7 @@ export const LoginForm = () => {
                             disabled={isPending}
                             placeholder="john.doe@example.com"
                             type="email"
-                            className="w-full px-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                            className="w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                           />
                         </FormControl>
                         <FormMessage className="text-xs text-red-500" />
@@ -228,14 +237,14 @@ export const LoginForm = () => {
                             disabled={isPending}
                             placeholder="******"
                             type="password"
-                            className="w-full px-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                            className="w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                           />
                         </FormControl>
                         <Button
                           size="sm"
                           variant="link"
                           asChild
-                          className="px-0 font-normal text-xs text-primary hover:text-primary/80 dark:text-blue-400 dark:hover:text-blue-300"
+                          className="px-0 text-xs font-normal text-primary hover:text-primary/80 dark:text-blue-400 dark:hover:text-blue-300"
                         >
                           <Link href="/reset">{t('forgotpwd')}</Link>
                         </Button>
@@ -252,7 +261,7 @@ export const LoginForm = () => {
               <Button
                 disabled={isPending}
                 type="submit"
-                className="w-full py-2.5 text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-200 rounded-md"
+                className="w-full rounded-md bg-primary py-2.5 text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90"
                 isLoading={isPending}
               >
                 {t('btn')}
@@ -264,3 +273,4 @@ export const LoginForm = () => {
     </section>
   );
 };
+export default LoginForm;

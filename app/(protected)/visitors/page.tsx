@@ -1,13 +1,14 @@
 'use client';
+
 const VisitorsPage = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4 dark:bg-gray-900">
       <section className="mx-auto">
-        <h1 className="item-center justify-center text-center text-4xl">
+        <h1 className="items-center justify-center text-center text-4xl">
           {' '}
           Visitors Page
         </h1>
-        <h3 className="item-center justify-center text-center py-5 text-2xl">
+        <h3 className="items-center justify-center py-5 text-center text-2xl">
           Coming Soon...
         </h3>
       </section>

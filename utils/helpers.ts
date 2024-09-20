@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 import { format } from 'date-fns';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,7 +13,7 @@ export const formatDate = (
   return format(new Date(date), formatType);
 };
 
-export const calculateRemainingDays = (fromdate: string): number => {
+export const calculateRemainingDays = (fromdate: Date): number => {
   const today = new Date();
   const expireDate = new Date(fromdate);
   const timeDiff = expireDate.getTime() - today.getTime();

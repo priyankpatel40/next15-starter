@@ -1,35 +1,21 @@
-'use server';
-import { getAllCompanies } from '@/data/company';
-import { Company } from '@prisma/client';
-import { UserTableSkeleton } from '@/components/ui/skeletons';
-import { Card } from '@/components/ui/card';
 import { BuildingOffice2Icon } from '@heroicons/react/20/solid';
-import FilterSelect from '@/components/ui/filterselect';
 import { Suspense } from 'react';
+
 import AllCompaniesTable from '@/app/(protected)/components/companies/allcompaniestable';
+import CompaniesCards from '@/app/(protected)/components/companies/companiesCards';
+import FilterSelect from '@/components/ui/filterselect';
+import { UserTableSkeleton } from '@/components/ui/skeletons';
 import TextSearch from '@/components/ui/textSearch';
-import { CompaniesCards } from '@/app/(protected)/components/companies/companiesCards';
+import { getAllCompanies } from '@/data/company';
+import type { CompaniesTableArray } from '@/utils/types';
 
-interface Company {
-  id: string;
-  company_name: string;
-  logo: string;
-  api_key: string;
-  is_active: boolean;
-  creatorName: string;
-  creatorEmail: string;
-  created_at: Date;
-  is_trial: boolean;
-}
-
-// Convert to an async Server Component
 export default async function AllCompaniesPage({
   searchParams,
 }: {
   searchParams: { page?: string; filter?: string; query?: string };
 }) {
   const page = Number(searchParams.page) || 1;
-  const filter = searchParams.filter || 'all';
+  const filter = (searchParams.filter as 'all' | 'active' | 'inactive') || 'all';
   const search = searchParams.query || '';
   const itemsPerPage = 10;
 
@@ -40,29 +26,53 @@ export default async function AllCompaniesPage({
     filter,
     search,
   });
-  console.log('🚀 ~ file: page.tsx:59 ~ result:', result);
-  const companies = result.companies;
+
+  const companies: CompaniesTableArray = (result?.companies || []).map((company) => ({
+    id: company.id,
+    companyName: company.companyName || '',
+    createdAt: company.createdAt,
+    updatedAt: company.updatedAt,
+    logo: company.logo || '',
+    creatorName: company.creatorName || null,
+    creatorEmail: company.creatorEmail || null,
+    expireDate: company.expireDate,
+    apiKey: company.apiKey,
+    isActive: company.isActive,
+    isTrial: company.isTrial,
+    subscription: company.subscription ?? {
+      id: '',
+      cid: '',
+      userId: '',
+      stripeSubscriptionId: '',
+      productId: '',
+      priceId: '',
+      quantity: 0,
+      status: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      expiresAt: null,
+      isActive: false,
+      interval: null,
+      subscriptionObj: null,
+    },
+  }));
+
   const totalCount = companies.length;
-  // Calculate counts based on the fetched companies
-  const activeCount = companies.filter((company) => company.is_active).length;
-  const inactiveCount = companies.filter((company) => !company.is_active).length;
-  const trialCount = companies.filter((company) => company.is_trial).length;
-  const nonTrialCount = companies.filter((company) => !company.is_trial).length;
+  const activeCount = companies.filter((company) => company.isActive).length;
+  const inactiveCount = companies.filter((company) => !company.isActive).length;
+  const trialCount = companies.filter((company) => company.isTrial).length;
+  const nonTrialCount = companies.filter((company) => !company.isTrial).length;
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
-  async function handleUpdateCompany(id: string, data: Partial<Company>) {
-    'use server';
-    console.log('🚀 ~ file: page.tsx:65 ~ handleUpdateCompany ~ data:', data);
-  }
 
   return (
-    <section className="h-full py-6 px-4 sm:px-6 lg:px-8 pt-16">
-      <div className="w-full max-w-7xl mx-auto">
+    <section className="h-full px-4 py-6 pt-16 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full">
         <div className="mb-8">
           <div className="flex items-center justify-center">
-            <div className="bg-gradient-to-r from-gray-200 to-gray-400 dark:from-gray-700 dark:to-gray-900 p-0.5 rounded-full shadow-lg">
-              <div className="bg-white dark:bg-gray-800 rounded-full p-3">
-                <BuildingOffice2Icon className="w-6 h-6 text-gray-800 dark:text-gray-200" />
+            <div className="rounded-full bg-gradient-to-r from-gray-200 to-gray-400 p-0.5 shadow-lg dark:from-gray-700 dark:to-gray-900">
+              <div className="rounded-full bg-white p-3 dark:bg-gray-800">
+                <BuildingOffice2Icon className="size-6 text-gray-800 dark:text-gray-200" />
               </div>
             </div>
             <div className="ml-4 flex flex-col">
@@ -75,8 +85,8 @@ export default async function AllCompaniesPage({
             </div>
           </div>
         </div>
-        <div className="bg-white border border-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-          <div className="p-4 space-y-4 sm:flex sm:items-center sm:justify-between sm:space-y-0 sm:space-x-4">
+        <div className="overflow-hidden rounded-lg border border-gray-200 bg-white dark:bg-gray-800">
+          <div className="space-y-4 p-4 sm:flex sm:items-center sm:justify-between sm:space-x-4 sm:space-y-0">
             <CompaniesCards
               totalCount={totalCount}
               activeCount={activeCount}
@@ -85,7 +95,7 @@ export default async function AllCompaniesPage({
               nonTrialCount={nonTrialCount}
             />
 
-            <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+            <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
               <div className="relative">
                 <TextSearch placeholder="Search by name" />
               </div>
@@ -93,14 +103,13 @@ export default async function AllCompaniesPage({
             </div>
           </div>
           <div className="overflow-x-auto">
-            <Suspense key={companies} fallback={<UserTableSkeleton />}>
+            <Suspense key={companies.length} fallback={<UserTableSkeleton />}>
               <AllCompaniesTable
                 companies={companies}
                 page={page}
                 itemsPerPage={itemsPerPage}
                 totalCount={totalCount}
                 totalPages={totalPages}
-                onUpdateCompany={handleUpdateCompany}
               />
             </Suspense>
           </div>

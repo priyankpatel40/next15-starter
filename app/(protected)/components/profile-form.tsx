@@ -1,52 +1,51 @@
 'use client';
 
-import { useState, useTransition, useCallback } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
-import * as z from 'zod';
+import { useCallback, useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
+import type * as z from 'zod';
 
-import { SettingsSchema } from '@/schemas';
 import { settings } from '@/actions/settings';
+import { FormError } from '@/components/form-error';
+import { FormSuccess } from '@/components/form-success';
+import { Button } from '@/components/ui/button';
 import {
   Form,
-  FormField,
   FormControl,
+  FormDescription,
+  FormField,
   FormItem,
   FormLabel,
-  FormDescription,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
 import { showToast } from '@/components/ui/toast';
+import { SettingsSchema } from '@/schemas';
 
-interface ClientProfileFormProps {
-  user: {
-    id: string;
-    name: string | null;
-    email: string | null;
-    role: string;
-    isTwoFactorEnabled: boolean;
-    isOAuth: boolean;
-  };
-}
-
-export function ProfileForm({ user }: ClientProfileFormProps) {
+const ProfileForm = ({
+  name,
+  email,
+  isTwoFactorEnabled,
+  isOAuth,
+}: {
+  name: string | null;
+  email: string | null;
+  isTwoFactorEnabled: boolean;
+  isOAuth: boolean;
+}) => {
   const [error, setError] = useState<string | undefined>();
-  const [success, setSuccess] = useState<string | undefined>();
+  const [success] = useState<string | undefined>();
   const { update } = useSession();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
-      name: user.name || '',
-      email: user.email || '',
-      isTwoFactorEnabled: user.isTwoFactorEnabled,
+      name: name || '',
+      email: email || '',
+      isTwoFactorEnabled,
     },
   });
 
@@ -76,7 +75,7 @@ export function ProfileForm({ user }: ClientProfileFormProps) {
   return (
     <Form {...form}>
       <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-        <h2 className="text-2xl font-semibold mb-6">Profile Settings</h2>
+        <h2 className="mb-6 text-2xl font-semibold">Profile Settings</h2>
         <FormField
           control={form.control}
           name="name"
@@ -88,14 +87,14 @@ export function ProfileForm({ user }: ClientProfileFormProps) {
                   {...field}
                   placeholder="John Doe"
                   disabled={isPending}
-                  className="border border-gray-300 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-600"
+                  className="border border-gray-300 focus:border-gray-400 dark:border-gray-700 dark:focus:border-gray-600"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {!user.isOAuth && (
+        {!isOAuth && (
           <>
             <FormField
               control={form.control}
@@ -104,18 +103,18 @@ export function ProfileForm({ user }: ClientProfileFormProps) {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <div className="relative group">
+                    <div className="group relative">
                       <Input
                         {...field}
                         placeholder="john.doe@example.com"
                         type="email"
-                        disabled={true}
-                        className="border border-gray-300 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-600 cursor-not-allowed"
+                        disabled
+                        className="cursor-not-allowed border border-gray-300 focus:border-gray-400 dark:border-gray-700 dark:focus:border-gray-600"
                       />
-                      <div className="absolute invisible group-hover:visible bg-gray-800 text-white text-xs rounded py-1 px-2 bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="invisible absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
                         Email cannot be changed
                         <svg
-                          className="absolute text-gray-800 h-2 w-full left-0 top-full"
+                          className="absolute left-0 top-full h-2 w-full text-gray-800"
                           x="0px"
                           y="0px"
                           viewBox="0 0 255 255"
@@ -137,7 +136,7 @@ export function ProfileForm({ user }: ClientProfileFormProps) {
               control={form.control}
               name="isTwoFactorEnabled"
               render={({ field }) => (
-                <FormItem className="flex border border-gray-300 dark:border-gray-700 flex-row items-center justify-between rounded-lg p-3 shadow-sm">
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border border-gray-300 p-3 shadow-sm dark:border-gray-700">
                   <div className="space-y-0.5">
                     <FormLabel>Two Factor Authentication</FormLabel>
                     <FormDescription>
@@ -164,4 +163,5 @@ export function ProfileForm({ user }: ClientProfileFormProps) {
       </form>
     </Form>
   );
-}
+};
+export default ProfileForm;

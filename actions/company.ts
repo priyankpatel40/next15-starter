@@ -1,63 +1,69 @@
 'use server';
 
-import * as z from 'zod';
-import { db } from '@/lib/db';
-import { CompanySchema, EditCompanySchema } from '@/schemas';
-import { getUserByEmail } from '@/data/user';
-import { Prisma, UserRole } from '@prisma/client';
+import { type Company, Prisma, UserRole } from '@prisma/client';
 import { randomBytes } from 'crypto';
+import type * as z from 'zod';
+
 import { auth, unstable_update } from '@/auth';
 import { getCompanyByName } from '@/data/company';
+import { getUserByEmail } from '@/data/user';
+import { db } from '@/lib/db';
+import logger from '@/lib/logger';
+import { CompanySchema, EditCompanySchema } from '@/schemas';
 
 export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
-  console.log('🚀 ~ createCompany ~ values:', values);
+  logger.info('🚀 ~ createCompany ~ values:', values);
   const validatedFields = CompanySchema.safeParse(values);
   const currentSession = await auth();
-  console.log('🚀 ~ createCompany ~ session:', currentSession);
+  logger.info('🚀 ~ createCompany ~ session:', currentSession);
 
   if (!validatedFields.success) {
     return { error: 'Invalid fields!' };
   }
-  const { company_name } = validatedFields.data;
+  const { companyName } = validatedFields.data;
   const existingUser = await getUserByEmail(currentSession?.user.email);
-  let company = null;
+  let company: Company | null = null; // Explicit type definition
+
   if (existingUser && existingUser.cid === null) {
     try {
       const apiKey = await randomBytes(16).toString('base64');
-      console.error('apikey', apiKey);
+      logger.error('apikey', apiKey);
       // Use Prisma transaction to ensure both operations succeed or fail together
-      const result = await db.$transaction(async (db) => {
+      await db.$transaction(async (transaction) => {
         // Create the organization
-        company = await db.company.create({
+        const createdCompany = (await transaction.company.create({
           data: {
-            company_name,
-            api_key: apiKey,
-            is_trial: true,
-            expire_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+            companyName,
+            apiKey,
+            isTrial: true,
+            expireDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
           },
-        });
-        console.log('company', company);
+        })) as Company;
+        company = createdCompany; // Ensure company is not null
+        logger.info('company', company);
         // Associate user with organization
-        const updateOrg = await db.company.update({
-          where: { id: company.id },
-          data: { owner_id: existingUser.id, created_by: existingUser.id },
-        });
-        const updateUser = await db.user.update({
-          where: { id: existingUser.id },
-          data: { cid: company.id, role: UserRole.ADMIN },
-        });
+        if (company) {
+          await transaction.company.update({
+            where: { id: company.id },
+            data: { ownerId: existingUser.id, createdBy: existingUser.id },
+          });
+          await transaction.user.update({
+            where: { id: existingUser.id },
+            data: { cid: company.id, role: UserRole.ADMIN },
+          });
+
+          await unstable_update({
+            user: {
+              cid: company.id,
+              company,
+            },
+          });
+        }
       });
-      const updatedSession = await unstable_update({
-        user: {
-          cid: company?.id,
-          company: company,
-        },
-      });
-      console.log('updatedSession', updatedSession);
     } catch (e) {
       // Error handling
       let errorMessage: string = 'Something went wrong, unable to create your account.';
-      console.error('Error during user and organization registration:', e);
+      logger.error('Error during user and organization registration:', e);
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         // The .code property can be accessed in a type-safe manner
         if (e.code === 'P2002') {
@@ -70,42 +76,42 @@ export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
     }
   }
 
-  return { success: 'Your account is now ready to use!', company: company };
+  return { success: 'Your account is now ready to use!', company };
 };
 
 export const updateCompany = async (
   values: z.infer<typeof EditCompanySchema>,
   id: string,
 ) => {
-  console.log('🚀 ~ updateCompany ~ values:', values);
+  logger.info('🚀 ~ updateCompany ~ values:', values);
   const validatedFields = EditCompanySchema.safeParse(values);
   const currentSession = await auth();
-  console.log('🚀 ~ updateCompany ~ session:', currentSession);
+  logger.info('🚀 ~ updateCompany ~ session:', currentSession);
 
   if (!validatedFields.success) {
     return { error: 'Invalid fields!' };
   }
-  const { company_name, is_trial, expire_date } = validatedFields.data;
-  const existingCompany = await getCompanyByName(company_name);
+  const { companyName, isTrial, expireDate } = validatedFields.data;
+  const existingCompany = await getCompanyByName(companyName);
   if (existingCompany) {
     if (existingCompany?.id !== id) {
       return { error: 'Company name already exists.' };
     }
   }
   try {
-    const result = await db.company.update({
-      where: { id: id },
+    await db.company.update({
+      where: { id },
       data: {
-        company_name: company_name,
-        updated_at: new Date(),
-        is_trial: is_trial,
-        expire_date: expire_date,
+        companyName,
+        updatedAt: new Date(),
+        isTrial,
+        expireDate,
       },
     });
   } catch (e) {
     // Error handling
     let errorMessage: string = 'Something went wrong, unable to create your account.';
-    console.error('Error during user and organization registration:', e);
+    logger.error('Error during user and organization registration:', e);
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       // The .code property can be accessed in a type-safe manner
       if (e.code === 'P2002') {

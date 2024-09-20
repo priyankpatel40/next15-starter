@@ -1,14 +1,17 @@
 'use server';
 
-import * as z from 'zod';
-import bcrypt from 'bcryptjs';
-import { db } from '@/lib/db';
-import { RegisterSchema } from '@/schemas';
-import { getUserByEmail } from '@/data/user';
 import { Prisma, UserRole } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import type * as z from 'zod';
+
+import { getUserByEmail } from '@/data/user';
 import { sendVerificationEmail } from '@/emails/mail';
+import { db } from '@/lib/db';
+import logger from '@/lib/logger';
 import { generateVerificationToken } from '@/lib/tokens';
-export const register = async (values: z.infer<typeof RegisterSchema>) => {
+import { RegisterSchema } from '@/schemas';
+
+const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -26,7 +29,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     };
   }
   try {
-    const result = await db.user.create({
+    await db.user.create({
       data: {
         email,
         password: hashedPassword,
@@ -34,20 +37,23 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         role: UserRole.ADMIN,
       },
     });
-    const verificationToken = await generateVerificationToken(email);
-    console.log('verificationToken', verificationToken);
+    const verificationToken = (await generateVerificationToken(email)) as {
+      email: string;
+      token: string;
+    };
+    logger.info('verificationToken', verificationToken);
     await sendVerificationEmail({
       email: verificationToken.email,
       token: verificationToken.token,
       username: name,
       invitedByUsername: '',
       invitedByEmail: '',
-      company_name: '',
+      companyName: '',
     });
   } catch (e) {
     // Error handling
     let errorMessage: string = 'Something went wrong, unable to create your account.';
-    console.error('Error during user registration:', e);
+    logger.error('Error during user registration:', e);
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       // The .code property can be accessed in a type-safe manner
       if (e.code === 'P2002') {
@@ -62,3 +68,4 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     success: 'Confirmation email sent, please verify your account to start!',
   };
 };
+export default register;

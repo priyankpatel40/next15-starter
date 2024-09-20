@@ -1,9 +1,9 @@
 'use client';
 
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import BackButton from '@/components/auth/back-button';
 import { Header } from '@/components/auth/header';
 import { Social } from '@/components/auth/social';
-import { BackButton } from '@/components/auth/back-button';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 
 interface CardWrapperProps {
   cardClasses: string;
@@ -35,7 +35,7 @@ export const CardWrapper = ({
               <span className="w-full border-t border-gray-300 dark:border-gray-600" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800">
+              <span className="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
                 or
               </span>
             </div>

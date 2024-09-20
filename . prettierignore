@@ -7,3 +7,4 @@ next-env.d.ts
 next.config.ts
 yarn.lock
 .eslintrc.json
+e2etests/*

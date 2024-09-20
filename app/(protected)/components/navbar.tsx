@@ -1,17 +1,21 @@
 'use client';
-import React, { useMemo } from 'react';
+
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
-import Image from 'next/image';
-import Logo from '@/public/small-light.png';
-import { ProfileDropDown } from './profile-dropdown';
-import { Session } from 'next-auth';
-import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import Image from 'next/image';
 import Link from 'next/link';
-import { Avatar } from '@/components/ui/avatar';
-import ThemeSwitch from '@/components/themeSwtich';
+import { usePathname } from 'next/navigation';
+import type { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
+import React, { useMemo } from 'react';
+
+import ThemeSwitch from '@/components/themeSwtich';
+import Avatar from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import LocaleSwitcher from '@/components/ui/localSwitcher';
+import Logo from '@/public/small-light.png';
+
+import ProfileDropDown from './profile-dropdown';
 
 const navigation = [
   {
@@ -65,10 +69,9 @@ const userNavigation = [
 
 interface AdminNavBarProps {
   session: Session;
-  contextType: 'profile' | 'usersTable'; // Add this line
 }
 
-export const AdminNavBar = ({ session, contextType }: AdminNavBarProps) => {
+export const AdminNavBar = ({ session }: AdminNavBarProps) => {
   const pathname = usePathname();
   const userRole = session.user.role;
 
@@ -88,123 +91,131 @@ export const AdminNavBar = ({ session, contextType }: AdminNavBarProps) => {
     <div className="min-h-full">
       <Disclosure
         as="nav"
-        className="bg-gradient-to-r from-gray-900 to-black fixed top-0 w-full z-50 shadow-md"
+        className="fixed top-0 z-50 w-full bg-gradient-to-r from-gray-900 to-black shadow-md"
       >
-        {({ open }) => (
-          <>
-            <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
-              <div className="flex h-16 items-center justify-between">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0 mr-4">
-                    <Avatar
-                      image={session.user.company.logo}
-                      name={session.user.company.company_name}
-                      contextType="navbar"
-                      className="w-10 h-10 border-2 border-white"
-                    />
-                  </div>
-                  <div className="hidden md:block">
-                    <div className="ml-10 flex items-baseline space-x-4">
-                      {filteredNavigation.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          aria-current={isCurrentPage(item.href) ? 'page' : undefined}
-                          className={clsx(
-                            isCurrentPage(item.href)
-                              ? 'bg-white text-black font-semibold'
-                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                            'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200',
-                          )}
-                        >
-                          {item.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <ThemeSwitch />
-                  <LocaleSwitcher />
-                  <ProfileDropDown session={session} />
-                </div>
-              </div>
-            </div>
-
-            <DisclosurePanel className="md:hidden">
-              <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3 z-50">
-                {filteredNavigation.map((item) => (
-                  <DisclosureButton
-                    key={item.name}
-                    as={Link}
-                    href={item.href}
-                    aria-current={isCurrentPage(item.href) ? 'page' : undefined}
-                    className={clsx(
-                      isCurrentPage(item.href)
-                        ? 'bg-gray-900 text-white'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                      'block rounded-md px-3 py-2 text-base font-medium',
-                    )}
-                  >
-                    {item.name}
-                  </DisclosureButton>
-                ))}
-              </div>
-              <div className="border-t border-gray-700 pb-3 pt-4">
-                <div className="flex items-center px-5">
-                  <div className="flex-shrink-0">
-                    {session.user.image ? (
-                      <Image
-                        alt="Profile Image"
-                        src={session.user.image || Logo}
-                        className="h-8 w-8 rounded-full"
-                        width={32}
-                        height={32}
+        {() => {
+          return (
+            <>
+              <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="mr-4 shrink-0">
+                      <Avatar
+                        image={session.user.company.logo}
+                        name={session.user.company.companyName}
+                        contextType="navbar"
                       />
-                    ) : (
-                      <div className="flex-shrink-0">
-                        <div className="w-8 h-8 rounded-full border-2 border-gray-300 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 flex items-center justify-center text-gray-800 font-bold text-lg shadow-lg">
-                          {session?.user?.name
-                            ? session?.user?.name[0].toUpperCase()
-                            : 'S'}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-base font-medium leading-none text-white">
-                      {session.user.name}
                     </div>
-                    {
-                      <div className="text-sm pt-2 font-medium leading-none text-gray-400">
-                        {session.user.role}
+                    <div className="hidden md:block">
+                      <div className="ml-10 flex items-baseline space-x-4">
+                        {filteredNavigation.map((item) => (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            aria-current={isCurrentPage(item.href) ? 'page' : undefined}
+                            className={clsx(
+                              isCurrentPage(item.href)
+                                ? 'bg-white font-semibold text-black'
+                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                              'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200',
+                            )}
+                          >
+                            {item.name}
+                          </Link>
+                        ))}
                       </div>
-                    }
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    className="relative ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                  >
-                    <span className="absolute -inset-1.5" />
-                  </button>
+                  <div className="flex items-center space-x-4">
+                    <ThemeSwitch />
+                    <LocaleSwitcher />
+                    <ProfileDropDown session={session} />
+                  </div>
                 </div>
-                <div className="mt-3 space-y-1 px-2">
-                  {userNavigation.map((item) => (
+              </div>
+
+              <DisclosurePanel className="md:hidden">
+                <div className="z-50 space-y-1 px-2 pb-3 pt-2 sm:px-3">
+                  {filteredNavigation.map((item) => (
                     <DisclosureButton
                       key={item.name}
-                      as={item.href ? 'a' : 'button'}
+                      as={Link}
                       href={item.href}
-                      onClick={item.onClick}
-                      className="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                      aria-current={isCurrentPage(item.href) ? 'page' : undefined}
+                      className={clsx(
+                        isCurrentPage(item.href)
+                          ? 'bg-gray-900 text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'block rounded-md px-3 py-2 text-base font-medium',
+                      )}
                     >
                       {item.name}
                     </DisclosureButton>
                   ))}
                 </div>
-              </div>
-            </DisclosurePanel>
-          </>
-        )}
+                <div className="border-t border-gray-700 pb-3 pt-4">
+                  <div className="flex items-center px-5">
+                    <div className="shrink-0">
+                      {session.user.image ? (
+                        <Image
+                          alt="Profile Image"
+                          src={session.user.image || Logo}
+                          className="size-8 rounded-full"
+                          width={32}
+                          height={32}
+                        />
+                      ) : (
+                        <div className="shrink-0">
+                          <div className="flex size-8 items-center justify-center rounded-full border-2 border-gray-300 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 text-lg font-bold text-gray-800 shadow-lg">
+                            {session?.user?.name
+                              ? session?.user?.name[0].toUpperCase()
+                              : 'S'}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="ml-3">
+                      <div className="text-base font-medium leading-none text-white">
+                        {session.user.name}
+                      </div>
+                      <div className="pt-2 text-sm font-medium leading-none text-gray-400">
+                        {session.user.role}
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      className="relative ml-auto shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                    />
+                  </div>
+                  <div className="mt-3 space-y-1 px-2">
+                    {userNavigation.map((item) =>
+                      item.href ? (
+                        <DisclosureButton
+                          key={item.name}
+                          as={Link}
+                          href={item.href}
+                          onClick={item.onClick}
+                          className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                        >
+                          {item.name}
+                        </DisclosureButton>
+                      ) : (
+                        <DisclosureButton
+                          key={item.name}
+                          as={Button}
+                          onClick={item.onClick}
+                          className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                        >
+                          {item.name}
+                        </DisclosureButton>
+                      ),
+                    )}
+                  </div>
+                </div>
+              </DisclosurePanel>
+            </>
+          );
+        }}
       </Disclosure>
     </div>
   );

@@ -1,71 +1,72 @@
 'use client';
+
 import {
-  LineChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
   Line,
+  LineChart,
+  Pie,
+  PieChart,
+  Rectangle,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  Legend,
-  Rectangle,
 } from 'recharts';
-import { PieChart, Pie, Sector, Cell } from 'recharts';
+
+import logger from '@/lib/logger';
 
 export const DailyCompaniesChart = ({
   dailyActiveCompanies,
 }: {
   dailyActiveCompanies: any;
 }) => {
-  console.log(
+  logger.info(
     '🚀 ~ file: dailyCompaniesChart.tsx:18 ~ dailyActiveCompanies:',
     dailyActiveCompanies,
   );
   return (
-    <>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          width={500}
-          height={300}
-          data={dailyActiveCompanies}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar
-            dataKey="companies"
-            fill="#103a7c"
-            activeBar={<Rectangle fill="black" stroke="lightGray" />}
-          />
-        </BarChart>
-      </ResponsiveContainer>
-    </>
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart
+        width={500}
+        height={300}
+        data={dailyActiveCompanies}
+        margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar
+          dataKey="companies"
+          fill="#103a7c"
+          activeBar={<Rectangle fill="black" stroke="lightGray" />}
+        />
+      </BarChart>
+    </ResponsiveContainer>
   );
 };
 
 export const DailyUsersChart = ({ dailyActiveUsers }: { dailyActiveUsers: any }) => {
   return (
-    <>
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={dailyActiveUsers}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Line type="monotone" dataKey="users" stroke="#103a7c" strokeWidth={2} />
-        </LineChart>
-      </ResponsiveContainer>
-    </>
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart data={dailyActiveUsers}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="date" />
+        <YAxis />
+        <Tooltip />
+        <Line type="monotone" dataKey="users" stroke="#103a7c" strokeWidth={2} />
+      </LineChart>
+    </ResponsiveContainer>
   );
 };
 
@@ -79,7 +80,6 @@ export const PieChartComponent = ({ data }: { data: any }) => {
     innerRadius,
     outerRadius,
     percent,
-    index,
   }: {
     cx: number;
     cy: number;
@@ -87,7 +87,6 @@ export const PieChartComponent = ({ data }: { data: any }) => {
     innerRadius: number;
     outerRadius: number;
     percent: number;
-    index: number;
   }) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -118,8 +117,8 @@ export const PieChartComponent = ({ data }: { data: any }) => {
           fill="#8884d8"
           dataKey="value"
         >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          {data.map((entry: string, index: number) => (
+            <Cell key={`cell-${entry}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
         <Tooltip />

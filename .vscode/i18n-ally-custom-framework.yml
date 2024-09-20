@@ -1,0 +1,16 @@
+languageIds:
+  - javascript
+  - typescript
+  - javascriptreact
+  - typescriptreact
+usageMatchRegex:
+  - "[^\\w\\d]t\\(['\"`]({key})['\"`]"
+  - "[^\\w\\d]i18next\\.t\\(['\"`]({key})['\"`]"
+monopoly: false
+keystyle: nested
+parasiteInferenceMatch:
+  - "[^\\w\\d]t\\(['\"`]({key})['\"`]"
+refactorTemplates:
+  - "[^\\w\\d]t\\('{key}'\\)"
+  - "[^\\w\\d]t\\(\"{key}\"\\)"
+  - "[^\\w\\d]t\\(`{key}`\\)"

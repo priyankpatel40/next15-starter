@@ -1,29 +1,29 @@
 'use client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 
-import { ChangePasswordSchema } from '@/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import type * as z from 'zod';
+
+import { changePassword } from '@/actions/change-password';
+import { FormError } from '@/components/form-error';
+import { FormSuccess } from '@/components/form-success';
+import { Button } from '@/components/ui/button';
 import {
   Form,
-  FormField,
   FormControl,
+  FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
-import { changePassword } from '@/actions/change-password';
-import { User } from '@prisma/client';
 import { showToast } from '@/components/ui/toast';
+import { ChangePasswordSchema } from '@/schemas';
 
-export function ChangePasswordForm({ user }: { user: User }) {
+const ChangePasswordForm = ({ isOAuth }: { isOAuth: boolean }) => {
   const [error, setError] = useState<string | undefined>();
-  const [success, setSuccess] = useState<string | undefined>();
+  const [success] = useState<string | undefined>();
   const [isPending, setIsPending] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof ChangePasswordSchema>>({
@@ -47,7 +47,7 @@ export function ChangePasswordForm({ user }: { user: User }) {
           type: 'success',
         });
       }
-    } catch (error) {
+    } catch (err) {
       setError('Something went wrong!');
     } finally {
       setIsPending(false);
@@ -56,8 +56,8 @@ export function ChangePasswordForm({ user }: { user: User }) {
 
   return (
     <>
-      <h2 className="text-2xl font-semibold mb-6">Change Password</h2>
-      {!user.isOAuth ? (
+      <h2 className="mb-6 text-2xl font-semibold">Change Password</h2>
+      {!isOAuth ? (
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
@@ -73,7 +73,7 @@ export function ChangePasswordForm({ user }: { user: User }) {
                       type="password"
                       disabled={isPending}
                       required
-                      className="border border-gray-300 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-600"
+                      className="border border-gray-300 focus:border-gray-400 dark:border-gray-700 dark:focus:border-gray-600"
                     />
                   </FormControl>
                   <FormMessage />
@@ -93,7 +93,7 @@ export function ChangePasswordForm({ user }: { user: User }) {
                       type="password"
                       disabled={isPending}
                       required
-                      className="border border-gray-300 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-600"
+                      className="border border-gray-300 focus:border-gray-400 dark:border-gray-700 dark:focus:border-gray-600"
                     />
                   </FormControl>
                   <FormMessage />
@@ -112,4 +112,5 @@ export function ChangePasswordForm({ user }: { user: User }) {
       )}
     </>
   );
-}
+};
+export default ChangePasswordForm;

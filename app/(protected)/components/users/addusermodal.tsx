@@ -1,11 +1,15 @@
-import { Button } from '@/components/ui/button';
-import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { User } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { CreateUserSchema } from '@/schemas';
-import { Input } from '@/components/ui/input';
+import type * as z from 'zod';
+
+import { addUser } from '@/actions/adduser';
+import { FormError } from '@/components/form-error';
+import { FormSuccess } from '@/components/form-success';
+import { Button } from '@/components/ui/button';
+import { DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -14,10 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
-import { addUser } from '@/actions/adduser';
-import { User, UserRole } from '@prisma/client';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -26,6 +27,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { showToast } from '@/components/ui/toast';
+import logger from '@/lib/logger';
+import { CreateUserSchema } from '@/schemas';
 
 interface AddUserModalProps {
   onClose: () => void;
@@ -51,7 +54,7 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
     setError('');
     setSuccess('');
     setIsPending(true);
-    console.log(values);
+    logger.info(values);
     try {
       const data = await addUser(values);
       if (data.success) {
@@ -65,18 +68,18 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
       } else if (data.error) {
         setError(data.error);
       }
-    } catch (error) {
-      console.error('Error updating user:', error);
+    } catch (err) {
+      logger.error('Error updating user:', err);
       setError('An unexpected error occurred. Please try again.');
     }
     setIsPending(false);
   };
   return (
     <>
-      <DialogTitle className="text-lg font-medium mb-2 sm:text-xl">
+      <DialogTitle className="mb-2 text-lg font-medium sm:text-xl">
         Add new user
       </DialogTitle>
-      <DialogDescription className="text-sm mb-4 text-gray-500">
+      <DialogDescription className="mb-4 text-sm text-gray-500">
         Create a new user in your company. Once added, they will receive an account
         verification email.
       </DialogDescription>
@@ -168,12 +171,12 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
               <FormError message={error} />
               <FormSuccess message={success} />
             </div>
-            <div className="mt-6 flex flex-col sm:flex-row-reverse sm:justify-center justify-center gap-2">
+            <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row-reverse sm:justify-center">
               <Button
                 type="submit"
                 disabled={isPending}
                 isLoading={isPending}
-                className="w-full sm:w-auto px-7"
+                className="w-full px-7 sm:w-auto"
               >
                 Add User
               </Button>
@@ -181,7 +184,7 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
                 onClick={onClose}
                 type="button"
                 variant="outline"
-                className="w-full sm:w-auto px-7"
+                className="w-full px-7 sm:w-auto"
               >
                 Close
               </Button>
