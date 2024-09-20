@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { stripe } from '@/utils/stripe';
+import logger from '@/lib/logger';
 
 export const createSubscription = async ({
   userId,
@@ -23,35 +23,35 @@ export const createSubscription = async ({
   try {
     const existingSubscription = await db.subscription.findFirst({
       where: {
-        cid: cid,
+        cid,
       },
     });
     if (existingSubscription) {
-      const result = await db.subscription.update({
+      await db.subscription.update({
         where: {
-          cid: cid,
+          cid,
         },
         data: {
           stripeSubscriptionId: subscriptionId,
-          status: status,
-          updated_at: new Date(),
-          userId: userId,
-          productId: productId,
-          priceId: priceId,
-          quantity: quantity,
+          status,
+          updatedAt: new Date(),
+          userId,
+          productId,
+          priceId,
+          quantity,
           subscriptionObj: data,
         },
       });
     } else {
-      const result = await db.subscription.create({
+      await db.subscription.create({
         data: {
-          cid: cid,
+          cid,
           stripeSubscriptionId: subscriptionId,
-          status: status,
-          userId: userId,
-          productId: productId,
-          priceId: priceId,
-          quantity: quantity,
+          status,
+          userId,
+          productId,
+          priceId,
+          quantity,
           subscriptionObj: data,
         },
       });
@@ -61,15 +61,15 @@ export const createSubscription = async ({
         id: cid,
       },
       data: {
-        is_active: true,
-        is_trial: false,
-        updated_at: new Date(),
+        isActive: true,
+        isTrial: false,
+        updatedAt: new Date(),
       },
     });
 
     return 'Subscription created successfully';
   } catch (e) {
-    console.error('Error updating subscription:', e);
+    logger.error('Error updating subscription:', e);
     throw new Error('Failed to update subscription');
   }
 };
@@ -88,7 +88,7 @@ export const updateSubscriptionData = async ({
   productId: string;
   priceId: string;
   quantity: number;
-  data: string;
+  data?: string;
 }) => {
   try {
     await db.subscription.update({
@@ -96,19 +96,19 @@ export const updateSubscriptionData = async ({
         stripeSubscriptionId: subscriptionId,
       },
       data: {
-        status: status,
-        updated_at: new Date(),
-        userId: userId,
-        productId: productId,
-        priceId: priceId,
-        quantity: quantity,
+        status,
+        updatedAt: new Date(),
+        userId,
+        productId,
+        priceId,
+        quantity,
         subscriptionObj: data,
       },
     });
 
     return 'Subscription updated successfully';
   } catch (e) {
-    console.error('Error updating subscription:', e);
+    logger.error('Error updating subscription:', e);
     throw new Error('Failed to update subscription');
   }
   // Removed unreachable return statement
@@ -116,11 +116,11 @@ export const updateSubscriptionData = async ({
 export const deleteSubscription = async ({
   subscriptionId,
   status,
-  is_active,
+  isActive,
 }: {
   subscriptionId: string;
   status?: string;
-  is_active?: boolean;
+  isActive?: boolean;
 }) => {
   try {
     await db.subscription.update({
@@ -129,16 +129,16 @@ export const deleteSubscription = async ({
       },
       data: {
         stripeSubscriptionId: subscriptionId,
-        status: status,
-        is_active: is_active || false,
-        updated_at: new Date(),
+        status,
+        isActive: isActive || false,
+        updatedAt: new Date(),
       },
     });
 
     return { success: true, message: 'Subscription updated successfully' };
   } catch (e) {
-    console.error('Error updating subscription:', e);
-    //throw new Error('Failed to update subscription');
+    logger.error('Error updating subscription:', e);
+    // throw new Error('Failed to update subscription');
     return { error: true, message: 'Failed to update subscription details' };
   }
 };
@@ -146,17 +146,16 @@ export const deleteSubscription = async ({
 export const getSubscription = async (cid: string) => {
   try {
     const result = await db.subscription.findFirst({
-      where: { cid: cid },
+      where: { cid },
     });
     if (result) {
       return result;
-    } else {
-      return null;
     }
+    return null;
   } catch (error) {
-    console.log(error);
+    logger.info(error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
-    console.log('Error in updating the subscription:', errorMessage);
+    logger.info('Error in updating the subscription:', errorMessage);
     return { error: true, message: errorMessage };
   }
 };

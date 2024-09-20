@@ -1,12 +1,16 @@
 'use client';
 
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { useState, useTransition } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
+import { useState, useTransition } from 'react';
+import { useForm } from 'react-hook-form';
+import type * as z from 'zod';
 
-import { ResetSchema } from '@/schemas';
-import { Input } from '@/components/ui/input';
+import reset from '@/actions/reset';
+import { CardWrapper } from '@/components/auth/card-wrapper';
+import { FormError } from '@/components/form-error';
+import { FormSuccess } from '@/components/form-success';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -15,13 +19,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { CardWrapper } from '@/components/auth/card-wrapper';
-import { Button } from '@/components/ui/button';
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
-import { reset } from '@/actions/reset';
+import { Input } from '@/components/ui/input';
+import { ResetSchema } from '@/schemas';
 
-export const ResetForm = () => {
+const ResetForm = () => {
+  const t = useTranslations('ResetForm');
+  const g = useTranslations('General');
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
@@ -47,19 +50,20 @@ export const ResetForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Forgot your password?"
-      backButtonLabel="Back to login"
+      headerLabel={t('headerLabel')}
+      backButtonLabel={t('backButtonLabel')}
       backButtonHref="/login"
+      cardClasses=""
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4 w-[300px]">
+          <div className="w-[300px] space-y-4">
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{g('email')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -76,10 +80,12 @@ export const ResetForm = () => {
           <FormError message={error} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
-            Send reset email
+            {t('btn')}
           </Button>
         </form>
       </Form>
     </CardWrapper>
   );
 };
+
+export default ResetForm;

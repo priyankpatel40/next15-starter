@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import LogoLight from '../../public/logo-light.png';
+
 import LogoDark from '../../public/logo-dark.png';
+import LogoLight from '../../public/logo-light.png';
 
 // const font = Poppins({
 //   subsets: ['latin'],
@@ -25,7 +26,7 @@ export const Header = ({ label }: HeaderProps) => {
   const logoSrc = !mounted || resolvedTheme === 'light' ? LogoLight : LogoDark;
 
   return (
-    <div className="w-full flex flex-col gap-y-4 items-center justify-center">
+    <div className="flex w-full flex-col items-center justify-center gap-y-4">
       <Image
         src={logoSrc}
         alt={`${resolvedTheme || 'default'} theme logo`}
@@ -33,7 +34,7 @@ export const Header = ({ label }: HeaderProps) => {
         height={200}
         className="mx-auto"
       />
-      <p className="text-muted-foreground text-lg">{label}</p>
+      <p className="text-lg text-muted-foreground">{label}</p>
     </div>
   );
 };

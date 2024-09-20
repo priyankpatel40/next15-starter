@@ -1,11 +1,13 @@
+import './globals.css';
+
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { SessionProvider } from 'next-auth/react';
-import { auth } from '@/auth';
-import './globals.css';
-import Providers from '@/components/providers';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+
+import { auth } from '@/auth';
+import Providers from '@/components/providers';
 
 const inter = Inter({ subsets: ['latin'] });
 

@@ -1,10 +1,15 @@
+/* eslint-disable no-underscore-dangle */
+
 'use server';
+
 import { db } from '@/lib/db';
-export const getCompanyByName = async (company_name: string) => {
+import logger from '@/lib/logger';
+
+export const getCompanyByName = async (companyName: string) => {
   try {
     const company = await db.company.findFirst({
-      where: { company_name: { equals: company_name, mode: 'insensitive' } },
-      select: { id: true, company_name: true },
+      where: { companyName: { equals: companyName, mode: 'insensitive' } },
+      select: { id: true, companyName: true },
     });
     return company;
   } catch {
@@ -38,10 +43,10 @@ export const getAllCompanies = async ({
   const whereClause: any = {};
 
   if (filter !== 'all') {
-    whereClause.is_active = filter === 'active';
+    whereClause.isActive = filter === 'active';
   }
   if (search) {
-    whereClause.company_name = {
+    whereClause.companyName = {
       contains: search,
       mode: 'insensitive',
     };
@@ -52,14 +57,14 @@ export const getAllCompanies = async ({
       skip: (page - 1) * itemsPerPage,
       where: whereClause,
       orderBy: {
-        company_name: orderBy,
+        companyName: orderBy,
       },
     }),
   ]);
 
   // Fetch creator names
   const creatorIds = companies
-    .map((company) => company.created_by)
+    .map((company) => company.createdBy)
     .filter((id): id is string => id !== null);
   const creators = await db.user.findMany({
     where: { id: { in: creatorIds } },
@@ -70,62 +75,70 @@ export const getAllCompanies = async ({
     creators.map((creator) => [creator.id, { name: creator.name, email: creator.email }]),
   );
 
-  const companiesWithCreatorInfo = companies.map((company) => ({
+  // Fetch subscriptions
+  const cIds = companies.map((company) => company.id);
+  const subscription = await db.subscription.findMany({
+    where: { cid: { in: cIds } },
+  });
+  const subscriptionMap = new Map(subscription.map((sub) => [sub.cid, { sub }]));
+
+  const companiesWithInfo = companies.map((company) => ({
     ...company,
-    creatorName: company.created_by
-      ? creatorMap.get(company.created_by)?.name || null
+    creatorName: company.createdBy
+      ? creatorMap.get(company.createdBy)?.name || null
       : null,
-    creatorEmail: company.created_by
-      ? creatorMap.get(company.created_by)?.email || null
+    creatorEmail: company.createdBy
+      ? creatorMap.get(company.createdBy)?.email || null
+      : null,
+    subscription: company.createdBy
+      ? subscriptionMap.get(company.id)?.sub || null // Fixed to access the correct property
       : null,
   }));
 
   return {
-    companies: companiesWithCreatorInfo,
+    companies: companiesWithInfo,
   };
 };
 export const getAllCompanyUsersForReports = async ({
-  orderBy,
   filter,
 }: {
-  orderBy: 'asc' | 'desc';
   filter: 'all' | 'active' | 'inactive';
 }) => {
   const whereClause: any = {};
 
   if (filter !== 'all') {
-    whereClause.is_active = filter === 'active';
+    whereClause.isActive = filter === 'active';
   }
 
   const [totalCount, statusCounts, dailyActiveUsers, dailyLoginActivity] =
     await Promise.all([
       db.user.count({ where: whereClause }),
       db.user.groupBy({
-        by: ['is_active'],
+        by: ['isActive'],
         where: whereClause,
         _count: true,
       }),
       db.$queryRaw`
         SELECT 
-          TO_CHAR(DATE(created_at), 'YYYY-MM-DD') as date, 
+          TO_CHAR(DATE("createdAt"), 'YYYY-MM-DD') as date, 
           CAST(COUNT(*) AS INTEGER) as users
         FROM "User"
-        GROUP BY DATE(created_at)
-        ORDER BY DATE(created_at)
+        GROUP BY DATE("createdAt")
+        ORDER BY DATE("createdAt")
       ` as Promise<Array<{ date: string; users: number }>>,
       db.$queryRaw`
         SELECT 
-          TO_CHAR(DATE(logged_in), 'YYYY-MM-DD') as date, 
+          TO_CHAR(DATE("loggedIn"), 'YYYY-MM-DD') as date, 
           CAST(COUNT(*) AS INTEGER) as users
         FROM "User" 
          JOIN "LoginActivity" ON "User".id = "LoginActivity"."userId"
-        GROUP BY DATE(logged_in)
-        ORDER BY DATE(logged_in)
+        GROUP BY DATE("loggedIn")
+        ORDER BY DATE("loggedIn")
       ` as Promise<Array<{ date: string; users: number }>>,
     ]);
 
-  const activeCount = statusCounts.find((r) => r.is_active)?._count ?? 0;
-  const inactiveCount = statusCounts.find((r) => !r.is_active)?._count ?? 0;
+  const activeCount = statusCounts.find((r) => r.isActive)?._count ?? 0;
+  const inactiveCount = statusCounts.find((r) => !r.isActive)?._count ?? 0;
 
   return {
     totalCount,
@@ -145,42 +158,46 @@ export const getAllCompaniesforDashboard = async ({
   const whereClause: any = {};
 
   if (filter !== 'all') {
-    whereClause.is_active = filter === 'active';
+    whereClause.isActive = filter === 'active';
   }
 
-  const [companies, totalCount, statusCounts, dailyActiveCompanies] = await Promise.all([
-    db.company.findMany({
-      where: whereClause,
-      orderBy: {
-        company_name: orderBy,
-      },
-    }),
-    db.company.count({ where: whereClause }),
-    db.company.groupBy({
-      by: ['is_active'],
-      where: whereClause,
-      _count: true,
-    }),
-    db.$queryRaw`
+  const [companies, totalCount, statusCounts, trialCount, dailyActiveCompanies] =
+    await Promise.all([
+      db.company.findMany({
+        where: whereClause,
+        orderBy: {
+          companyName: orderBy,
+        },
+      }),
+      db.company.count({ where: whereClause }),
+      db.company.groupBy({
+        by: ['isActive'],
+        where: whereClause,
+        _count: true,
+      }),
+      db.company.groupBy({
+        by: ['isTrial'],
+        where: whereClause,
+        _count: true,
+      }),
+      db.$queryRaw`
         SELECT 
-          TO_CHAR(DATE(created_at), 'YYYY-MM-DD') as date, 
+          TO_CHAR(DATE("createdAt"), 'YYYY-MM-DD') as date, 
           CAST(COUNT(*) AS INTEGER) as companies
         FROM "Company"
-        GROUP BY DATE(created_at)
-        ORDER BY DATE(created_at)
+        GROUP BY DATE("createdAt")
+        ORDER BY DATE("createdAt")
       ` as Promise<Array<{ date: string; companies: number }>>,
-  ]);
+    ]);
 
-  const activeCount = statusCounts.find((r) => r.is_active)?._count ?? 0;
-  const inactiveCount = statusCounts.find((r) => !r.is_active)?._count ?? 0;
-  const activeSubscriptions =
-    statusCounts.find((r) => r.is_active && !r.is_trial)?._count ?? 0;
-  const inactiveSubscriptions =
-    statusCounts.find((r) => r.is_active && r.is_trial)?._count ?? 0;
+  const activeCount = statusCounts.find((r) => r.isActive)?._count ?? 0;
+  const inactiveCount = statusCounts.find((r) => !r.isActive)?._count ?? 0;
+  const activeSubscriptions = trialCount.find((r) => r.isTrial)?._count ?? 0;
+  const inactiveSubscriptions = trialCount.find((r) => r.isTrial)?._count ?? 0;
 
   // Fetch creator names
   const creatorIds = companies
-    .map((company) => company.created_by)
+    .map((company) => company.createdBy)
     .filter((id): id is string => id !== null);
   const creators = await db.user.findMany({
     where: { id: { in: creatorIds } },
@@ -193,11 +210,11 @@ export const getAllCompaniesforDashboard = async ({
 
   const companiesWithCreatorInfo = companies.map((company) => ({
     ...company,
-    creatorName: company.created_by
-      ? creatorMap.get(company.created_by)?.name || null
+    creatorName: company.createdBy
+      ? creatorMap.get(company.createdBy)?.name || null
       : null,
-    creatorEmail: company.created_by
-      ? creatorMap.get(company.created_by)?.email || null
+    creatorEmail: company.createdBy
+      ? creatorMap.get(company.createdBy)?.email || null
       : null,
   }));
 
@@ -216,10 +233,10 @@ export const deleteCompanyById = async (id: string) => {
   try {
     await db.company.update({
       where: { id },
-      data: { is_active: false, is_deleted: true },
+      data: { isActive: false, isDeleted: true },
     });
   } catch (error) {
-    console.error('Error deleting company:', error);
+    logger.error('Error deleting company:', error);
     throw error;
   }
   return { success: true };
@@ -231,12 +248,12 @@ export const toggleCompanyStatusById = async (id: string) => {
     if (!company) {
       throw new Error('Company not found');
     }
-    const updatedCompany = await db.company.update({
+    await db.company.update({
       where: { id },
-      data: { is_active: !company.is_active },
+      data: { isActive: !company.isActive },
     });
   } catch (error) {
-    console.error('Error updating company status:', error);
+    logger.error('Error updating company status:', error);
     throw error;
   }
   return { success: true };

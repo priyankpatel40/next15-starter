@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import { newVerification } from '@/actions/new-verification';
 import { CardWrapper } from '@/components/auth/card-wrapper';
 import { FormError } from '@/components/form-error';
@@ -44,17 +45,17 @@ export const NewVerificationForm = () => {
   }, [token, router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen w-full px-4 sm:px-6 lg:px-8 ">
+    <div className="flex min-h-screen w-full items-center justify-center px-4 sm:px-6 lg:px-8 ">
       <CardWrapper
         headerLabel="Account Verification"
         backButtonLabel="Back to login"
         backButtonHref="/login"
         cardClasses="w-full max-w-md shadow-lg"
       >
-        <div className="flex flex-col items-center justify-center w-full h-full p-6 space-y-4">
+        <div className="flex size-full flex-col items-center justify-center space-y-4 p-6">
           {isLoading && (
             <div className="flex flex-col items-center space-y-2">
-              <ArrowPathIcon className="h-12 w-12 animate-spin text-black dark:text-white" />
+              <ArrowPathIcon className="size-12 animate-spin text-black dark:text-white" />
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Verifying your account...
               </p>

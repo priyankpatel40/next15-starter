@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { FaTimes } from 'react-icons/fa';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 
@@ -67,24 +67,26 @@ export const EnterCode: React.FC<EnterCodeProps> = ({ callback, reset, isLoading
   };
 
   return (
-    <div className="flex flex-wrap gap-2 sm:gap-3 w-full">
+    <div className="flex w-full flex-wrap gap-2 sm:gap-3">
       {Array.from({ length: 6 }, (_, index) => (
         <Input
           key={index}
-          ref={(el) => (inputRefs.current[index] = el)}
+          ref={(el) => {
+            inputRefs.current[index] = el;
+          }}
           className="
-        flex-1
-        min-w-0
-        h-12 sm:h-14
-        text-xl sm:text-2xl
-        bg-gray-100 dark:bg-gray-800
-        text-gray-900 dark:text-gray-100
-        border border-gray-300 dark:border-gray-700
-        rounded-md
-        flex items-center justify-center
-        text-center
-        focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400
-        transition-colors duration-200
+        flex
+        h-12
+        min-w-0 flex-1
+        items-center justify-center
+        rounded-md border
+        border-gray-300 bg-gray-100
+        text-center text-xl text-gray-900
+        transition-colors
+        duration-200 focus:outline-none focus:ring-2
+        focus:ring-blue-500
+        dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:ring-blue-400
+        sm:h-14 sm:text-2xl
       "
           type="text"
           inputMode="numeric"
@@ -103,7 +105,7 @@ export const EnterCode: React.FC<EnterCodeProps> = ({ callback, reset, isLoading
         onClick={handleSubmit}
         disabled={isLoading || code.join('').length < 6}
         isLoading={isLoading}
-        className="w-full py-2.5 text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-200 rounded-md"
+        className="w-full rounded-md bg-primary py-2.5 text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90"
       >
         Submit Code
       </Button>

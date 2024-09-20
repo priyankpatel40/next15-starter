@@ -1,12 +1,10 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { showToast } from '@/components/ui/toast';
-import { deleteCompanyById, toggleCompanyStatusById } from '@/data/company';
 import { XCircleIcon } from '@heroicons/react/24/outline';
 import { CheckCircledIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
-import { EditCompanyModal } from './editCompanyModal';
 import { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -17,17 +15,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { showToast } from '@/components/ui/toast';
+import { deleteCompanyById, toggleCompanyStatusById } from '@/data/company';
+
+import EditCompanyModal from './editCompanyModal';
 
 export function EditLink({
   id,
   onCompanyUpdated,
 }: {
   id: string;
-  onCompanyUpdated: (id: string, company: { company_name: string }) => void;
+  onCompanyUpdated: (id: string, company: { companyName: string }) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const handleCompanyUpdate = (id: string, company: { company_name: string }) => {
-    onCompanyUpdated(id, company);
+  const handleCompanyUpdate = (cid: string, company: { companyName: string }) => {
+    onCompanyUpdated(cid, company);
   };
 
   return (
@@ -35,16 +37,15 @@ export function EditLink({
       <DialogTrigger asChild>
         <Button
           variant="link"
-          className="rounded-md p-1 transition-transform duration-200 transform hover:scale-105"
+          className="rounded-md p-1 transition-transform duration-200 hover:scale-105"
         >
-          <Pencil1Icon className="w-7 h-7 text-blue-600 transition-transform duration-200 transform hover:scale-105 hover:text-blue-800 rounded-md p-1" />
+          <Pencil1Icon className="size-7 rounded-md p-1 text-blue-600 transition-transform duration-200 hover:scale-105 hover:text-blue-800" />
           Edit
         </Button>
       </DialogTrigger>
       <DialogContent>
         <EditCompanyModal
           id={id}
-          isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           onCompanyUpdate={handleCompanyUpdate}
         />
@@ -79,10 +80,10 @@ export function DeleteLink({
   return (
     <Button
       variant="link"
-      className="rounded-md p-1 transition-transform duration-200 transform hover:scale-105"
+      className="rounded-md p-1 transition-transform duration-200 hover:scale-105"
       onClick={deleteCompany}
     >
-      <TrashIcon className="w-7 h-7 text-red-600 transition-transform duration-200 transform hover:scale-105 hover:text-red-800 hover:bg-red-100 rounded-md p-1" />
+      <TrashIcon className="size-7 rounded-md p-1 text-red-600 transition-transform duration-200 hover:scale-105 hover:bg-red-100 hover:text-red-800" />
       Delete{' '}
     </Button>
   );
@@ -133,16 +134,16 @@ export function StatusLink({
       <DialogTrigger asChild>
         <Button
           variant="link"
-          className="rounded-md p-1 transition-transform duration-200 transform hover:scale-105"
+          className="rounded-md p-1 transition-transform duration-200 hover:scale-105"
         >
           {status ? (
             <>
-              <XCircleIcon className="w-7 h-7 text-red-600 hover:text-red-800  rounded-md p-1" />
+              <XCircleIcon className="size-7 rounded-md p-1 text-red-600  hover:text-red-800" />
               Deactivate
             </>
           ) : (
             <>
-              <CheckCircledIcon className="w-7 h-7 text-green-600 hover:text-green-800  rounded-md p-1" />
+              <CheckCircledIcon className="size-7 rounded-md p-1 text-green-600  hover:text-green-800" />
               Activate
             </>
           )}

@@ -1,11 +1,12 @@
 'use server';
-import * as z from 'zod';
-import bcrypt from 'bcryptjs';
 
-import { ChangePasswordSchema } from '@/schemas';
+import bcrypt from 'bcryptjs';
+import type * as z from 'zod';
+
+import { auth } from '@/auth';
 import { getUserById } from '@/data/user';
 import { db } from '@/lib/db';
-import { auth } from '@/auth';
+import { ChangePasswordSchema } from '@/schemas';
 
 export const changePassword = async (values: z.infer<typeof ChangePasswordSchema>) => {
   const validatedFields = ChangePasswordSchema.safeParse(values);
@@ -28,10 +29,10 @@ export const changePassword = async (values: z.infer<typeof ChangePasswordSchema
 
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   try {
-   await db.user.update({
-    where: { id: existingUser.id },
-    data: { password: hashedPassword },
-  });
+    await db.user.update({
+      where: { id: existingUser.id },
+      data: { password: hashedPassword },
+    });
 
     return { success: 'Password updated!' };
   } catch (error) {

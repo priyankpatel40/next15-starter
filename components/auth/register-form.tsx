@@ -1,11 +1,15 @@
 'use client';
-import * as z from 'zod';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import type * as z from 'zod';
 
-import { RegisterSchema } from '@/schemas';
-import { Input } from '@/components/ui/input';
+import register from '@/actions/register';
+import { FormError } from '@/components/form-error';
+import { FormSuccess } from '@/components/form-success';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -14,17 +18,16 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { FormError } from '@/components/form-error';
-import { FormSuccess } from '@/components/form-success';
-import { register } from '@/actions/register';
-import { BackButton } from './back-button';
-import { Social } from './social';
-import { Header } from './header';
-import { Card } from '../ui/card';
-import { useTranslations } from 'next-intl';
+import { Input } from '@/components/ui/input';
+import logger from '@/lib/logger';
+import { RegisterSchema } from '@/schemas';
 
-export const RegisterForm = () => {
+import { Card } from '../ui/card';
+import BackButton from './back-button';
+import { Header } from './header';
+import { Social } from './social';
+
+const RegisterForm = () => {
   const t = useTranslations('RegistrationPage');
   const g = useTranslations('General');
   const [error, setError] = useState<string | undefined>('');
@@ -43,7 +46,7 @@ export const RegisterForm = () => {
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     setError('');
     setSuccess('');
-    console.log(values);
+    logger.info(values);
     startTransition(() => {
       register(values).then((data) => {
         if (data.success) {
@@ -56,8 +59,8 @@ export const RegisterForm = () => {
   };
 
   return (
-    <section className="flex items-center justify-center min-h-screen p-4 ">
-      <Card className="w-full min-w-[360px] sm:min-w-[380px] md:min-w-[448px] max-w-lg p-8 shadow-lg rounded-xl bg-white dark:bg-gray-800">
+    <section className="flex min-h-screen items-center justify-center p-4 ">
+      <Card className="w-full min-w-[360px] max-w-lg rounded-xl bg-white p-8 shadow-lg dark:bg-gray-800 sm:min-w-[380px] md:min-w-[448px]">
         <Form {...form}>
           <Header label={t('headerLabel')} />
           <form
@@ -77,7 +80,7 @@ export const RegisterForm = () => {
                         {...field}
                         disabled={isPending}
                         placeholder="John Doe"
-                        className="w-full border rounded-md focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                        className="w-full rounded-md border focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                       />
                     </FormControl>
                     <FormMessage />
@@ -96,7 +99,7 @@ export const RegisterForm = () => {
                         disabled={isPending}
                         placeholder="john.doe@example.com"
                         type="email"
-                        className="w-full border rounded-md focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                        className="w-full rounded-md border focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                       />
                     </FormControl>
                     <FormMessage />
@@ -115,7 +118,7 @@ export const RegisterForm = () => {
                         disabled={isPending}
                         placeholder="******"
                         type="password"
-                        className="w-full border rounded-md focus:ring-2 focus:ring-primary dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                        className="w-full rounded-md border focus:ring-2 focus:ring-primary dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                       />
                     </FormControl>
                     <FormMessage />
@@ -130,13 +133,13 @@ export const RegisterForm = () => {
                 disabled={isPending}
                 isLoading={isPending}
                 type="submit"
-                className="w-full mt-5 py-2.5 text-sm font-semibold"
+                className="mt-5 w-full py-2.5 text-sm font-semibold"
               >
                 {t('btn')}
               </Button>
-              <div className="flex items-center justify-center my-6 relative">
-                <hr className="w-full h-px bg-gray-200 dark:bg-gray-700 border-0" />
-                <span className="absolute px-3 text-sm font-medium text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800">
+              <div className="relative my-6 flex items-center justify-center">
+                <hr className="h-px w-full border-0 bg-gray-200 dark:bg-gray-700" />
+                <span className="absolute bg-white px-3 text-sm font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">
                   or
                 </span>
               </div>
@@ -158,3 +161,5 @@ export const RegisterForm = () => {
     </section>
   );
 };
+
+export default RegisterForm;

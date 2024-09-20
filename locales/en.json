@@ -6,11 +6,13 @@
   },
   "HomePage": {
     "title": "Home",
-    "tabLine": "A simple authentication service"
+    "tagLine": "A simple authentication service"
   },
   "LocaleSwitcher": {
-    "de": "Deutsch",
+    "de": "Dutch",
     "en": "English",
+    "fr": "French",
+    "es": "Spanish",
     "label": "Language"
   },
   "LoginPage": {
@@ -31,6 +33,16 @@
     "gitHubText": "Signup with Github",
     "enterCode": "Enter your two factor code",
     "btn": "Create an account"
+  },
+  "NewPasswordPage": {
+    "headerLabel": "Enter a new password",
+    "backButtonLabel": "Back to login",
+    "btn": "Reset password"
+  },
+  "ResetForm": {
+    "headerLabel": "Forgot your password?",
+    "backButtonLabel": "Back to login",
+    "btn": "Send reset email"
   },
   "ProfilePage": {
     "title": "Profile"

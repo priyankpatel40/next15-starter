@@ -1,10 +1,15 @@
 'use server';
-import React from 'react';
+
 import { render } from '@react-email/components';
+import React from 'react';
+
+import logger from '@/lib/logger';
+
 import { sendEmail } from '../lib/sendmail';
 import AccountVerifyEmail from './accountVerify';
 import ResetPasswordEmail from './resetPassword';
 import TwoFactorEmail from './twoFactor';
+
 const domain = process.env.NEXT_PUBLIC_APP_URL;
 
 export const sendTwoFactorTokenEmail = async (
@@ -12,7 +17,7 @@ export const sendTwoFactorTokenEmail = async (
   token: string,
   username: string,
 ) => {
-  console.log(
+  logger.info(
     '🚀 ~ file: mail.ts:72 ~ sendTwoFactorTokenEmail ~ userData:',
     email,
     username,
@@ -22,7 +27,7 @@ export const sendTwoFactorTokenEmail = async (
     const emailContent = await render(
       <TwoFactorEmail username={username} code={token} />,
     );
-    console.log(
+    logger.info(
       '🚀 ~ file: mail.ts:85 ~ sendTwoFactorTokenEmail ~ emailContent:',
       emailContent,
     );
@@ -32,8 +37,9 @@ export const sendTwoFactorTokenEmail = async (
       subject: `${token} - Your two factor authentication code`,
       html: emailContent,
     });
+    return true;
   } catch (error) {
-    console.log('🚀 ~ file: mail.ts:89 ~ sendTwoFactorTokenEmail ~ error:', error);
+    logger.info('🚀 ~ file: mail.ts:89 ~ sendTwoFactorTokenEmail ~ error:', error);
     return false;
   }
 };
@@ -44,7 +50,7 @@ export const sendPasswordResetEmail = async (
   username: string,
 ) => {
   const resetLink = `${domain}/new-password?token=${token}`;
-  console.log(
+  logger.info(
     '🚀 ~ file: mail.ts:72 ~ sendVerificationEmail ~ userData:',
     email,
     username,
@@ -53,7 +59,7 @@ export const sendPasswordResetEmail = async (
     const emailContent = await render(
       <ResetPasswordEmail username={username} link={resetLink} />,
     );
-    console.log(
+    logger.info(
       '🚀 ~ file: mail.ts:85 ~ sendVerificationEmail ~ emailContent:',
       emailContent,
     );
@@ -63,26 +69,27 @@ export const sendPasswordResetEmail = async (
       subject: 'Reset your password',
       html: emailContent,
     });
+    return true;
   } catch (error) {
-    console.log('🚀 ~ file: mail.ts:89 ~ sendVerificationEmail ~ error:', error);
+    logger.info('🚀 ~ file: mail.ts:89 ~ sendVerificationEmail ~ error:', error);
     return false;
   }
 };
 
 export const sendVerificationEmail = async (userData: any) => {
-  console.log('🚀 ~ file: mail.ts:72 ~ sendVerificationEmail ~ userData:', userData);
+  logger.info('🚀 ~ file: mail.ts:72 ~ sendVerificationEmail ~ userData:', userData);
   try {
     const confirmLink = `${domain}/new-verification?token=${userData.token}`;
     const emailContent = await render(
       <AccountVerifyEmail
         username={userData.username}
-        company_name={userData.company_name}
+        companyName={userData.companyName}
         link={confirmLink}
         invitedByUsername={userData.invitedByUsername}
         invitedByEmail={userData.invitedByEmail}
       />,
     );
-    console.log(
+    logger.info(
       '🚀 ~ file: mail.ts:85 ~ sendVerificationEmail ~ emailContent:',
       emailContent,
     );
@@ -92,8 +99,9 @@ export const sendVerificationEmail = async (userData: any) => {
       subject: 'Confirm your account',
       html: emailContent,
     });
+    return true;
   } catch (error) {
-    console.log('🚀 ~ file: mail.ts:89 ~ sendVerificationEmail ~ error:', error);
+    logger.info('🚀 ~ file: mail.ts:89 ~ sendVerificationEmail ~ error:', error);
     return false;
   }
 };

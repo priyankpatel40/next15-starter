@@ -1,5 +1,6 @@
-import * as z from 'zod';
 import { UserRole } from '@prisma/client';
+import * as z from 'zod';
+
 export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -60,7 +61,7 @@ export const RegisterSchema = z.object({
     }),
 });
 export const CompanySchema = z.object({
-  company_name: z
+  companyName: z
     .string({
       required_error: 'Company name is required!',
     })
@@ -97,7 +98,7 @@ export const CreateUserSchema = z.object({
 });
 
 export const EditCompanySchema = z.object({
-  company_name: z
+  companyName: z
     .string({
       required_error: 'Company name is required!',
     })
@@ -108,8 +109,8 @@ export const EditCompanySchema = z.object({
     .max(20, {
       message: 'Maximum 20 characters allowed',
     }),
-  is_trial: z.boolean().optional(),
-  expire_date: z.date().nullable(),
+  isTrial: z.boolean().optional(),
+  expireDate: z.date().nullable(),
 });
 export const EditUserSchema = z.object({
   password: z
@@ -130,8 +131,8 @@ export const EditUserSchema = z.object({
     .max(40, {
       message: 'Maximum 40 characters allowed',
     }),
-  role: z.enum([UserRole.ADMIN, UserRole.USER]),
-  is_active: z.boolean().optional(),
+  role: z.enum([UserRole.ADMIN, UserRole.USER, UserRole.SUPERADMIN]),
+  isActive: z.boolean().optional(),
   isTwoFactorEnabled: z.boolean().optional(),
 });
 export const ChangePasswordSchema = z

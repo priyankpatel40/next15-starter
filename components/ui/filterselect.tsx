@@ -1,5 +1,7 @@
 'use client';
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
 import {
   Select,
   SelectContent,
@@ -7,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 
 interface FilterSelectProps {
   filter: string;
@@ -30,7 +31,7 @@ export default function FilterSelect({ filter }: FilterSelectProps) {
 
   return (
     <Select value={filter} onValueChange={handleChange}>
-      <SelectTrigger className="w-full sm:w-[180px] border border-gray-300 dark:border-gray-600 rounded-md">
+      <SelectTrigger className="w-full rounded-md border border-gray-300 dark:border-gray-600 sm:w-[180px]">
         <SelectValue placeholder="Filter users" />
       </SelectTrigger>
       <SelectContent>

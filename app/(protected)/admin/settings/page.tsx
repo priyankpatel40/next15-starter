@@ -1,5 +1,7 @@
+import type { Metadata } from 'next';
+
 import SettingsTab from '../../components/settingsTab';
-import { Metadata } from 'next';
+
 export const metadata: Metadata = {
   title: 'Settings',
 };

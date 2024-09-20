@@ -1,4 +1,5 @@
-import { test, expect } from '@playwright/test';
+/* eslint-disable playwright/no-conditional-in-test */
+import { expect, type Page, test, type TestInfo } from '@playwright/test';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -8,7 +9,12 @@ test.describe('Login Page', () => {
     await page.goto('/login');
   });
 
-  async function fillLoginForm(page, email, password, testInfo) {
+  async function fillLoginForm(
+    page: Page,
+    email: string,
+    password: string,
+    testInfo: TestInfo,
+  ) {
     await page.fill('input[name="email"]', email);
     await page.fill('input[name="password"]', password);
     await page.click('button[type="submit"]');
@@ -20,7 +26,7 @@ test.describe('Login Page', () => {
     });
   }
 
-  async function logPageState(page, testInfo) {
+  async function logPageState(page: Page, testInfo: TestInfo) {
     testInfo.attach('screenshot', {
       body: await page.screenshot(),
       contentType: 'image/png',

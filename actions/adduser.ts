@@ -1,15 +1,17 @@
 'use server';
 
-import * as z from 'zod';
+import { Prisma } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { db } from '@/lib/db';
-import { CreateUserSchema } from '@/schemas';
-import { getUserByEmail } from '@/data/user';
-import { Prisma, UserRole } from '@prisma/client';
+import type * as z from 'zod';
 
-import { generateVerificationToken } from '@/lib/tokens';
 import { auth } from '@/auth';
+import { getUserByEmail } from '@/data/user';
 import { sendVerificationEmail } from '@/emails/mail';
+import { db } from '@/lib/db';
+import logger from '@/lib/logger';
+import { generateVerificationToken } from '@/lib/tokens';
+import { CreateUserSchema } from '@/schemas';
+
 export const addUser = async (values: z.infer<typeof CreateUserSchema>) => {
   const validatedFields = CreateUserSchema.safeParse(values);
   const currentSession = await auth();
@@ -32,19 +34,19 @@ export const addUser = async (values: z.infer<typeof CreateUserSchema>) => {
         email,
         password: hashedPassword,
         name,
-        role: role,
+        role,
         cid: currentSession?.user.cid,
-        created_by: currentSession?.user.id,
+        createdBy: currentSession?.user.id,
       },
       select: {
         id: true,
         email: true,
         name: true,
         role: true,
-        is_active: true,
-        created_at: true,
-        created_by: true,
-        is_deleted: true,
+        isActive: true,
+        createdAt: true,
+        createdBy: true,
+        isDeleted: true,
         emailVerified: true,
       },
     });
@@ -56,7 +58,7 @@ export const addUser = async (values: z.infer<typeof CreateUserSchema>) => {
       username: name,
       invitedByUsername: currentSession?.user.name,
       invitedByEmail: currentSession?.user.email,
-      company_name: currentSession?.user.company.company_name,
+      companyName: currentSession?.user.company.companyName,
     });
     const userWithCreatorName = {
       ...result,
@@ -69,7 +71,7 @@ export const addUser = async (values: z.infer<typeof CreateUserSchema>) => {
   } catch (e) {
     // Error handling
     let errorMessage: string = 'Something went wrong, unable to add your user.';
-    console.error('Error during user registration:', e);
+    logger.error('Error during user registration:', e);
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       // The .code property can be accessed in a type-safe manner
       if (e.code === 'P2002') {
