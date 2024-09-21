@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin('./i18n/requests.ts');
 const nextConfig = {
   experimental: {
     ppr: "incremental",
+   serverComponentsExternalPackages: ['pino'],
   },
    images: {
     domains: ['avatars.githubusercontent.com','lh3.googleusercontent.com'],
