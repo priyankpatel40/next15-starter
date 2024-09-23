@@ -78,6 +78,7 @@
     "nameError": "Sorry, This company name is already in use!",
     "fail": "Failed to create company."
   },
+
   "ProfilePage": {
     "pageTitle": "Profile",
     "title": "Profile Settings",
