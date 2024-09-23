@@ -1,0 +1,256 @@
+{
+  "AppLayout": {
+    "home": "Zuhause",
+    "logout": "Abmelden",
+    "profile": "Profil"
+  },
+  "HomePage": {
+    "title": "Zuhause",
+    "tagLine": "Ein einfacher Authentifizierungsdienst"
+  },
+  "General": {
+    "email": "E-Mail",
+    "password": "Passwort",
+    "submitbtn": "Absenden",
+    "name": "Name",
+    "error": "Etwas ist schiefgelaufen! Bitte versuche es erneut.",
+    "admin": "Admin",
+    "user": "Benutzer",
+    "role": "Rolle",
+    "enabled": "Aktiviert",
+    "disabled": "deaktiviert",
+    "active": "Aktiv",
+    "inActive": "Inaktiv",
+    "activate": "Aktivieren",
+    "deActivate": "Deaktivieren"
+  },
+  "LocaleSwitcher": {
+    "de": "Niederländisch",
+    "en": "Englisch",
+    "fr": "Französisch",
+    "es": "Spanisch",
+    "label": "Sprache"
+  },
+  "LoginPage": {
+    "pageTitle": "Anmelden",
+    "headerLabel": "Willkommen zurück",
+    "backButtonLabel": "Sie haben noch kein Konto?",
+    "googleText": "Mit Google anmelden",
+    "gitHubText": "Mit Github anmelden",
+    "enterCode": "Geben Sie Ihren Zwei-Faktor-Code ein",
+    "resendBtn": "Code erneut senden",
+    "resendTxt": "Wird erneut gesendet...",
+    "forgotpwd": "Passwort vergessen?",
+    "btn": "Anmelden"
+  },
+  "RegistrationPage": {
+    "pageTitle": "Konto erstellen",
+    "headerLabel": "Erstellen Sie Ihr Konto",
+    "backButtonLabel": "Haben Sie bereits ein Konto?",
+    "googleText": "Mit Google anmelden",
+    "gitHubText": "Mit Github anmelden",
+    "enterCode": "Geben Sie Ihren Zwei-Faktor-Code ein",
+    "btn": "Ein Konto erstellen"
+  },
+  "NewPasswordPage": {
+    "pageTitle": "Passwort",
+    "headerLabel": "Neues Passwort eingeben",
+    "backButtonLabel": "Zurück zum Login",
+    "btn": "Passwort zurücksetzen"
+  },
+  "ResetForm": {
+    "pageTitle": "Reset",
+    "headerLabel": "Passwort vergessen?",
+    "backButtonLabel": "Zurück zum Login",
+    "btn": "Sende Reset-E-Mail"
+  },
+  "SettingsTab": {
+    "pageTitle": "Einstellungen",
+    "subscription": "Abonnement",
+    "domain": "Domänen-Einstellungen"
+  },
+  "CompanyPage": {
+    "pageTitle": "Firma erstellen",
+    "title": "Firma erstellen",
+    "subTitle": " Beginnen wir mit dem Einrichten Ihres Firmenprofils.",
+    "btn": " Erstellen und fortsetzen",
+    "label": "Firmenname",
+    "nameError": "Dieser Firmenname wird bereits verwendet!",
+    "fail": "Unternehmen konnte nicht erstellt werden."
+  },
+  "ProfilePage": {
+    "pageTitle": "Profil",
+    "title": "Profileinstellungen",
+    "email": "E-Mail kann nicht geändert werden",
+    "2FA": "Zwei-Faktor-Authentifizierung",
+    "2FAlable": "Zwei-Faktor-Authentifizierung für Ihr Konto aktivieren",
+    "btn": "Änderungen speichern",
+    "account": "Konto",
+    "password": "Passwort",
+    "changePassword": "Passwort ändern",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "updatePassword": "Passwort aktualisieren",
+    "oAuth": "Sie können Ihr Passwort nicht ändern, da Sie sich bei Oauth angemeldet haben"
+  },
+  "VerificationPage": {
+    "pageTitle": "Überprüfe",
+    "headerLabel": "Kontoüberprüfung",
+    "backButtonLabel": "Zurück zum Login",
+    "title": " Überprüfe dein Konto...",
+    "success": "Weiterleitung zum Login...",
+    "error": "Token fehlt."
+  },
+  "SubscriptionPage": {
+    "pageTitle": "Abonnement",
+    "subscribed": "Abonniert",
+    "cancelled": "Abgebrochen",
+    "current": "Aktuelle Abonnementdetails",
+    "period": "Aktueller Zeitraum:",
+    "license": "Lizenz",
+    "onTrial": "Auf Probezeit - endet in",
+    "days": "tage",
+    "subscription": "Ihr Abonnement",
+    "ProductList": {
+      "license": "Benutzerlizenzen",
+      "current": "Aktuell",
+      "btnCurrent": "Aktueller Plan",
+      "btn": "Plan auswählen",
+      "success": "Abonnement erfolgreich aktualisiert!",
+      "error": "Zahlungssitzung kann nicht erstellt werden!"
+    },
+    "CancelSubscription": {
+      "title": "Möchten Sie nicht fortfahren?",
+      "cancel": "Abonnement kündigen",
+      "confirm": "Stornierung bestätigen",
+      "success": "Ihre Stornierungsanfrage wurde bearbeitet.",
+      "text": " Dein Abonnement wird sofort abgebrochen und du wirst den Zugriff auf alle Premium-Funktionen verlieren.",
+      "text2": "Bitte beachten Sie, dass die Kündigung Ihres Abonnements zukünftige Gebühren verhindert, aber Sie haben weiterhin Zugriff bis zum Ende Ihres Abrechnungszyklus.",
+      "text3": " Sind Sie sicher, dass Sie fortfahren möchten? Diese Aktion kann nicht rückgängig gemacht werden und Sie müssen erneut abonnieren, um wieder Zugang zu erhalten.",
+      "error": "Ihre Stornierungsanfrage konnte nicht bearbeitet werden. Bitte versuchen Sie es erneut!",
+      "btnConfirm": "Ja, Abbrechen",
+      "btnCancel": "Nein, mein Abonnement fortsetzen"
+    }
+  },
+  "UsersPage": {
+    "pageTitle": "Benutzer",
+    "title": "Firmenbenutzer",
+    "subTitle": "Verwalten und überwachen Sie alle Benutzer in Ihrer Organisation",
+    "placeholder": "Nach Namen suchen",
+    "AddUserModal": {
+      "btn": "Neuen Benutzer hinzufügen",
+      "description": " Erstellen Sie einen neuen Benutzer in Ihrem Unternehmen. Sobald er hinzugefügt wurde, wird er eine Bestätigungs-E-Mail erhalten.",
+      "close": "Schließen",
+      "error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "UserTable": {
+      "user": "Benutzer",
+      "role": "Rolle",
+      "status": "Status",
+      "addedBy": "Hinzugefügt von",
+      "action": "Aktion",
+      "pending": "E-Mail-Verifizierung ausstehend vom Benutzer"
+    },
+    "EditUser": {
+      "edit": "Bearbeiten",
+      "heading": "Benutzer bearbeiten",
+      "fetching": "Benutzerdetails werden abgerufen",
+      "title": "Details bearbeiten von ",
+      "label": "Ist 2FA aktiviert?",
+      "labelTxt": "2FA für Benutzer aktivieren oder deaktivieren",
+      "btn": "Aktualisieren",
+      "close": "Schließen",
+      "success": "Benutzer erfolgreich aktualisiert",
+      "error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "UserStatusLink": {
+      "activateMsg": "Benutzer ist jetzt aktiviert.",
+      "deactivateMsg": "Benutzer ist jetzt deaktiviert.",
+      "error": "Fehler beim Aktualisieren des Benutzerstatus",
+      "activation": "Aktivieren",
+      "deActivation": "Deaktivierung",
+      "deActivationTxt": "Dieser Benutzer wird sofort deaktiviert und verliert den Zugriff auf alle Funktionen gemäß der zugewiesenen Rolle.",
+      "activationTxt": "Dieser Benutzer wird sofort aktiviert und erhält den Zugriff auf alle Funktionen gemäß der zugewiesenen Rolle.",
+      "btn": "Bestätigen",
+      "cancel": "Abbrechen"
+    }
+  },
+  "Cards": {
+    "total": "Gesamt",
+    "admins": "Admins",
+    "users": "Benutzer",
+    "active": "Aktiv",
+    "inActive": "Inaktiv",
+    "all": "Alle",
+    "trial": "Testversion",
+    "subscribed": "Abonniert",
+    "companies": "Firmen",
+    "subscriptions": "Abonnements"
+  },
+  "ReportsPage": {
+    "pageTitle": "Berichte",
+    "reports": "Berichte",
+    "dailyUsers": "Täglich aktive Benutzer",
+    "browser": "  Meistbenutzter Browser",
+    "os": "meistgenutztes Betriebssystem",
+    "devices": "Meistbenutzte Geräte"
+  },
+  "CompaniesPage": {
+    "pageTitle": "Alle Unternehmen",
+    "title": "Alle Unternehmen",
+    "subTitle": "",
+    "placeholder": "Nach Namen suchen",
+    "name": "Name",
+    "key": "API-Schlüssel",
+    "status": "Status",
+    "createdBy": "Erstellt von",
+    "subscription": "Abonnement",
+    "action": "Aktion",
+    "createdOn": "Erstellt am",
+    "daysLeft": "verbleibende Tage",
+    "trial": "Testversion",
+    "subscribed": "Abonniert",
+    "nodata": "Keine Daten gefunden",
+    "active": "Aktiv",
+    "inActive": "Inaktiv",
+    "EditCompany": {
+      "edit": "Bearbeiten",
+      "heading": "Firma bearbeiten",
+      "fetching": "Unternehmensdetails werden abgerufen",
+      "title": "Details bearbeiten von ",
+      "name": "Firmenname",
+      "label": "Wird vor Gericht gestellt?",
+      "labelTxt": "Aktiviere oder deaktiviere Testversion für das Unternehmen",
+      "btn": "Aktualisieren",
+      "close": "Schließen",
+      "success": "Unternehmensdetails erfolgreich aktualisiert",
+      "error": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+      "trialLabel": "Testversion endet am",
+      "trialLabelTxt": "Wählen Sie das Datum aus, an dem die Testversion endet"
+    },
+    "CompanyStatusLink": {
+      "activateMsg": "Firma ist jetzt aktiviert.",
+      "deactivateMsg": "Firma ist jetzt deaktiviert.",
+      "error": "Fehler beim Aktualisieren des Firmenstatus",
+      "activation": "Aktivieren",
+      "deActivation": "Deaktivierung",
+      "deActivationTxt": "Diese Firma wird sofort deaktiviert und verliert den Zugang zu allen Konten.",
+      "activationTxt": "Diese Firma wird sofort freigeschaltet und erhält den Zugang zu allen Konten.",
+      "btn": "Bestätigen",
+      "cancel": "Abbrechen"
+    }
+  },
+  "DashboardPage": {
+    "pageTitle": "Dashboard",
+    "dashboard": "Dashboard",
+    "dailyUsers": " Täglich neu erstellte Benutzer",
+    "dailyCompanies": "Täglich neu erstellte Unternehmen",
+    "loggedIn": "Täglich angemeldete Benutzer",
+    "recent": "Neueste Unternehmen",
+    "devices": "Meistbenutzte Geräte",
+    "name": "Name",
+    "status": "Status",
+    "createdOn": "Erstellt am",
+    "loading": "Lade Daten..."
+  }
+}

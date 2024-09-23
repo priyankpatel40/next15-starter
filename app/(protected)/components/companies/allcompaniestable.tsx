@@ -4,6 +4,7 @@ import { EnvelopeIcon, UserIcon } from '@heroicons/react/24/outline';
 import { CalendarIcon, OpenInNewWindowIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import Avatar from '@/components/ui/avatar';
@@ -28,6 +29,7 @@ export default function AllCompaniesTable({
 }) {
   const [companies, setCompanies] = useState(initialCompanies);
   const router = useRouter();
+  const t = useTranslations('CompaniesPage');
   const handleStatusChange = (id: string, newStatus: boolean) => {
     setCompanies((prevCompanies) =>
       prevCompanies.map((company) =>
@@ -58,22 +60,22 @@ export default function AllCompaniesTable({
           <thead className="bg-gray-300 text-sm uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="w-1/5 p-4">
-                User
+                {t('name')}
               </th>
               <th scope="col" className="w-[15%] p-2">
-                API Key
+                {t('key')}
               </th>
               <th scope="col" className="w-[10%] p-2">
-                Status
+                {t('status')}
               </th>
               <th scope="col" className="w-[30%] p-2">
-                Created by
+                {t('createdBy')}
               </th>
               <th scope="col" className="w-[15%] p-2">
-                Subscription
+                {t('subscription')}
               </th>
               <th scope="col" className="w-[10%] p-2">
-                Action
+                {t('action')}
               </th>
             </tr>
           </thead>
@@ -108,7 +110,7 @@ export default function AllCompaniesTable({
                           : 'bg-gray-50 text-gray-700 ring-gray-700',
                       )}
                     >
-                      {company.isActive ? 'Active' : 'Inactive'}
+                      {company.isActive ? `${t('active')}` : `${t('inActive')}`}
                     </span>
                   </td>
                   <td className="whitespace-nowrap p-2 font-medium dark:text-white">
@@ -128,7 +130,7 @@ export default function AllCompaniesTable({
                       <div className="flex items-center">
                         <CalendarIcon className="mr-2 size-4 text-gray-400" />
                         <span className="text-xs text-gray-500">
-                          Created on {formatDate(company.createdAt)}
+                          {t('createdOn')} {formatDate(company.createdAt)}
                         </span>
                       </div>
                     </div>
@@ -138,19 +140,19 @@ export default function AllCompaniesTable({
                       <div className="flex items-center">
                         <span className="mr-2 size-2 shrink-0 rounded-full bg-yellow-400" />
                         <span className="text-sm font-medium text-yellow-700 dark:text-yellow-400">
-                          Trial
+                          {t('trial')}
                         </span>
                         <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
                           {company.expireDate
-                            ? `${calculateRemainingDays(company.expireDate)} days left`
-                            : '0 days left'}
+                            ? `${calculateRemainingDays(company.expireDate)}  ${t('daysLeft')} `
+                            : `0 ${t('daysLeft')}`}
                         </span>
                       </div>
                     ) : (
                       <div className="flex items-center">
                         <span className="mr-2 size-2 shrink-0 rounded-full bg-blue-500" />
                         <span className="flex items-center space-x-1 text-sm font-medium text-blue-700 dark:text-blue-400">
-                          <span>Subscribed</span>
+                          <span>{t('subscribed')}</span>
                           {company.subscription && (
                             <a
                               href={`https://dashboard.stripe.com/subscriptions/${company.subscription.stripeSubscriptionId}`}
@@ -187,7 +189,7 @@ export default function AllCompaniesTable({
             ) : (
               <tr>
                 <td colSpan={6} className="p-6 text-center">
-                  <span className="text-lg text-gray-500">No data found</span>
+                  <span className="text-lg text-gray-500">{t('nodata')}</span>
                 </td>
               </tr>
             )}

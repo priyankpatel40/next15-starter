@@ -1,4 +1,5 @@
 import { BuildingOffice2Icon } from '@heroicons/react/20/solid';
+import { useTranslations } from 'next-intl';
 import { Suspense } from 'react';
 
 import AllCompaniesTable from '@/app/(protected)/components/companies/allcompaniestable';
@@ -18,6 +19,7 @@ export default async function AllCompaniesPage({
   const filter = (searchParams.filter as 'all' | 'active' | 'inactive') || 'all';
   const search = searchParams.query || '';
   const itemsPerPage = 10;
+  const t = useTranslations('CompaniesPage');
 
   const result = await getAllCompanies({
     page,
@@ -77,11 +79,9 @@ export default async function AllCompaniesPage({
             </div>
             <div className="ml-4 flex flex-col">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Companies
+                {t('pageTitle')}
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Manage and oversee all companies within your organization
-              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('subTitle')}</p>
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@ export default async function AllCompaniesPage({
 
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
               <div className="relative">
-                <TextSearch placeholder="Search by name" />
+                <TextSearch placeholder={t('placeholder')} />
               </div>
               <FilterSelect filter={filter} />
             </div>

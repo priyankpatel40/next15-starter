@@ -1,56 +1,256 @@
 {
   "AppLayout": {
-    "home": "Home",
-    "logout": "Logout",
-    "profile": "Profile"
+    "home": "Startpagina",
+    "logout": "Afmelden",
+    "profile": "Profiel"
   },
   "HomePage": {
-    "title": "Home",
-    "tagLine": "A simple authentication service"
-  },
-  "LocaleSwitcher": {
-    "de": "Dutch",
-    "en": "English",
-    "fr": "French",
-    "es": "Spanish",
-    "label": "Language"
-  },
-  "LoginPage": {
-    "headerLabel": "Welcome back",
-    "backButtonLabel": "Don't have an account?",
-    "googleText": "Login with Google",
-    "gitHubText": "Login with Github",
-    "enterCode": "Enter your two factor code",
-    "resendBtn": "Resend code",
-    "resendTxt": "Resending...",
-    "forgotpwd": "Forgot password?",
-    "btn": "Login"
-  },
-  "RegistrationPage": {
-    "headerLabel": "Create your account",
-    "backButtonLabel": "Already have an account?",
-    "googleText": "Signup with Google",
-    "gitHubText": "Signup with Github",
-    "enterCode": "Enter your two factor code",
-    "btn": "Create an account"
-  },
-  "NewPasswordPage": {
-    "headerLabel": "Enter a new password",
-    "backButtonLabel": "Back to login",
-    "btn": "Reset password"
-  },
-  "ResetForm": {
-    "headerLabel": "Forgot your password?",
-    "backButtonLabel": "Back to login",
-    "btn": "Send reset email"
-  },
-  "ProfilePage": {
-    "title": "Profile"
+    "title": "Startpagina",
+    "tagLine": "Een eenvoudige authenticatie service"
   },
   "General": {
-    "email": "Email",
-    "password": "Password",
-    "submitbtn": "Submit",
-    "name": "Name"
+    "email": "E-mailadres",
+    "password": "Wachtwoord",
+    "submitbtn": "Bevestigen",
+    "name": "naam",
+    "error": "Er is iets misgegaan! Probeer het opnieuw.",
+    "admin": "Beheerder",
+    "user": "Gebruiker",
+    "role": "Functie",
+    "enabled": "Ingeschakeld",
+    "disabled": "uitgeschakeld",
+    "active": "actief",
+    "inActive": "Inactief",
+    "activate": "Activeren",
+    "deActivate": "Deactiveren"
+  },
+  "LocaleSwitcher": {
+    "de": "Nederlands",
+    "en": "Nederlands",
+    "fr": "Frans",
+    "es": "Spaans",
+    "label": "Taal"
+  },
+  "LoginPage": {
+    "pageTitle": "Aanmelden",
+    "headerLabel": "Welkom terug",
+    "backButtonLabel": "Nog geen account?",
+    "googleText": "Inloggen met Google",
+    "gitHubText": "Inloggen met Github",
+    "enterCode": "Voer je tweestapsverificatiecode in",
+    "resendBtn": "Code opnieuw verzenden",
+    "resendTxt": "Opnieuw verzenden...",
+    "forgotpwd": "Wachtwoord vergeten?",
+    "btn": "Aanmelden"
+  },
+  "RegistrationPage": {
+    "pageTitle": "Account aanmaken",
+    "headerLabel": "Maak je account aan",
+    "backButtonLabel": "Heeft u al een account?",
+    "googleText": "Aanmelden met Google",
+    "gitHubText": "Aanmelden bij Github",
+    "enterCode": "Voer je tweestapsverificatiecode in",
+    "btn": "Account aanmaken"
+  },
+  "NewPasswordPage": {
+    "pageTitle": "Wachtwoord",
+    "headerLabel": "Voer een nieuw wachtwoord in",
+    "backButtonLabel": "Terug naar inloggen",
+    "btn": "Wachtwoord opnieuw instellen"
+  },
+  "ResetForm": {
+    "pageTitle": "Reset",
+    "headerLabel": "Wachtwoord vergeten?",
+    "backButtonLabel": "Terug naar inloggen",
+    "btn": "Verstuur reset e-mail"
+  },
+  "SettingsTab": {
+    "pageTitle": "Instellingen",
+    "subscription": "Abonnement",
+    "domain": "Domein instellingen"
+  },
+  "CompanyPage": {
+    "pageTitle": "Bedrijf aanmaken",
+    "title": "Uw bedrijf aanmaken",
+    "subTitle": " Laten we beginnen met het instellen van je bedrijfsprofiel.",
+    "btn": " Aanmaken en doorgaan",
+    "label": "Bedrijfsnaam is vereist",
+    "nameError": "Sorry, de naam van dit bedrijf is al in gebruik!",
+    "fail": "Bedrijf aanmaken mislukt."
+  },
+  "ProfilePage": {
+    "pageTitle": "Profiel",
+    "title": "Profile",
+    "email": "E-mail kan niet worden gewijzigd",
+    "2FA": "Twee-factor authenticatie",
+    "2FAlable": "Twee-factorenauthenticatie voor uw account inschakelen",
+    "btn": "Wijzigingen opslaan",
+    "account": "Rekening",
+    "password": "Wachtwoord",
+    "changePassword": "Wachtwoord wijzigen",
+    "newPassword": "Nieuw wachtwoord",
+    "confirmPassword": "Bevestig wachtwoord",
+    "updatePassword": "Wachtwoord bijwerken",
+    "oAuth": "Je kan je wachtwoord niet wijzigen omdat je je bij Oauth hebt aangemeld"
+  },
+  "VerificationPage": {
+    "pageTitle": "Controleren",
+    "headerLabel": "Verificatie account",
+    "backButtonLabel": "Terug naar inloggen",
+    "title": " Verifiëren van je account...",
+    "success": "Omleiden naar inloggen...",
+    "error": "Token ontbreekt."
+  },
+  "SubscriptionPage": {
+    "pageTitle": "Abonnement",
+    "subscribed": "Ingeschreven",
+    "cancelled": "Geannuleerd",
+    "current": "Huidige Abonnement Details",
+    "period": "Huidige periode:",
+    "license": "Licentie",
+    "onTrial": "Tijdens de proefperiode - eindigt over",
+    "days": "Dagen",
+    "subscription": "Uw abonnement",
+    "ProductList": {
+      "license": "Gebruikerslicenties",
+      "current": "Stroom",
+      "btnCurrent": "Huidig abonnement",
+      "btn": "Kies een abonnement",
+      "success": "Abonnement succesvol bijgewerkt!",
+      "error": "Kan de betalingssessie niet aanmaken!"
+    },
+    "CancelSubscription": {
+      "title": "Wil je niet doorgaan?",
+      "cancel": "Abonnement opzeggen",
+      "confirm": "Annulering bevestigen",
+      "success": "Uw annuleringsverzoek is verwerkt.",
+      "text": " Je abonnement zal onmiddellijk worden geannuleerd, en je verliest toegang tot alle premium-functies.",
+      "text2": "Houd er rekening mee dat het annuleren van je abonnement toekomstige kosten zal voorkomen, maar je hebt nog steeds toegang tot het einde van je factureringscyclus.",
+      "text3": " Weet u zeker dat u wilt doorgaan? Deze actie kan niet ongedaan worden gemaakt en u moet zich opnieuw abonneren om weer toegang te krijgen.",
+      "error": "Kan uw annuleringsverzoek niet verwerken. Probeer het opnieuw!",
+      "btnConfirm": "Ja, annuleren",
+      "btnCancel": "Nee, doorgaan met mijn abonnement"
+    }
+  },
+  "UsersPage": {
+    "pageTitle": "Gebruikers",
+    "title": "Bedrijf gebruikers",
+    "subTitle": "Beheer en houd toezicht op alle gebruikers binnen uw organisatie",
+    "placeholder": "Zoeken op naam",
+    "AddUserModal": {
+      "btn": "Nieuwe gebruiker toevoegen",
+      "description": " Maak een nieuwe gebruiker aan in uw bedrijf. Eenmaal toegevoegd, zullen zij een account verificatie e-mail ontvangen.",
+      "close": "Afsluiten",
+      "error": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+    },
+    "UserTable": {
+      "user": "Gebruiker",
+      "role": "Functie",
+      "status": "status",
+      "addedBy": "Toegevoegd door",
+      "action": "actie",
+      "pending": "E-mail verificatie in behandeling door de gebruiker"
+    },
+    "EditUser": {
+      "edit": "Bewerken",
+      "heading": "Gebruiker bewerken",
+      "fetching": "Ophalen van gebruikersgegevens",
+      "title": "Bewerk details van ",
+      "label": "Is 2FA ingeschakeld?",
+      "labelTxt": "2FA voor gebruiker in- of uitschakelen",
+      "btn": "Vernieuwen",
+      "close": "Afsluiten",
+      "success": "Gebruiker succesvol bijgewerkt",
+      "error": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+    },
+    "UserStatusLink": {
+      "activateMsg": "Gebruiker is nu geactiveerd.",
+      "deactivateMsg": "Gebruiker is nu gedeactiveerd.",
+      "error": "Bijwerken van gebruikersstatus mislukt",
+      "activation": "Activeren",
+      "deActivation": "Deactiveren",
+      "deActivationTxt": "Deze gebruiker zal onmiddellijk worden gedeactiveerd, en zal de toegang tot alle functies verliezen als per de toegewezen rol.",
+      "activationTxt": "Deze gebruiker wordt onmiddellijk geactiveerd, en krijgt toegang tot alle functies als per de toegewezen rol.",
+      "btn": "Bevestigen",
+      "cancel": "annuleren"
+    }
+  },
+  "Cards": {
+    "total": "Totaal",
+    "admins": "Beheerders",
+    "users": "Gebruikers",
+    "active": "actief",
+    "inActive": "Inactief",
+    "all": "Allemaal",
+    "trial": "Proefperiode",
+    "subscribed": "Ingeschreven",
+    "companies": "Bedrijven",
+    "subscriptions": "Abonnementen"
+  },
+  "ReportsPage": {
+    "pageTitle": "Rapporten",
+    "reports": "Rapporten",
+    "dailyUsers": "Dagelijkse actieve gebruikers",
+    "browser": "  Meest gebruikte browser",
+    "os": "Meest gebruikte OS",
+    "devices": "Meest gebruikte apparaten"
+  },
+  "CompaniesPage": {
+    "pageTitle": "Alle bedrijven",
+    "title": "Alle bedrijven",
+    "subTitle": "",
+    "placeholder": "Zoeken op naam",
+    "name": "naam",
+    "key": "API sleutel",
+    "status": "status",
+    "createdBy": "Aangemaakt door",
+    "subscription": "Abonnement",
+    "action": "actie",
+    "createdOn": "Aangemaakt op",
+    "daysLeft": "dagen resterend",
+    "trial": "Proefperiode",
+    "subscribed": "Ingeschreven",
+    "nodata": "Geen gegevens gevonden",
+    "active": "actief",
+    "inActive": "Inactief",
+    "EditCompany": {
+      "edit": "Bewerken",
+      "heading": "Bedrijf bewerken",
+      "fetching": "Bedrijfsgegevens ophalen",
+      "title": "Bewerk details van ",
+      "name": "Bedrijfsnaam is vereist",
+      "label": "Is er een proefperiode?",
+      "labelTxt": "Proefperiode voor het bedrijf in- of uitschakelen",
+      "btn": "Vernieuwen",
+      "close": "Afsluiten",
+      "success": "Bedrijfsgegevens zijn succesvol bijgewerkt",
+      "error": "Er is een onverwachte fout opgetreden. Probeer het opnieuw.",
+      "trialLabel": "Proefperiode eindigt op",
+      "trialLabelTxt": "Selecteer de datum waarop de proefperiode eindigt"
+    },
+    "CompanyStatusLink": {
+      "activateMsg": "Bedrijf is nu geactiveerd.",
+      "deactivateMsg": "Bedrijf is nu gedeactiveerd.",
+      "error": "Bedrijfsstatus bijwerken mislukt",
+      "activation": "Activeren",
+      "deActivation": "Deactiveren",
+      "deActivationTxt": "Dit bedrijf zal onmiddellijk worden gedeactiveerd en de toegang tot alle accounts zal verliezen.",
+      "activationTxt": "Dit bedrijf wordt onmiddellijk geactiveerd en krijgt toegang tot alle rekeningen.",
+      "btn": "Bevestigen",
+      "cancel": "annuleren"
+    }
+  },
+  "DashboardPage": {
+    "pageTitle": "Dashboard",
+    "dashboard": "Dashboard",
+    "dailyUsers": " Dagelijkse nieuw aangemaakte gebruikers",
+    "dailyCompanies": "Dagelijks nieuw aangemaakte bedrijven",
+    "loggedIn": "Dagelijks ingelogde gebruikers",
+    "recent": "Recente bedrijven",
+    "devices": "Meest gebruikte apparaten",
+    "name": "naam",
+    "status": "status",
+    "createdOn": "Aangemaakt op",
+    "loading": "Gegevens laden..."
   }
 }

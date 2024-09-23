@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useCallback, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import type * as z from 'zod';
@@ -38,6 +39,8 @@ const ProfileForm = ({
   const [error, setError] = useState<string | undefined>();
   const [success] = useState<string | undefined>();
   const { update } = useSession();
+  const t = useTranslations('ProfilePage');
+  const g = useTranslations('General');
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
@@ -75,13 +78,13 @@ const ProfileForm = ({
   return (
     <Form {...form}>
       <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-        <h2 className="mb-6 text-2xl font-semibold">Profile Settings</h2>
+        <h2 className="mb-6 text-2xl font-semibold">{t('title')}</h2>
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>{g('name')}</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -101,7 +104,7 @@ const ProfileForm = ({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{g('email')}</FormLabel>
                   <FormControl>
                     <div className="group relative">
                       <Input
@@ -112,7 +115,7 @@ const ProfileForm = ({
                         className="cursor-not-allowed border border-gray-300 focus:border-gray-400 dark:border-gray-700 dark:focus:border-gray-600"
                       />
                       <div className="invisible absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
-                        Email cannot be changed
+                        {t('email')}
                         <svg
                           className="absolute left-0 top-full h-2 w-full text-gray-800"
                           x="0px"
@@ -138,10 +141,8 @@ const ProfileForm = ({
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border border-gray-300 p-3 shadow-sm dark:border-gray-700">
                   <div className="space-y-0.5">
-                    <FormLabel>Two Factor Authentication</FormLabel>
-                    <FormDescription>
-                      Enable two factor authentication for your account
-                    </FormDescription>
+                    <FormLabel>{t('2FA')}</FormLabel>
+                    <FormDescription>{t('2FAlable')}</FormDescription>
                   </div>
                   <FormControl>
                     <Switch
@@ -158,7 +159,7 @@ const ProfileForm = ({
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button disabled={isPending} type="submit">
-          Save Profile
+          {t('btn')}
         </Button>
       </form>
     </Form>

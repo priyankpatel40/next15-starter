@@ -2,6 +2,7 @@
 
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { newVerification } from '@/actions/new-verification';
@@ -17,10 +18,11 @@ export const NewVerificationForm = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   const router = useRouter();
+  const t = useTranslations('VerificationPage');
 
   useEffect(() => {
     if (!token) {
-      setError('Missing token!');
+      setError(t('error'));
       setIsLoading(false);
       return;
     }
@@ -37,7 +39,7 @@ export const NewVerificationForm = () => {
         }
       })
       .catch(() => {
-        setError('Something went wrong! Please try again.');
+        setError(t('error'));
       })
       .finally(() => {
         setIsLoading(false);
@@ -47,8 +49,8 @@ export const NewVerificationForm = () => {
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-4 sm:px-6 lg:px-8 ">
       <CardWrapper
-        headerLabel="Account Verification"
-        backButtonLabel="Back to login"
+        headerLabel={t('headerLabel')}
+        backButtonLabel={t('backButtonLabel')}
         backButtonHref="/login"
         cardClasses="w-full max-w-md shadow-lg"
       >
@@ -56,16 +58,14 @@ export const NewVerificationForm = () => {
           {isLoading && (
             <div className="flex flex-col items-center space-y-2">
               <ArrowPathIcon className="size-12 animate-spin text-black dark:text-white" />
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Verifying your account...
-              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('title')}</p>
             </div>
           )}
           {success && !isLoading && (
             <div className="text-center">
               <FormSuccess message={success} />
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Redirecting to login...
+                {t('success')}
               </p>
             </div>
           )}

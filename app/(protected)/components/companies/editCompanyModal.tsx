@@ -2,6 +2,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Company } from '@prisma/client';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState, useTransition } from 'react';
 import DatePicker from 'react-datepicker';
 import { useForm, useWatch } from 'react-hook-form';
@@ -40,6 +41,7 @@ const EditCompanyModal = ({ id, onClose, onCompanyUpdate }: EditCompanyModalProp
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
   const [company, setCompany] = useState<{ companyName: string } | null>(null);
+  const t = useTranslations('CompaniesPage.EditCompany');
 
   const form = useForm<z.infer<typeof EditCompanySchema>>({
     resolver: zodResolver(EditCompanySchema),
@@ -91,10 +93,10 @@ const EditCompanyModal = ({ id, onClose, onCompanyUpdate }: EditCompanyModalProp
   return company ? (
     <DialogContent className="fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-[95vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white p-4 text-gray-900 shadow-xl focus:outline-none data-[state=open]:animate-contentShow dark:bg-gray-800 dark:text-white sm:w-[90vw] sm:p-6 md:w-[85vw] lg:w-[80vw]">
       <DialogTitle className="mb-0 text-lg font-medium sm:text-xl">
-        Edit company
+        {t('heading')}
       </DialogTitle>
       <DialogDescription className="mb-2 text-sm text-gray-500 dark:text-gray-300">
-        Edit company details of {company.companyName}
+        {t('title')} {company.companyName}
       </DialogDescription>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} method="POST" className="space-y-6">
@@ -104,7 +106,7 @@ const EditCompanyModal = ({ id, onClose, onCompanyUpdate }: EditCompanyModalProp
               name="companyName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel> {t('name')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -123,10 +125,8 @@ const EditCompanyModal = ({ id, onClose, onCompanyUpdate }: EditCompanyModalProp
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border border-gray-300 p-3 shadow-sm dark:border-gray-600">
                   <div className="space-y-0.5">
-                    <FormLabel>Is on trial?</FormLabel>
-                    <FormDescription>
-                      Enable or disable trial for the company
-                    </FormDescription>
+                    <FormLabel>{t('trialLabel')}</FormLabel>
+                    <FormDescription>{t('trialLabelTxt')}</FormDescription>
                   </div>
                   <FormControl>
                     <Switch
@@ -146,10 +146,8 @@ const EditCompanyModal = ({ id, onClose, onCompanyUpdate }: EditCompanyModalProp
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border border-gray-300 p-3 shadow-sm dark:border-gray-600">
                     <div className="space-y-0.5">
-                      <FormLabel>Trial ends on</FormLabel>
-                      <FormDescription>
-                        Select the date when the trial ends
-                      </FormDescription>
+                      <FormLabel> {t('trialLabel')}</FormLabel>
+                      <FormDescription>{t('trialLabelTxt')}</FormDescription>
                     </div>
                     <FormControl>
                       <DatePicker
@@ -185,7 +183,7 @@ const EditCompanyModal = ({ id, onClose, onCompanyUpdate }: EditCompanyModalProp
                 isLoading={isPending}
                 className="w-full border border-transparent px-7 sm:w-auto"
               >
-                Update
+                {t('btn')}
               </Button>
               <Button
                 onClick={onClose}
@@ -193,7 +191,7 @@ const EditCompanyModal = ({ id, onClose, onCompanyUpdate }: EditCompanyModalProp
                 variant="outline"
                 className="w-full border border-gray-300 px-7 dark:border-gray-600 sm:w-auto"
               >
-                Close
+                {t('close')}
               </Button>
             </div>
           </div>
@@ -203,11 +201,11 @@ const EditCompanyModal = ({ id, onClose, onCompanyUpdate }: EditCompanyModalProp
   ) : (
     <DialogContent className="fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-[95vw] max-w-[500px] translate-x-1/2 translate-y-1/2 overflow-y-auto rounded-lg bg-white p-4 text-gray-900 shadow-xl focus:outline-none data-[state=open]:animate-contentShow dark:bg-gray-800 dark:text-white sm:w-[90vw] sm:p-6 md:w-[85vw] lg:w-[80vw]">
       <DialogTitle className="mb-2 text-lg font-medium sm:text-xl">
-        Edit company
+        {t('heading')}
       </DialogTitle>
       <DialogDescription className="mb-4 flex space-x-2 text-sm text-gray-500 dark:text-gray-300">
         <Loader />
-        <span>Fetching company details</span>
+        <span>{t('fetching')}</span>
       </DialogDescription>
     </DialogContent>
   );

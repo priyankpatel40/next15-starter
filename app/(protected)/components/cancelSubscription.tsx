@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -21,6 +22,7 @@ import { showToast } from '@/components/ui/toast';
 
 const CancelSubscription = ({ subscriptionId }: { subscriptionId: string }) => {
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations('SubscriptionPage.CancelSubscription');
 
   const form = useForm();
   const router = useRouter();
@@ -46,7 +48,7 @@ const CancelSubscription = ({ subscriptionId }: { subscriptionId: string }) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div>
-          <h2 className="font-bold">Don&apos;t want to continue?</h2>
+          <h2 className="font-bold">{t('title')}</h2>
           <Dialog>
             <DialogTrigger asChild>
               <Button
@@ -54,24 +56,20 @@ const CancelSubscription = ({ subscriptionId }: { subscriptionId: string }) => {
                 variant="link"
                 className="ml-4 p-2 text-sm text-gray-500 hover:underline"
               >
-                Cancel subscription
+                {t('cancel')}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Confirm Cancellation</DialogTitle>
+                <DialogTitle>{t('confirm')}</DialogTitle>
                 <DialogDescription className="rounded-md bg-gray-100 p-4 font-semibold text-gray-500">
-                  Your subscription will be canceled immediately, and you will lose access
-                  to all premium features.
+                  {t('text')}
                 </DialogDescription>
                 <DialogDescription className="rounded-md bg-gray-100 p-4 font-semibold text-gray-500">
-                  Please note that canceling your subscription will prevent any future
-                  charges, but you will still have access until the end of your billing
-                  cycle.
+                  {t('text2')}
                 </DialogDescription>
                 <DialogDescription className="rounded-md bg-gray-100 p-4 font-semibold text-gray-500">
-                  Are you sure you want to proceed? This action cannot be undone, and you
-                  will need to resubscribe to regain access.
+                  {t('text3')}
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
@@ -82,10 +80,10 @@ const CancelSubscription = ({ subscriptionId }: { subscriptionId: string }) => {
                   isLoading={isPending}
                   className="p-4"
                 >
-                  Yes, Cancel
+                  {t('btnConfirm')}
                 </Button>
                 <DialogClose asChild>
-                  <Button variant="link">No, Continue</Button>
+                  <Button variant="link">{t('btnCancel')}</Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>

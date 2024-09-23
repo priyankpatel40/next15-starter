@@ -3,6 +3,7 @@
 import { XCircleIcon } from '@heroicons/react/24/outline';
 import type { User, UserRole } from '@prisma/client';
 import { CheckCircledIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -46,7 +47,7 @@ export function EditUserLink({
   const handleUserUpdate = (user: User) => {
     onUserUpdated(user);
   };
-
+  const t = useTranslations('UsersPage.EditUser');
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -55,7 +56,7 @@ export function EditUserLink({
           className="rounded-md p-1 transition-transform duration-200 hover:scale-105"
         >
           <Pencil1Icon className="size-7 rounded-md p-1 text-blue-600 transition-transform duration-200 hover:scale-105 hover:text-blue-800" />
-          Edit
+          {t('edit')}
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -116,6 +117,8 @@ export function UserStatusLink({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const t = useTranslations('UsersPage.UserStatusLink');
+  const g = useTranslations('General');
   const handleClick = async () => {
     setIsLoading(true);
     const newStatus = !status;
@@ -123,19 +126,19 @@ export function UserStatusLink({
     if (success) {
       if (status) {
         showToast({
-          message: 'User is deactivated now.',
+          message: t('deactivateMsg'),
           type: 'warning',
         });
       } else {
         showToast({
-          message: 'User is activated now.',
+          message: t('activateMsg'),
           type: 'success',
         });
       }
       onStatusChange(id, newStatus);
     } else {
       showToast({
-        message: 'Failed to update user status',
+        message: t('error'),
         type: 'error',
       });
     }
@@ -153,23 +156,23 @@ export function UserStatusLink({
           {status ? (
             <>
               <XCircleIcon className="size-7 rounded-md p-1 text-red-600  hover:text-red-800" />
-              Deactivate
+              {g('deActivate')}
             </>
           ) : (
             <>
               <CheckCircledIcon className="size-7 rounded-md p-1 text-green-600  hover:text-green-800" />
-              Activate
+              {g('activate')}
             </>
           )}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Confirm {status ? 'Deactivation' : 'Activation'}</DialogTitle>
+          <DialogTitle>
+            {t('btn')} {status ? `${t('deActivation')}` : `${t('activation')}`}
+          </DialogTitle>
           <DialogDescription>
-            {status
-              ? 'This user will be deactivated immediately, and will loose the access to all the features as per the assigned role.'
-              : 'This user will be activated immediately, and will get the access to all the features as per the assigned role.'}
+            {status ? `${t('deActivationTxt')}` : `${t('activationTxt')}`}{' '}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -181,11 +184,11 @@ export function UserStatusLink({
               onClick={handleClick}
               className="p-4"
             >
-              Confirm
+              {t('btn')}
             </Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button variant="link">Cancel</Button>
+            <Button variant="link">{t('cancel')}</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

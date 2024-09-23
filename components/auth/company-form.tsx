@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { Company } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import type * as z from 'zod';
@@ -35,6 +36,8 @@ interface CreateCompanyResult {
 }
 
 const CompanyForm = () => {
+  const t = useTranslations('CompanyPage');
+
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
@@ -57,7 +60,7 @@ const CompanyForm = () => {
       getCompanyByName(values.companyName.trim().toLowerCase())
         .then((dataResponse) => {
           if (dataResponse?.companyName) {
-            setError('Sorry, This company name is already in use!');
+            setError(t('nameError'));
           } else {
             createCompany(values).then((result: CreateCompanyResult) => {
               if (result.success) {
@@ -76,14 +79,14 @@ const CompanyForm = () => {
                   });
                 }
               } else {
-                setError('Failed to create company.');
+                setError(t('fail'));
               }
             });
           }
         })
 
         .catch(() => {
-          setError('An error occurred');
+          setError(t('fail'));
         });
     });
   };
@@ -110,10 +113,10 @@ const CompanyForm = () => {
             </svg>
           </div>
           <h2 className="mb-2 text-2xl font-bold text-gray-800 dark:text-gray-100 sm:text-3xl md:text-4xl">
-            Create Your Company
+            {t('title')}
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-400 sm:text-base">
-            Let&apos;s get started by setting up your company profile.
+            {t('subTitle')}
           </p>
         </div>
         <Form {...form}>
@@ -128,7 +131,7 @@ const CompanyForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 sm:text-base">
-                    Company Name
+                    {t('label')}
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -152,7 +155,7 @@ const CompanyForm = () => {
               type="submit"
               className="  w-full rounded-md py-2.5 text-sm font-semibold transition-colors duration-200"
             >
-              Create and Continue
+              {t('btn')}
             </Button>
           </form>
         </Form>

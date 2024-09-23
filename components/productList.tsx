@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useMemo, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import type { Stripe } from 'stripe'; // Import Stripe types
@@ -44,6 +45,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
   const router = useRouter();
   const [tab, setTab] = useState('');
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations('SubscriptionPage.ProductList');
 
   const pricingIntervals = useMemo(() => {
     const intervals = new Set<string>();
@@ -102,7 +104,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
           );
           if (result?.success) {
             showToast({
-              message: 'Subscription updated successfully!',
+              message: t('success'),
               type: 'success',
             });
             router.refresh();
@@ -114,7 +116,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
           router.push(session.url || '');
         } else {
           showToast({
-            message: 'Unable to create payment session!',
+            message: t('error'),
             type: 'error',
           });
         }
@@ -137,7 +139,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
                   name="quantity"
                   render={() => (
                     <FormItem className="flex items-center space-x-2">
-                      <FormLabel className="mt-1.5 text-sm">User licenses</FormLabel>
+                      <FormLabel className="mt-1.5 text-sm">{t('license')}</FormLabel>
                       <Select
                         onValueChange={(value) => handleValueChange(Number(value))}
                         defaultValue={quantity.toString()} // Set default value to current quantity
@@ -175,7 +177,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
                     className={`rounded-md px-4 py-2 text-center text-sm font-semibold transition-colors duration-200 
                 ${tab === interval ? 'bg-gray-300 dark:bg-gray-700' : 'text-gray-500 hover:text-black dark:hover:text-white'}`}
                   >
-                    Per {interval.charAt(0).toUpperCase() + interval.slice(1)}
+                    / {interval.charAt(0).toUpperCase() + interval.slice(1)}
                   </Tabs.Trigger>
                 ))}
               </Tabs.List>
@@ -223,7 +225,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
                         subscription.status !== 'canceled' && (
                           <div className="relative">
                             <div className="absolute right-0 top-0 rounded-md bg-green-700 px-3 py-1 text-xs text-white">
-                              Current
+                              {t('current')}
                             </div>
                           </div>
                         )}
@@ -301,8 +303,8 @@ const ProductList: React.FC<PricingTabsProps> = ({
                           price.id === subscription.priceId &&
                           quantity === subscription.quantity &&
                           subscription.status !== 'canceled'
-                            ? 'Current Plan'
-                            : 'Choose Plan'}
+                            ? t('btnCurrent')
+                            : t('btn')}
                         </Button>
                       </div>
                     </div>

@@ -1,56 +1,256 @@
 {
   "AppLayout": {
-    "home": "Home",
-    "logout": "Logout",
-    "profile": "Profile"
+    "home": "Inicio",
+    "logout": "Cerrar sesión",
+    "profile": "Perfil"
   },
   "HomePage": {
-    "title": "Home",
-    "tagLine": "A simple authentication service"
-  },
-  "LocaleSwitcher": {
-    "de": "Dutch",
-    "en": "English",
-    "fr": "French",
-    "es": "Spanish",
-    "label": "Language"
-  },
-  "LoginPage": {
-    "headerLabel": "Welcome back",
-    "backButtonLabel": "Don't have an account?",
-    "googleText": "Login with Google",
-    "gitHubText": "Login with Github",
-    "enterCode": "Enter your two factor code",
-    "resendBtn": "Resend code",
-    "resendTxt": "Resending...",
-    "forgotpwd": "Forgot password?",
-    "btn": "Login"
-  },
-  "RegistrationPage": {
-    "headerLabel": "Create your account",
-    "backButtonLabel": "Already have an account?",
-    "googleText": "Signup with Google",
-    "gitHubText": "Signup with Github",
-    "enterCode": "Enter your two factor code",
-    "btn": "Create an account"
-  },
-  "NewPasswordPage": {
-    "headerLabel": "Enter a new password",
-    "backButtonLabel": "Back to login",
-    "btn": "Reset password"
-  },
-  "ResetForm": {
-    "headerLabel": "Forgot your password?",
-    "backButtonLabel": "Back to login",
-    "btn": "Send reset email"
-  },
-  "ProfilePage": {
-    "title": "Profile"
+    "title": "Inicio",
+    "tagLine": "Un servicio de autenticación simple"
   },
   "General": {
-    "email": "Email",
-    "password": "Password",
-    "submitbtn": "Submit",
-    "name": "Name"
+    "email": "E-mail",
+    "password": "Contraseña",
+    "submitbtn": "Enviar",
+    "name": "Nombre",
+    "error": "¡Algo salió mal! Por favor, inténtalo de nuevo.",
+    "admin": "Admin",
+    "user": "Usuario",
+    "role": "Rol",
+    "enabled": "Activado",
+    "disabled": "deshabilitado",
+    "active": "Activo",
+    "inActive": "Inactivo",
+    "activate": "Activar",
+    "deActivate": "Desactivar"
+  },
+  "LocaleSwitcher": {
+    "de": "Holandés",
+    "en": "Inglés",
+    "fr": "Francés",
+    "es": "Español",
+    "label": "Idioma"
+  },
+  "LoginPage": {
+    "pageTitle": "Ingresar",
+    "headerLabel": "Bienvenida de nuevo",
+    "backButtonLabel": "¿No tienes una cuenta?",
+    "googleText": "Iniciar sesión con Google",
+    "gitHubText": "Iniciar sesión con Github",
+    "enterCode": "Introduzca su código de dos factores",
+    "resendBtn": "Reenviar código",
+    "resendTxt": "Reenviando...",
+    "forgotpwd": "¿Olvidaste la contraseña?",
+    "btn": "Ingresar"
+  },
+  "RegistrationPage": {
+    "pageTitle": "Crear cuenta",
+    "headerLabel": "Crea tu cuenta",
+    "backButtonLabel": "¿Ya tienes una cuenta?",
+    "googleText": "Registrarse con Google",
+    "gitHubText": "Regístrate con Github",
+    "enterCode": "Introduzca su código de dos factores",
+    "btn": "Crear una cuenta"
+  },
+  "NewPasswordPage": {
+    "pageTitle": "Contraseña",
+    "headerLabel": "Introduzca una nueva contraseña",
+    "backButtonLabel": "Volver a iniciar sesión",
+    "btn": "Restablecer contraseña"
+  },
+  "ResetForm": {
+    "pageTitle": "Reset",
+    "headerLabel": "¿Olvidaste tu contraseña?",
+    "backButtonLabel": "Volver a iniciar sesión",
+    "btn": "Enviar email"
+  },
+  "SettingsTab": {
+    "pageTitle": "Ajustes",
+    "subscription": "Suscripción",
+    "domain": "Ajustes de dominio"
+  },
+  "CompanyPage": {
+    "pageTitle": "Crear empresa",
+    "title": "Crea tu empresa",
+    "subTitle": " Vamos a empezar configurando el perfil de su empresa.",
+    "btn": " Crear y continuar",
+    "label": "Nombre de la empresa",
+    "nameError": "¡Lo sentimos, este nombre de empresa ya está en uso!",
+    "fail": "Error al crear la empresa."
+  },
+  "ProfilePage": {
+    "pageTitle": "Perfil",
+    "title": "Profile",
+    "email": "No se puede cambiar el correo electrónico",
+    "2FA": "Autenticación en dos pasos",
+    "2FAlable": "Habilitar autenticación de dos factores para su cuenta",
+    "btn": "Guardar Cambios",
+    "account": "Cuenta",
+    "password": "Contraseña",
+    "changePassword": "Cambiar contraseña",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "updatePassword": "Actualizar contraseña",
+    "oAuth": "No puedes cambiar tu contraseña porque te registraste con Oauth"
+  },
+  "VerificationPage": {
+    "pageTitle": "Verificando",
+    "headerLabel": "Verificación de cuenta",
+    "backButtonLabel": "Volver a iniciar sesión",
+    "title": " Verificando tu cuenta...",
+    "success": "Redireccionando para iniciar sesión...",
+    "error": "Falta el token."
+  },
+  "SubscriptionPage": {
+    "pageTitle": "Suscripción",
+    "subscribed": "Suscrito",
+    "cancelled": "Cancelado",
+    "current": "Detalles de la suscripción actual",
+    "period": "Período actual:",
+    "license": "Licencia",
+    "onTrial": "En prueba - termina en",
+    "days": "días",
+    "subscription": "Tu suscripción",
+    "ProductList": {
+      "license": "Licencias de usuario",
+      "current": "Actual",
+      "btnCurrent": "Plan Actual",
+      "btn": "Elegir plan",
+      "success": "¡Suscripción actualizada con éxito!",
+      "error": "¡No se puede crear la sesión de pago!"
+    },
+    "CancelSubscription": {
+      "title": "¿No quieres continuar?",
+      "cancel": "Cancelar suscripción",
+      "confirm": "Confirmar cancelación",
+      "success": "Su solicitud de cancelación ha sido procesada.",
+      "text": " Tu suscripción se cancelará inmediatamente y perderás el acceso a todas las características premium.",
+      "text2": "Tenga en cuenta que la cancelación de su suscripción impedirá cualquier cargo futuro, pero todavía tendrá acceso hasta el final de su ciclo de facturación.",
+      "text3": " ¿Está seguro de que desea continuar? Esta acción no se puede deshacer, y necesitará volver a enviarla para recuperar el acceso.",
+      "error": "No se puede procesar su solicitud de cancelación. ¡Por favor, inténtelo de nuevo!",
+      "btnConfirm": "Sí, Cancelar",
+      "btnCancel": "No, continuar mi suscripción"
+    }
+  },
+  "UsersPage": {
+    "pageTitle": "Usuarios",
+    "title": "Usuarios de la empresa",
+    "subTitle": "Administrar y supervisar todos los usuarios de su organización",
+    "placeholder": "Buscar por nombre",
+    "AddUserModal": {
+      "btn": "Añadir nuevo usuario",
+      "description": " Crea un nuevo usuario en tu empresa. Una vez añadido, recibirá un correo electrónico de verificación de la cuenta.",
+      "close": "Cerrar",
+      "error": "Ocurrió un error inesperado. Por favor, inténtelo de nuevo."
+    },
+    "UserTable": {
+      "user": "Usuario",
+      "role": "Rol",
+      "status": "Estado",
+      "addedBy": "Añadido por",
+      "action": "Accin",
+      "pending": "Email de verificación pendiente por el usuario"
+    },
+    "EditUser": {
+      "edit": "Editar",
+      "heading": "Editar usuario",
+      "fetching": "Obteniendo detalles del usuario",
+      "title": "Editar detalles de ",
+      "label": "¿Está 2FA habilitado?",
+      "labelTxt": "Activar o desactivar 2FA para el usuario",
+      "btn": "Actualizar",
+      "close": "Cerrar",
+      "success": "Usuario actualizado correctamente",
+      "error": "Ocurrió un error inesperado. Por favor, inténtelo de nuevo."
+    },
+    "UserStatusLink": {
+      "activateMsg": "El usuario está activado.",
+      "deactivateMsg": "El usuario está desactivado.",
+      "error": "Error al actualizar el estado del usuario",
+      "activation": "Activación",
+      "deActivation": "Desactivación",
+      "deActivationTxt": "Este usuario se desactivará inmediatamente, y perderá el acceso a todas las características según el rol asignado.",
+      "activationTxt": "Este usuario se activará inmediatamente, y obtendrá el acceso a todas las características según el rol asignado.",
+      "btn": "Confirmar",
+      "cancel": "Cancelar"
+    }
+  },
+  "Cards": {
+    "total": "Total",
+    "admins": "Administradores",
+    "users": "Usuarios",
+    "active": "Activo",
+    "inActive": "Inactivo",
+    "all": "Todos",
+    "trial": "Prueba",
+    "subscribed": "Suscrito",
+    "companies": "Empresas",
+    "subscriptions": "Suscripciones"
+  },
+  "ReportsPage": {
+    "pageTitle": "Informes",
+    "reports": "Informes",
+    "dailyUsers": "Usuarios Activos Diarios",
+    "browser": "  Navegador más usado",
+    "os": "SO más usado",
+    "devices": "Dispositivos más usados"
+  },
+  "CompaniesPage": {
+    "pageTitle": "Todas las empresas",
+    "title": "Todas las empresas",
+    "subTitle": "",
+    "placeholder": "Buscar por nombre",
+    "name": "Nombre",
+    "key": "Clave API",
+    "status": "Estado",
+    "createdBy": "Creado por",
+    "subscription": "Suscripción",
+    "action": "Accin",
+    "createdOn": "Creado el",
+    "daysLeft": "días restantes",
+    "trial": "Prueba",
+    "subscribed": "Suscrito",
+    "nodata": "No se encontraron datos",
+    "active": "Activo",
+    "inActive": "Inactivo",
+    "EditCompany": {
+      "edit": "Editar",
+      "heading": "Editar empresa",
+      "fetching": "Obteniendo detalles de la empresa",
+      "title": "Editar detalles de ",
+      "name": "Nombre de la empresa",
+      "label": "¿Está en juicio?",
+      "labelTxt": "Activar o desactivar la prueba para la empresa",
+      "btn": "Actualizar",
+      "close": "Cerrar",
+      "success": "Detalles de la empresa actualizados correctamente",
+      "error": "Ocurrió un error inesperado. Por favor, inténtelo de nuevo.",
+      "trialLabel": "Prueba finalizada el",
+      "trialLabelTxt": "Seleccione la fecha en que finalice el período de prueba"
+    },
+    "CompanyStatusLink": {
+      "activateMsg": "La empresa está activada ahora.",
+      "deactivateMsg": "La empresa está desactivada ahora.",
+      "error": "Error al actualizar el estado de la empresa",
+      "activation": "Activación",
+      "deActivation": "Desactivación",
+      "deActivationTxt": "Esta empresa será desactivada inmediatamente y perderá el acceso a todas las cuentas.",
+      "activationTxt": "Esta empresa se activará inmediatamente y tendrá acceso a todas las cuentas.",
+      "btn": "Confirmar",
+      "cancel": "Cancelar"
+    }
+  },
+  "DashboardPage": {
+    "pageTitle": "Tablero",
+    "dashboard": "Tablero",
+    "dailyUsers": " Usuarios nuevos y diarios",
+    "dailyCompanies": "Nuevas empresas creadas diariamente",
+    "loggedIn": "Usuarios conectados diariamente",
+    "recent": "Empresas recientes",
+    "devices": "Dispositivos más usados",
+    "name": "Nombre",
+    "status": "Estado",
+    "createdOn": "Creado el",
+    "loading": "Cargando datos..."
   }
 }
