@@ -1,56 +1,56 @@
 {
   "AppLayout": {
-    "home": "Home",
-    "logout": "Logout",
-    "profile": "Profile"
+    "home": "Inicio",
+    "logout": "Cerrar sesión",
+    "profile": "Perfil"
   },
   "HomePage": {
-    "title": "Home",
-    "tagLine": "A simple authentication service"
+    "title": "Inicio",
+    "tagLine": "Un servicio de autenticación simple"
   },
   "LocaleSwitcher": {
-    "de": "Dutch",
-    "en": "English",
-    "fr": "French",
-    "es": "Spanish",
-    "label": "Language"
+    "de": "Holandés",
+    "en": "Inglés",
+    "fr": "Francés",
+    "es": "Español",
+    "label": "Idioma"
   },
   "LoginPage": {
-    "headerLabel": "Welcome back",
-    "backButtonLabel": "Don't have an account?",
-    "googleText": "Login with Google",
-    "gitHubText": "Login with Github",
-    "enterCode": "Enter your two factor code",
-    "resendBtn": "Resend code",
-    "resendTxt": "Resending...",
-    "forgotpwd": "Forgot password?",
-    "btn": "Login"
+    "headerLabel": "Bienvenida de nuevo",
+    "backButtonLabel": "¿No tienes una cuenta?",
+    "googleText": "Iniciar sesión con Google",
+    "gitHubText": "Iniciar sesión con Github",
+    "enterCode": "Introduzca su código de dos factores",
+    "resendBtn": "Reenviar código",
+    "resendTxt": "Reenviando...",
+    "forgotpwd": "¿Olvidaste la contraseña?",
+    "btn": "Ingresar"
   },
   "RegistrationPage": {
-    "headerLabel": "Create your account",
-    "backButtonLabel": "Already have an account?",
-    "googleText": "Signup with Google",
-    "gitHubText": "Signup with Github",
-    "enterCode": "Enter your two factor code",
-    "btn": "Create an account"
+    "headerLabel": "Crea tu cuenta",
+    "backButtonLabel": "¿Ya tienes una cuenta?",
+    "googleText": "Registrarse con Google",
+    "gitHubText": "Regístrate con Github",
+    "enterCode": "Introduzca su código de dos factores",
+    "btn": "Crear una cuenta"
   },
   "NewPasswordPage": {
-    "headerLabel": "Enter a new password",
-    "backButtonLabel": "Back to login",
-    "btn": "Reset password"
+    "headerLabel": "Introduzca una nueva contraseña",
+    "backButtonLabel": "Volver a iniciar sesión",
+    "btn": "Restablecer contraseña"
   },
   "ResetForm": {
-    "headerLabel": "Forgot your password?",
-    "backButtonLabel": "Back to login",
-    "btn": "Send reset email"
+    "headerLabel": "¿Olvidaste tu contraseña?",
+    "backButtonLabel": "Volver a iniciar sesión",
+    "btn": "Enviar email"
   },
   "ProfilePage": {
-    "title": "Profile"
+    "title": "Perfil"
   },
   "General": {
-    "email": "Email",
-    "password": "Password",
-    "submitbtn": "Submit",
-    "name": "Name"
+    "email": "E-mail",
+    "password": "Contraseña",
+    "submitbtn": "Enviar",
+    "name": "Nombre"
   }
 }
