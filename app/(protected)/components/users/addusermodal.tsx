@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { User } from '@prisma/client';
 import { UserRole } from '@prisma/client';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import type * as z from 'zod';
@@ -39,6 +40,8 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, setIsPending] = useState<boolean>(false);
+  const t = useTranslations('UsersPage.AddUserModal');
+  const g = useTranslations('General');
 
   const form = useForm<z.infer<typeof CreateUserSchema>>({
     resolver: zodResolver(CreateUserSchema),
@@ -70,18 +73,17 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
       }
     } catch (err) {
       logger.error('Error updating user:', err);
-      setError('An unexpected error occurred. Please try again.');
+      setError(t('error'));
     }
     setIsPending(false);
   };
   return (
     <>
       <DialogTitle className="mb-2 text-lg font-medium sm:text-xl">
-        Add new user
+        {t('btn')}
       </DialogTitle>
       <DialogDescription className="mb-4 text-sm text-gray-500">
-        Create a new user in your company. Once added, they will receive an account
-        verification email.
+        {t('description')}
       </DialogDescription>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} method="POST" className="space-y-6">
@@ -91,7 +93,7 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel> {g('name')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -109,7 +111,7 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{g('email')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -128,7 +130,7 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{g('password')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -147,7 +149,7 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel>{g('role')}</FormLabel>
                   <Select
                     disabled={isPending}
                     onValueChange={field.onChange}
@@ -159,8 +161,8 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
-                      <SelectItem value={UserRole.USER}>User</SelectItem>
+                      <SelectItem value={UserRole.ADMIN}>{g('admin')}</SelectItem>
+                      <SelectItem value={UserRole.USER}>{g('user')}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -178,7 +180,7 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
                 isLoading={isPending}
                 className="w-full px-7 sm:w-auto"
               >
-                Add User
+                {t('btn')}
               </Button>
               <Button
                 onClick={onClose}
@@ -186,7 +188,7 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
                 variant="outline"
                 className="w-full px-7 sm:w-auto"
               >
-                Close
+                {t('close')}
               </Button>
             </div>
           </div>

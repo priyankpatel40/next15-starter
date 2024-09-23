@@ -6,6 +6,7 @@ import { UsersIcon } from '@heroicons/react/24/outline';
 import type { User } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Suspense } from 'react';
 
 import { auth } from '@/auth';
@@ -26,6 +27,7 @@ interface AllUsersProps {
 
 const AllUsers = async ({ searchParams }: AllUsersProps) => {
   const session = await auth();
+  const t = useTranslations('UsersPage');
   const page = Number(searchParams.page) || 1;
   const filter = searchParams.filter || 'all';
   const search = searchParams.query || '';
@@ -71,11 +73,9 @@ const AllUsers = async ({ searchParams }: AllUsersProps) => {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Company Users
+              {t('title')}
             </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Manage and oversee all users within your organization
-            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('subTitle')}</p>
           </div>
         </div>
       </div>
@@ -93,7 +93,7 @@ const AllUsers = async ({ searchParams }: AllUsersProps) => {
             </div>
             <div className="flex grow flex-col  justify-center space-y-4 lg:flex-row lg:space-x-4 lg:space-y-5">
               <div className="grow lg:mt-5">
-                <TextSearch placeholder="Search by name" />
+                <TextSearch placeholder={t('placeholder')} />
               </div>
               <div className="w-full lg:w-auto">
                 <FilterSelect filter={filter} />

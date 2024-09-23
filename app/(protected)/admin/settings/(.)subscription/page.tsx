@@ -1,5 +1,6 @@
 import { CheckCircledIcon, Cross2Icon } from '@radix-ui/react-icons';
 import type { Metadata } from 'next';
+import { useTranslations } from 'next-intl';
 import { Suspense } from 'react';
 import type Stripe from 'stripe';
 
@@ -37,6 +38,7 @@ interface Subscription {
 const SubscriptionPage = async () => {
   let subscriptionData;
   const session = await auth();
+  const t = useTranslations('SubscriptionPage');
   logger.info('🚀 ~ file: page.tsx:10 ~ SubscriptionPage ~ session:', session);
   const subscription = (await getSubscription(session.user.cid)) as Subscription;
   if (subscription !== null) {
@@ -68,13 +70,12 @@ const SubscriptionPage = async () => {
         };
       }),
     );
-  logger.info('abc', session.user.company.isTrial);
 
   return (
     <div className="m-auto flex flex-col justify-center ">
       <div className="mb-6 flex items-center justify-center">
         <h2 className="mr-4 text-3xl font-bold text-gray-800 dark:text-gray-200">
-          Your Subscription
+          {t('subscription')}
         </h2>
         {session.user.company.isTrial && (
           <div className="flex items-center rounded-md bg-yellow-300 p-2 text-black shadow-lg transition-transform hover:scale-105 dark:bg-yellow-700 dark:text-white">
@@ -89,7 +90,7 @@ const SubscriptionPage = async () => {
                 const remainingDays = Math.ceil(
                   (expireDate.getTime() - today.getTime()) / (1000 * 3600 * 24),
                 );
-                return `On Trial - ends in ${remainingDays} days.`;
+                return ` ${t('onTrial')} ${remainingDays} ${t('days')}.`;
               })()}
             </div>
           </div>
@@ -101,7 +102,7 @@ const SubscriptionPage = async () => {
           subscription.status !== 'canceled' && (
             <div className="flex items-center rounded-md bg-green-300 p-2 text-black shadow-lg transition-transform hover:scale-105 dark:bg-green-700 dark:text-white">
               <CheckCircledIcon className="size-8 pr-2" />
-              <div className="mt-1">Subscribed</div>
+              <div className="mt-1"> {t('subscribed')}</div>
             </div>
           )}
         {!session.user.company.isTrial &&
@@ -109,7 +110,7 @@ const SubscriptionPage = async () => {
           subscription.status === 'canceled' && (
             <div className="flex items-center rounded-md bg-red-200 p-2 text-red-900 shadow-lg transition-transform hover:scale-105 dark:bg-red-700 dark:text-white">
               <Cross2Icon className="size-8 pr-2" />
-              <div className="mt-1">Cancelled</div>
+              <div className="mt-1"> {t('cancelled')}</div>
             </div>
           )}
       </div>
@@ -125,13 +126,13 @@ const SubscriptionPage = async () => {
               <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                 {' '}
                 {/* Adjusted text color for dark theme */}
-                Current Subscription Details
+                {t('current')}
               </h3>
               <div className="mt-2 rounded-md border-l-4 border-gray-500 bg-gray-100 text-gray-700 dark:border-gray-400 dark:bg-gray-700 dark:text-gray-300">
                 {' '}
                 {/* Adjusted background and text colors */}
                 <div className="p-3 pb-1">
-                  <strong>Current Period:</strong>{' '}
+                  <strong> {t('period')}</strong>{' '}
                   {formatDate(
                     new Date(subscriptionData.current_period_start * 1000),
                     'MMM dd, yyyy',
@@ -143,7 +144,7 @@ const SubscriptionPage = async () => {
                   )}
                 </div>
                 <div className="p-3 pt-1">
-                  <strong>License:</strong> {subscriptionData.quantity}
+                  <strong> {t('license')}</strong> {subscriptionData.quantity}
                 </div>
               </div>
             </div>

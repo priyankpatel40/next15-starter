@@ -1,5 +1,6 @@
 import * as Tabs from '@radix-ui/react-tabs';
 import type { Metadata } from 'next';
+import { useTranslations } from 'next-intl';
 
 import { auth } from '@/auth';
 import { getUserById } from '@/data/user';
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 
 const ProfileSettingsPage = async () => {
   const session = await auth();
+  const t = useTranslations('ProfilePage');
   const userId = session?.user?.id;
   const user = await getUserById(userId);
   if (!user) {
@@ -34,13 +36,13 @@ const ProfileSettingsPage = async () => {
               className="flex-1 px-6 py-4 text-sm font-medium text-gray-500 transition-colors duration-200 ease-in-out hover:text-gray-700 focus:outline-none data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:text-black dark:text-gray-400 dark:hover:text-gray-200 dark:data-[state=active]:border-blue-400 dark:data-[state=active]:text-blue-400"
               value="tab1"
             >
-              Account
+              {t('account')}
             </Tabs.Trigger>
             <Tabs.Trigger
               className="flex-1 px-6 py-4 text-sm font-medium text-gray-500 transition-colors duration-200 ease-in-out hover:text-gray-700 focus:outline-none data-[state=active]:border-b-2 data-[state=active]:border-black data-[state=active]:text-black dark:text-gray-400 dark:hover:text-gray-200 dark:data-[state=active]:border-blue-400 dark:data-[state=active]:text-blue-400"
               value="tab2"
             >
-              Password
+              {t('password')}
             </Tabs.Trigger>
           </Tabs.List>
           <div className="p-6">

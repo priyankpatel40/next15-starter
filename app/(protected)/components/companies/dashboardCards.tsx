@@ -1,6 +1,7 @@
 'use client';
 
 import { BuildingOfficeIcon, UsersIcon } from '@heroicons/react/24/outline';
+import { useTranslations } from 'next-intl';
 
 import { Card } from '@/components/ui/card';
 
@@ -13,18 +14,20 @@ export const CompaniesCard = ({
   activeCompanies: number;
   inactiveCompanies: number;
 }) => {
+  const t = useTranslations('Cards');
+
   return (
     <Card className="rounded-lg bg-white p-6 shadow transition-shadow duration-300 hover:shadow-lg dark:bg-gray-800">
       <div className="mb-4 flex items-center">
         <BuildingOfficeIcon className="mr-4 size-12 text-blue-500" />
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-          Companies
+          {t('companies')}
         </h2>
       </div>
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-lg bg-gray-100 p-4 text-center dark:bg-gray-700">
           <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            Total
+            {t('total')}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {totalCompanies}
@@ -32,7 +35,7 @@ export const CompaniesCard = ({
         </div>
         <div className="rounded-lg bg-green-100 p-4 text-center dark:bg-green-400">
           <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            Active
+            {t('active')}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {activeCompanies}
@@ -40,7 +43,7 @@ export const CompaniesCard = ({
         </div>
         <div className="rounded-lg bg-red-100 p-4 text-center dark:bg-red-400">
           <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            Inactive
+            {t('inActive')}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {inactiveCompanies}
@@ -60,18 +63,19 @@ export const SubscriptionsCard = ({
   activeSubscriptions: number;
   inactiveSubscriptions: number;
 }) => {
+  const t = useTranslations('Cards');
   return (
     <Card className="rounded-lg bg-white p-6 shadow transition-shadow duration-300 hover:shadow-lg dark:bg-gray-800">
       <div className="mb-4  flex items-center">
         <BuildingOfficeIcon className="mr-4 size-12 text-blue-500" />
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-          Subscriptions
+          {t('subscriptions')}
         </h2>
       </div>
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-lg bg-blue-100 p-4 text-center dark:bg-gray-700">
           <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            Subscribed
+            {t('subscribed')}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {activeSubscriptions}
@@ -79,7 +83,7 @@ export const SubscriptionsCard = ({
         </div>
         <div className="rounded-lg bg-yellow-100 p-4 text-center dark:bg-green-400">
           <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            On Trial
+            {t('trial')}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {inactiveSubscriptions}
@@ -87,7 +91,7 @@ export const SubscriptionsCard = ({
         </div>
         <div className="rounded-lg bg-gray-100 p-4 text-center dark:bg-red-400">
           <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            Total
+            {t('total')}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {totalSubscriptions}
@@ -107,6 +111,7 @@ export const UsersCard = ({
   totalActiveUsers: number;
   totalInactiveUsers: number;
 }) => {
+  const t = useTranslations('Cards');
   return (
     <Card className="rounded-lg bg-white p-6 shadow transition-shadow duration-300 hover:shadow-lg dark:bg-gray-800">
       <div className="mb-4 flex items-center">
@@ -116,13 +121,13 @@ export const UsersCard = ({
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-lg bg-gray-100 p-4 text-center dark:bg-gray-700">
           <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            Total
+            {t('total')}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">{totalUsers}</p>
         </div>
         <div className="rounded-lg bg-green-100 p-4 text-center dark:bg-green-400">
           <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            Active
+            {t('active')}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {totalActiveUsers}
@@ -130,7 +135,7 @@ export const UsersCard = ({
         </div>
         <div className="rounded-lg bg-red-100 p-4 text-center dark:bg-red-400">
           <p className="mb-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            Inactive
+            {t('inActive')}
           </p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white">
             {totalInactiveUsers}

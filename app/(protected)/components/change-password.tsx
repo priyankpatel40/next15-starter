@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import type * as z from 'zod';
@@ -25,6 +26,7 @@ const ChangePasswordForm = ({ isOAuth }: { isOAuth: boolean }) => {
   const [error, setError] = useState<string | undefined>();
   const [success] = useState<string | undefined>();
   const [isPending, setIsPending] = useState<boolean>(false);
+  const t = useTranslations('ProfilePage');
 
   const form = useForm<z.infer<typeof ChangePasswordSchema>>({
     resolver: zodResolver(ChangePasswordSchema),
@@ -56,7 +58,7 @@ const ChangePasswordForm = ({ isOAuth }: { isOAuth: boolean }) => {
 
   return (
     <>
-      <h2 className="mb-6 text-2xl font-semibold">Change Password</h2>
+      <h2 className="mb-6 text-2xl font-semibold">{t('changePassword')}</h2>
       {!isOAuth ? (
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
@@ -65,7 +67,7 @@ const ChangePasswordForm = ({ isOAuth }: { isOAuth: boolean }) => {
               name="newPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New Password</FormLabel>
+                  <FormLabel>{t('newPassword')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -85,7 +87,7 @@ const ChangePasswordForm = ({ isOAuth }: { isOAuth: boolean }) => {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>{t('confirmPassword')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -103,12 +105,12 @@ const ChangePasswordForm = ({ isOAuth }: { isOAuth: boolean }) => {
             <FormError message={error} />
             <FormSuccess message={success} />
             <Button disabled={isPending} type="submit">
-              Update Password
+              {t('updatePassword')}
             </Button>
           </form>
         </Form>
       ) : (
-        <h2>You can&apos;t change your password because you signed up with Oauth</h2>
+        <h2>{t('oAuth')}</h2>
       )}
     </>
   );

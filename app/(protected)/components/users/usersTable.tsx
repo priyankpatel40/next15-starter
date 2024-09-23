@@ -8,6 +8,7 @@ import {
 import { type User, UserRole } from '@prisma/client';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import Avatar from '@/components/ui/avatar';
@@ -32,6 +33,8 @@ export default function AllUsersTable({
 }) {
   const [users, setUsers] = useState(initialUsers);
   const router = useRouter();
+  const t = useTranslations('UsersPage.UserTable');
+  const g = useTranslations('General');
 
   const handleStatusChange = (id: string, newStatus: boolean) => {
     setUsers((prevUsers) =>
@@ -66,22 +69,22 @@ export default function AllUsersTable({
           <thead className="bg-gray-300 text-sm uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="w-[30%] p-4">
-                User
+                {t('user')}
               </th>
               <th scope="col" className="w-[15%] p-2">
-                Role
+                {t('role')}
               </th>
               <th scope="col" className="w-[15%] p-2">
-                Status
+                {t('status')}
               </th>
               <th scope="col" className="w-1/4 p-2">
-                Added by
+                {t('addedBy')}
               </th>
               <th scope="col" className="w-[15%] p-2">
                 2FA
               </th>
               <th scope="col" className="w-[10%] p-2">
-                Action
+                {t('action')}
               </th>
             </tr>
           </thead>
@@ -106,7 +109,7 @@ export default function AllUsersTable({
                           <div className="group relative">
                             <InformationCircleIcon className="ml-1 size-4 text-orange-500" />
                             <span className="absolute bottom-full left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                              Email verification pending by the user
+                              {t('pending')}
                             </span>
                           </div>
                         )}
@@ -127,7 +130,9 @@ export default function AllUsersTable({
                       <div className="rounded-full bg-gray-100 p-1.5">
                         <UserIcon className="size-4 text-gray-600" />
                       </div>
-                      <span className="text-sm font-medium text-gray-600">User</span>
+                      <span className="text-sm font-medium text-gray-600">
+                        {t('user')}
+                      </span>
                     </div>
                   )}
                 </td>
@@ -140,7 +145,7 @@ export default function AllUsersTable({
                         : 'bg-gray-50 text-gray-700 ring-gray-700',
                     )}
                   >
-                    {user.isActive ? 'Active' : 'Inactive'}
+                    {user.isActive ? `${g('active')}` : `${g('inActive')}`}
                   </span>
                 </td>
                 <td className="whitespace-nowrap p-2 font-medium dark:text-white">
@@ -178,7 +183,9 @@ export default function AllUsersTable({
                             user.isTwoFactorEnabled ? 'text-green-600' : 'text-red-600'
                           }`}
                         >
-                          {user.isTwoFactorEnabled ? 'Enabled' : 'Disabled'}
+                          {user.isTwoFactorEnabled
+                            ? `${g('enabled')}`
+                            : `${g('disabled')}`}
                         </span>
                       </div>
                     </div>

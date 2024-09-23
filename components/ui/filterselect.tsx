@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 import {
   Select,
@@ -18,6 +19,7 @@ export default function FilterSelect({ filter }: FilterSelectProps) {
   const { replace } = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const t = useTranslations('Cards');
 
   const handleChange = (value: string) => {
     const params = new URLSearchParams(searchParams);
@@ -35,9 +37,9 @@ export default function FilterSelect({ filter }: FilterSelectProps) {
         <SelectValue placeholder="Filter users" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">All</SelectItem>
-        <SelectItem value="active">Active</SelectItem>
-        <SelectItem value="inactive">Inactive</SelectItem>
+        <SelectItem value="all">{t('all')}</SelectItem>
+        <SelectItem value="active">{t('active')}</SelectItem>
+        <SelectItem value="inactive">{t('inActive')}</SelectItem>
       </SelectContent>
     </Select>
   );

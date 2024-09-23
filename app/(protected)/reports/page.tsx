@@ -1,5 +1,7 @@
 'use server';
 
+import { useTranslations } from 'next-intl';
+
 import { auth } from '@/auth';
 import { Card } from '@/components/ui/card';
 import {
@@ -14,6 +16,7 @@ import UsersCards from '../components/users/usersCards';
 
 export default async function ReportsPage() {
   const session = await auth();
+  const t = useTranslations('ReportsPage');
   const result = await getCompanyUsersForReports({
     orderBy: 'asc',
     id: session?.user.cid,
@@ -47,7 +50,7 @@ export default async function ReportsPage() {
 
         <Card className="mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
           <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
-            Daily Active Users
+            {t('dailyUsers')}
           </h2>
           <div className="h-80">
             <DailyUsersChart dailyActiveUsers={dailyActiveUsers} />
@@ -56,7 +59,7 @@ export default async function ReportsPage() {
         <Card className="mb-8 flex flex-row space-x-4 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
           <Card className="mb-8  flex w-1/3 flex-col rounded-lg bg-white p-6 shadow dark:border-gray-600 dark:bg-gray-800">
             <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
-              Most used browser
+              {t('browser')}
             </h2>
             <div className="h-80">
               <PieChartComponent data={browserData} />
@@ -64,7 +67,7 @@ export default async function ReportsPage() {
           </Card>
           <Card className="mb-8 flex w-1/3 flex-col rounded-lg bg-white p-6  shadow dark:border-gray-600 dark:bg-gray-800">
             <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
-              Most used OS
+              {t('os')}
             </h2>
             <div className="h-80">
               <PieChartComponent data={osData} />
@@ -72,7 +75,7 @@ export default async function ReportsPage() {
           </Card>
           <Card className="mb-8 flex w-1/3 flex-col rounded-lg bg-white p-6 shadow dark:border-gray-600 dark:bg-gray-800">
             <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
-              Most used devices
+              {t('devices')}
             </h2>
             <div className="h-80">
               <PieChartComponent data={deviceData} />

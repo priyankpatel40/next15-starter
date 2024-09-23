@@ -3,6 +3,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { User } from '@prisma/client';
 import { UserRole } from '@prisma/client';
+import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes'; // Add this import
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -61,7 +62,9 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, setIsPending] = useState<boolean>(false);
-  const { theme } = useTheme(); // Add this line
+  const { theme } = useTheme();
+  const t = useTranslations('UsersPage.EditUser');
+  const g = useTranslations('General');
 
   const form = useForm<z.infer<typeof EditUserSchema>>({
     resolver: zodResolver(EditUserSchema),
@@ -84,18 +87,18 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
       const data = await updateUser(values, userData.id);
       if (data.success) {
         showToast({
-          message: 'User updated successfully',
+          message: t('success'),
           type: 'success',
         });
         onUserUpdated(data.user);
         onClose();
         form.reset();
       } else {
-        setError(data.message || 'An error occurred while updating the user');
+        setError(data.message || t('error'));
       }
     } catch (err) {
       logger.error('Error updating user:', err);
-      setError('An unexpected error occurred. Please try again.');
+      setError(t('error'));
     }
     setIsPending(false);
   };
@@ -104,11 +107,14 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
     <DialogContent
       className={`fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-[95vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg p-4 shadow-xl focus:outline-none data-[state=open]:animate-contentShow sm:w-[90vw] sm:p-6 md:w-[85vw] lg:w-[80vw] ${theme === 'dark' ? ' text-white' : 'bg-white text-gray-900'}`}
     >
-      <DialogTitle className="mb-2 text-lg font-medium sm:text-xl">Edit user</DialogTitle>
+      <DialogTitle className="mb-2 text-lg font-medium sm:text-xl">
+        {t('heading')}
+      </DialogTitle>
       <DialogDescription
         className={`mb-4 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}
       >
-        Edit user details of {userData.email}
+        {t('title')}
+        {userData.email}
       </DialogDescription>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} method="POST" className="space-y-6">
@@ -118,7 +124,7 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel> {g('name')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -139,8 +145,8 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
                   className={`flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm ${theme === 'dark' ? 'border-gray-600' : 'border-gray-300'}`}
                 >
                   <div className="space-y-0.5">
-                    <FormLabel>Is 2FA enabled?</FormLabel>
-                    <FormDescription>Enable or disable 2FA for user</FormDescription>
+                    <FormLabel> {t('label')}</FormLabel>
+                    <FormDescription> {t('labelTxt')}</FormDescription>
                   </div>
                   <FormControl>
                     <Switch
@@ -159,7 +165,7 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel> {g('role')}</FormLabel>
                   <Select
                     disabled={isPending}
                     onValueChange={field.onChange}
@@ -173,8 +179,8 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
-                      <SelectItem value={UserRole.USER}>User</SelectItem>
+                      <SelectItem value={UserRole.ADMIN}> {g('admin')}</SelectItem>
+                      <SelectItem value={UserRole.USER}> {g('user')}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -192,7 +198,7 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
                 isLoading={isPending}
                 className="w-full px-7 sm:w-auto"
               >
-                Update
+                {t('btn')}
               </Button>
               <Button
                 onClick={onClose}
@@ -200,7 +206,7 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
                 variant="outline"
                 className="w-full px-7 sm:w-auto"
               >
-                Close
+                {t('close')}
               </Button>
             </div>
           </div>
@@ -211,12 +217,14 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
     <DialogContent
       className={`fixed left-1/2 top-1/2 z-50 max-h-[90vh] w-[95vw] max-w-[500px] translate-x-1/2 translate-y-1/2 overflow-y-auto rounded-lg p-4 shadow-xl focus:outline-none data-[state=open]:animate-contentShow sm:w-[90vw] sm:p-6 md:w-[85vw] lg:w-[80vw] ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}
     >
-      <DialogTitle className="mb-2 text-lg font-medium sm:text-xl">Edit user</DialogTitle>
+      <DialogTitle className="mb-2 text-lg font-medium sm:text-xl">
+        {t('heading')}
+      </DialogTitle>
       <DialogDescription
         className={`mb-4 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'} flex space-x-2`}
       >
         <Loader />
-        <span>Fetching user details</span>
+        <span>{t('fetching')}</span>
       </DialogDescription>
     </DialogContent>
   );
