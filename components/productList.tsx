@@ -177,7 +177,7 @@ const ProductList: React.FC<PricingTabsProps> = ({
                     className={`rounded-md px-4 py-2 text-center text-sm font-semibold transition-colors duration-200 
                 ${tab === interval ? 'bg-gray-300 dark:bg-gray-700' : 'text-gray-500 hover:text-black dark:hover:text-white'}`}
                   >
-                    / {interval.charAt(0).toUpperCase() + interval.slice(1)}
+                    {interval.charAt(0).toUpperCase() + interval.slice(1)}
                   </Tabs.Trigger>
                 ))}
               </Tabs.List>

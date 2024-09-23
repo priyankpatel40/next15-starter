@@ -1,6 +1,6 @@
 'use server';
 
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import {
@@ -27,7 +27,7 @@ export default async function DashboardPage() {
   const activeUsers = users.activeCount;
   const inactiveUsers = users.inactiveCount;
   const { dailyActiveUsers } = users;
-  const t = useTranslations('DashboardPage');
+  const t = await getTranslations('DashboardPage');
 
   const companiesresult = await getAllCompaniesforDashboard({
     orderBy: 'asc',

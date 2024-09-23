@@ -1,5 +1,5 @@
 import { BuildingOffice2Icon } from '@heroicons/react/20/solid';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import AllCompaniesTable from '@/app/(protected)/components/companies/allcompaniestable';
@@ -19,7 +19,7 @@ export default async function AllCompaniesPage({
   const filter = (searchParams.filter as 'all' | 'active' | 'inactive') || 'all';
   const search = searchParams.query || '';
   const itemsPerPage = 10;
-  const t = useTranslations('CompaniesPage');
+  const t = await getTranslations('CompaniesPage');
 
   const result = await getAllCompanies({
     page,

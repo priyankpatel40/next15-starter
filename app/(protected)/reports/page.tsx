@@ -1,6 +1,6 @@
 'use server';
 
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 import { auth } from '@/auth';
 import { Card } from '@/components/ui/card';
@@ -16,7 +16,7 @@ import UsersCards from '../components/users/usersCards';
 
 export default async function ReportsPage() {
   const session = await auth();
-  const t = useTranslations('ReportsPage');
+  const t = await getTranslations('ReportsPage');
   const result = await getCompanyUsersForReports({
     orderBy: 'asc',
     id: session?.user.cid,
