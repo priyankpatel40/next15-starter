@@ -1,0 +1,56 @@
+{
+  "AppLayout": {
+    "home": "Zuhause",
+    "logout": "Abmelden",
+    "profile": "Profil"
+  },
+  "HomePage": {
+    "title": "Zuhause",
+    "tagLine": "Ein einfacher Authentifizierungsdienst"
+  },
+  "LocaleSwitcher": {
+    "de": "Niederländisch",
+    "en": "Englisch",
+    "fr": "Französisch",
+    "es": "Spanisch",
+    "label": "Sprache"
+  },
+  "LoginPage": {
+    "headerLabel": "Willkommen zurück",
+    "backButtonLabel": "Sie haben noch kein Konto?",
+    "googleText": "Mit Google anmelden",
+    "gitHubText": "Mit Github anmelden",
+    "enterCode": "Geben Sie Ihren Zwei-Faktor-Code ein",
+    "resendBtn": "Code erneut senden",
+    "resendTxt": "Wird erneut gesendet...",
+    "forgotpwd": "Passwort vergessen?",
+    "btn": "Anmelden"
+  },
+  "RegistrationPage": {
+    "headerLabel": "Erstellen Sie Ihr Konto",
+    "backButtonLabel": "Haben Sie bereits ein Konto?",
+    "googleText": "Mit Google anmelden",
+    "gitHubText": "Mit Github anmelden",
+    "enterCode": "Geben Sie Ihren Zwei-Faktor-Code ein",
+    "btn": "Ein Konto erstellen"
+  },
+  "NewPasswordPage": {
+    "headerLabel": "Neues Passwort eingeben",
+    "backButtonLabel": "Zurück zum Login",
+    "btn": "Passwort zurücksetzen"
+  },
+  "ResetForm": {
+    "headerLabel": "Passwort vergessen?",
+    "backButtonLabel": "Zurück zum Login",
+    "btn": "Sende Reset-E-Mail"
+  },
+  "ProfilePage": {
+    "title": "Profil"
+  },
+  "General": {
+    "email": "E-Mail",
+    "password": "Passwort",
+    "submitbtn": "Absenden",
+    "name": "Name"
+  }
+}
