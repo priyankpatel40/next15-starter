@@ -4,7 +4,7 @@ import { type Company, Prisma, UserRole } from '@prisma/client';
 import { randomBytes } from 'crypto';
 import type * as z from 'zod';
 
-import { auth, unstable_update } from '@/auth';
+import { auth } from '@/auth';
 import { getCompanyByName } from '@/data/company';
 import { getUserByEmail } from '@/data/user';
 import { db } from '@/lib/db';
@@ -51,15 +51,9 @@ export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
             where: { id: existingUser.id },
             data: { cid: company.id, role: UserRole.ADMIN },
           });
-
-          await unstable_update({
-            user: {
-              cid: company.id,
-              company,
-            },
-          });
         }
       });
+      return { success: 'Your account is now ready to use!', company };
     } catch (e) {
       // Error handling
       let errorMessage: string = 'Something went wrong, unable to create your account.';
@@ -74,9 +68,9 @@ export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
       }
       return { error: errorMessage };
     }
+  } else {
+    return { error: "'Something went wrong, unable to create your account.';" };
   }
-
-  return { success: 'Your account is now ready to use!', company };
 };
 
 export const updateCompany = async (
