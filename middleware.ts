@@ -66,7 +66,7 @@ export default auth(async (req: any) => {
         ? '__Secure-authjs.session-token'
         : 'authjs.session-token',
   });
-  // logger.info('🚀 ~ auth ~ token:', token);
+
   const userHasCompany = token?.cid;
 
   if (isLoggedIn) {

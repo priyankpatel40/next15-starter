@@ -1,7 +1,9 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { Company } from '@prisma/client';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import type * as z from 'zod';
@@ -20,17 +22,24 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { getCompanyByName } from '@/data/company';
-import logger from '@/lib/logger';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import { CompanySchema } from '@/schemas';
 
 import { showToast } from '../ui/toast';
+
+// Define a type for the expected result
+interface CreateCompanyResult {
+  success?: string;
+  company?: Company | null;
+  error?: string;
+}
 
 const CompanyForm = () => {
   const [error, setError] = useState<string | undefined>('');
   const [success, setSuccess] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { update } = useSession();
 
   const form = useForm<z.infer<typeof CompanySchema>>({
     resolver: zodResolver(CompanySchema),
@@ -41,7 +50,6 @@ const CompanyForm = () => {
 
   // Form submission
   const onSubmit = async (values: z.infer<typeof CompanySchema>) => {
-    logger.info('🚀 ~ file: company-form.tsx:44 ~ onSubmit ~ values:', values);
     setError('');
     setSuccess('');
 
@@ -51,13 +59,22 @@ const CompanyForm = () => {
           if (dataResponse?.companyName) {
             setError('Sorry, This company name is already in use!');
           } else {
-            createCompany(values).then((result) => {
+            createCompany(values).then((result: CreateCompanyResult) => {
               if (result.success) {
                 showToast({
                   message: result.success,
                   type: 'success',
                 });
-                router.push(DEFAULT_LOGIN_REDIRECT);
+                if (result.company) {
+                  update({
+                    user: {
+                      cid: result.company.id,
+                      company: result.company,
+                    },
+                  }).then(() => {
+                    router.push(DEFAULT_LOGIN_REDIRECT);
+                  });
+                }
               } else {
                 setError('Failed to create company.');
               }

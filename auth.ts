@@ -96,12 +96,10 @@ export const {
       const existingUser = await getUserById(token.sub);
 
       if (!existingUser) return token;
-
       const existingAccount = await getAccountByUserId(existingUser.id);
       if (trigger === 'update' && session?.email) {
         // Note, that `session` can be any arbitrary object, remember to validate it!
         token.cid = session.cid;
-        // logger.info('🚀 ~ jwt ~ token:', token);
       }
 
       token.isOAuth = !!existingAccount;
