@@ -6,7 +6,7 @@ import { UsersIcon } from '@heroicons/react/24/outline';
 import type { User } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import { auth } from '@/auth';
@@ -27,7 +27,7 @@ interface AllUsersProps {
 
 const AllUsers = async ({ searchParams }: AllUsersProps) => {
   const session = await auth();
-  const t = useTranslations('UsersPage');
+  const t = await getTranslations('UsersPage');
   const page = Number(searchParams.page) || 1;
   const filter = searchParams.filter || 'all';
   const search = searchParams.query || '';

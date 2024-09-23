@@ -1,6 +1,6 @@
 import { CheckCircledIcon, Cross2Icon } from '@radix-ui/react-icons';
 import type { Metadata } from 'next';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 import type Stripe from 'stripe';
 
@@ -38,7 +38,7 @@ interface Subscription {
 const SubscriptionPage = async () => {
   let subscriptionData;
   const session = await auth();
-  const t = useTranslations('SubscriptionPage');
+  const t = await getTranslations('SubscriptionPage');
   logger.info('🚀 ~ file: page.tsx:10 ~ SubscriptionPage ~ session:', session);
   const subscription = (await getSubscription(session.user.cid)) as Subscription;
   if (subscription !== null) {

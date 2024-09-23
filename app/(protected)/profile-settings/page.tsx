@@ -1,6 +1,6 @@
 import * as Tabs from '@radix-ui/react-tabs';
 import type { Metadata } from 'next';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 import { auth } from '@/auth';
 import { getUserById } from '@/data/user';
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 const ProfileSettingsPage = async () => {
   const session = await auth();
-  const t = useTranslations('ProfilePage');
+  const t = await getTranslations('ProfilePage');
   const userId = session?.user?.id;
   const user = await getUserById(userId);
   if (!user) {
