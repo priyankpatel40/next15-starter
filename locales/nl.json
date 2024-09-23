@@ -1,56 +1,56 @@
 {
   "AppLayout": {
-    "home": "Home",
-    "logout": "Logout",
-    "profile": "Profile"
+    "home": "Startpagina",
+    "logout": "Afmelden",
+    "profile": "Profiel"
   },
   "HomePage": {
-    "title": "Home",
-    "tagLine": "A simple authentication service"
+    "title": "Startpagina",
+    "tagLine": "Een eenvoudige authenticatie service"
   },
   "LocaleSwitcher": {
-    "de": "Dutch",
-    "en": "English",
-    "fr": "French",
-    "es": "Spanish",
-    "label": "Language"
+    "de": "Nederlands",
+    "en": "Nederlands",
+    "fr": "Frans",
+    "es": "Spaans",
+    "label": "Taal"
   },
   "LoginPage": {
-    "headerLabel": "Welcome back",
-    "backButtonLabel": "Don't have an account?",
-    "googleText": "Login with Google",
-    "gitHubText": "Login with Github",
-    "enterCode": "Enter your two factor code",
-    "resendBtn": "Resend code",
-    "resendTxt": "Resending...",
-    "forgotpwd": "Forgot password?",
-    "btn": "Login"
+    "headerLabel": "Welkom terug",
+    "backButtonLabel": "Nog geen account?",
+    "googleText": "Inloggen met Google",
+    "gitHubText": "Inloggen met Github",
+    "enterCode": "Voer je tweestapsverificatiecode in",
+    "resendBtn": "Code opnieuw verzenden",
+    "resendTxt": "Opnieuw verzenden...",
+    "forgotpwd": "Wachtwoord vergeten?",
+    "btn": "Aanmelden"
   },
   "RegistrationPage": {
-    "headerLabel": "Create your account",
-    "backButtonLabel": "Already have an account?",
-    "googleText": "Signup with Google",
-    "gitHubText": "Signup with Github",
-    "enterCode": "Enter your two factor code",
-    "btn": "Create an account"
+    "headerLabel": "Maak je account aan",
+    "backButtonLabel": "Heeft u al een account?",
+    "googleText": "Aanmelden met Google",
+    "gitHubText": "Aanmelden bij Github",
+    "enterCode": "Voer je tweestapsverificatiecode in",
+    "btn": "Account aanmaken"
   },
   "NewPasswordPage": {
-    "headerLabel": "Enter a new password",
-    "backButtonLabel": "Back to login",
-    "btn": "Reset password"
+    "headerLabel": "Voer een nieuw wachtwoord in",
+    "backButtonLabel": "Terug naar inloggen",
+    "btn": "Wachtwoord opnieuw instellen"
   },
   "ResetForm": {
-    "headerLabel": "Forgot your password?",
-    "backButtonLabel": "Back to login",
-    "btn": "Send reset email"
+    "headerLabel": "Wachtwoord vergeten?",
+    "backButtonLabel": "Terug naar inloggen",
+    "btn": "Verstuur reset e-mail"
   },
   "ProfilePage": {
-    "title": "Profile"
+    "title": "Profiel"
   },
   "General": {
-    "email": "Email",
-    "password": "Password",
-    "submitbtn": "Submit",
-    "name": "Name"
+    "email": "E-mailadres",
+    "password": "Wachtwoord",
+    "submitbtn": "Bevestigen",
+    "name": "naam"
   }
 }
