@@ -40,8 +40,11 @@
     "enterCode": "Enter your two factor code",
     "resendBtn": "Resend code",
     "resendTxt": "Resending...",
-    "forgotpwd": "Forgot password?",
-    "btn": "Login"
+    "forgotPwd": "Forgot password?",
+    "btn": "Login",
+    "btnLink": "Send Login Link",
+    "loginPwd": "Login with Password Instead",
+    "loginLink": "Login with Link Instead"
   },
   "RegistrationPage": {
     "pageTitle": "Create account",
@@ -98,6 +101,14 @@
     "headerLabel": "Account Verification",
     "backButtonLabel": "Back to login",
     "title": " Verifying your account...",
+    "success": "Redirecting to login...",
+    "error": "Token is missing."
+  },
+  "VerifyRequestPage": {
+    "pageTitle": "Check your email",
+    "headerLabel": "A sign in link has been sent to your email address Please click on to login in your account.",
+    "backButtonLabel": "Back to login",
+    "title": "Check your email",
     "success": "Redirecting to login...",
     "error": "Token is missing."
   },
