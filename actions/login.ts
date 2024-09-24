@@ -12,7 +12,7 @@ import { db } from '@/lib/db';
 import logger from '@/lib/logger';
 import { generateTwoFactorToken, generateVerificationToken } from '@/lib/tokens';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
-import { LoginSchema } from '@/schemas';
+import { LoginLinkSchema, LoginSchema } from '@/schemas';
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -135,5 +135,56 @@ export const resendCode = async (email: string) => {
     }
   } else {
     return { error: true, message: 'Something went wrong!' };
+  }
+};
+
+export const loginWithLink = async (
+  values: z.infer<typeof LoginLinkSchema>,
+  callbackUrl?: string | null,
+) => {
+  const validatedFields = LoginLinkSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: true, message: 'Invalid fields!' };
+  }
+
+  const { email } = validatedFields.data;
+  logger.info(email);
+
+  const existingUser = (await getUserByEmail(email)) as User;
+  logger.info('🚀 ~ existingUser:', existingUser);
+
+  if (!existingUser || !existingUser.email || !existingUser.password) {
+    return { error: true, message: 'Invalid email address!' };
+  }
+
+  if (!existingUser.emailVerified) {
+    const verificationToken = (await generateVerificationToken(existingUser.email)) as {
+      email: string;
+      token: string;
+    };
+    await sendVerificationEmail({
+      email: verificationToken.email,
+      token: verificationToken.token,
+      username: existingUser.name,
+      invitedByUsername: '',
+      invitedByEmail: '',
+      companyName: '',
+    });
+
+    return { success: true, message: 'Confirmation email sent!' };
+  }
+
+  try {
+    logger.info('insingin');
+    await signIn('resend', {
+      email,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+    });
+    return null;
+  } catch (error) {
+    logger.info('🚀 ~ error:', error);
+    logger.info(error);
+    throw error;
   }
 };

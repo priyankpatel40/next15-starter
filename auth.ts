@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-param-reassign */
 // @ts-nocheck
-import { PrismaAdapter } from '@auth/prisma-adapter';
+
 import type { UserRole } from '@prisma/client';
 import NextAuth from 'next-auth';
 
@@ -23,6 +23,7 @@ export const {
   pages: {
     signIn: '/login',
     error: '/error',
+    verifyRequest: '/verify-request',
   },
   events: {
     async linkAccount({ user }) {
@@ -116,7 +117,5 @@ export const {
       return token;
     },
   },
-  adapter: PrismaAdapter(db),
-  session: { strategy: 'jwt' },
   ...authConfig,
 });

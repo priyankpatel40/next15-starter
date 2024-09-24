@@ -37,7 +37,7 @@ export const newVerification = async (token: string) => {
   });
 
   // Delete the used verification token
-  await db.verificationToken.delete({
+  await db.accountVerificationToken.delete({
     where: { id: existingToken.id },
   });
 

@@ -37,6 +37,11 @@ export const LoginSchema = z.object({
   }),
   code: z.optional(z.string()),
 });
+export const LoginLinkSchema = z.object({
+  email: z.string().email({
+    message: 'Email is required',
+  }),
+});
 
 export const RegisterSchema = z.object({
   email: z.string().email({
