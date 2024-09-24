@@ -40,8 +40,11 @@
     "enterCode": "Introduzca su código de dos factores",
     "resendBtn": "Reenviar código",
     "resendTxt": "Reenviando...",
-    "forgotpwd": "¿Olvidaste la contraseña?",
-    "btn": "Ingresar"
+    "forgotPwd": "Forgot password?",
+    "btn": "Ingresar",
+    "btnLink": "Send Login Link",
+    "loginPwd": "Login with Password Instead",
+    "loginLink": "Login with Link Instead"
   },
   "RegistrationPage": {
     "pageTitle": "Crear cuenta",
@@ -98,6 +101,14 @@
     "headerLabel": "Verificación de cuenta",
     "backButtonLabel": "Volver a iniciar sesión",
     "title": " Verificando tu cuenta...",
+    "success": "Redireccionando para iniciar sesión...",
+    "error": "Falta el token."
+  },
+  "VerifyRequestPage": {
+    "pageTitle": "Check your email",
+    "headerLabel": "A sign in link has been sent to your email address Please click on to login in your account.",
+    "backButtonLabel": "Volver a iniciar sesión",
+    "title": "Check your email",
     "success": "Redireccionando para iniciar sesión...",
     "error": "Falta el token."
   },
