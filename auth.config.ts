@@ -1,14 +1,24 @@
+import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcryptjs';
 import type { NextAuthConfig } from 'next-auth/';
 import Credentials from 'next-auth/providers/credentials';
 import Github from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
+import Resend from 'next-auth/providers/resend';
 
 import { getUserByEmail } from '@/data/user';
 import { LoginSchema } from '@/schemas';
 
+import { sendVerificationRequest } from './emails/mail';
+import { db } from './lib/db';
+
 export default {
   providers: [
+    Resend({
+      apiKey: process.env.RESEND_KEY,
+      from: process.env.EMAIL_FROM,
+      sendVerificationRequest,
+    }),
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -41,5 +51,7 @@ export default {
       },
     }),
   ],
+  adapter: PrismaAdapter(db),
+  session: { strategy: 'jwt' },
   debug: true,
 } satisfies NextAuthConfig;

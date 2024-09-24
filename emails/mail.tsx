@@ -7,6 +7,7 @@ import logger from '@/lib/logger';
 
 import { sendEmail } from '../lib/sendmail';
 import AccountVerifyEmail from './accountVerify';
+import MagicLinkEmail from './magicLink';
 import ResetPasswordEmail from './resetPassword';
 import TwoFactorEmail from './twoFactor';
 
@@ -104,4 +105,24 @@ export const sendVerificationEmail = async (userData: any) => {
     logger.info('🚀 ~ file: mail.ts:89 ~ sendVerificationEmail ~ error:', error);
     return false;
   }
+};
+
+export const sendVerificationRequest = async (params: {
+  identifier: string;
+  url: string;
+}) => {
+  logger.info('🚀 ~ file: mail.ts:72 ~ sendVerificationEmail ~ userData:', params);
+  const { identifier: to, url } = params;
+
+  const emailContent = await render(<MagicLinkEmail username={to} link={url} />);
+  logger.info(
+    '🚀 ~ file: mail.ts:85 ~ sendVerificationEmail ~ emailContent:',
+    emailContent,
+  );
+
+  await sendEmail({
+    sendTo: to,
+    subject: 'Login with link',
+    html: emailContent,
+  });
 };

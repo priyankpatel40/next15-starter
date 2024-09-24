@@ -19,7 +19,8 @@
     "stripe:login": "stripe login",
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks",
     "stripe:fixtures": "stripe fixtures fixtures/stripe-fixtures.json",
-    "prepare": "husky"
+    "prepare": "husky",
+    "migrate": "prisma migrate dev"
   },
   "dependencies": {
     "@auth/core": "^0.35.0",
@@ -67,6 +68,7 @@
     "react-is": "19.0.0-rc-fb9a90fa48-20240614",
     "react-spinners": "^0.13.8",
     "recharts": "2.13.0-alpha.5",
+    "resend": "^4.0.0",
     "sonner": "^1.5.0",
     "stripe": "^16.12.0",
     "tailwind-merge": "^2.5.2",
@@ -149,9 +151,15 @@
       "./node_modules/pino/lib/worker.js"
     ],
     "patches": {
-			"./node_modules/thread-stream/lib/worker.js": ["fn = (await realImport(workerData.filename)).default", "fn = realRequire(workerData.filename.replace('file://', ''))"],
-			"./node_modules/pino/lib/worker.js": ["fn = (await realImport(toLoad)).default", "fn = realRequire(t.target)"]
-		}
+      "./node_modules/thread-stream/lib/worker.js": [
+        "fn = (await realImport(workerData.filename)).default",
+        "fn = realRequire(workerData.filename.replace('file://', ''))"
+      ],
+      "./node_modules/pino/lib/worker.js": [
+        "fn = (await realImport(toLoad)).default",
+        "fn = realRequire(t.target)"
+      ]
+    }
   },
   "release": {
     "branches": [

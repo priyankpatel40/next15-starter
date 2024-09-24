@@ -65,6 +65,15 @@ model Account {
 }
 
 model VerificationToken {
+
+identifier String
+  token      String
+  expires    DateTime
+ 
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+model AccountVerificationToken {
   id      String   @id @default(cuid())
   email   String
   token   String   @unique
