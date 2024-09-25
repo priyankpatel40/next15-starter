@@ -40,8 +40,11 @@
     "enterCode": "Entrez votre code à deux facteurs",
     "resendBtn": "Renvoyer le code",
     "resendTxt": "Renvoyer...",
-    "forgotpwd": "Mot de passe oublié ?",
-    "btn": "Se connecter"
+    "forgotPwd": "Forgot password?",
+    "btn": "Se connecter",
+    "btnLink": "Send Login Link",
+    "loginPwd": "Login with Password Instead",
+    "loginLink": "Login with Link Instead"
   },
   "RegistrationPage": {
     "pageTitle": "Créer un compte",
@@ -98,6 +101,14 @@
     "headerLabel": "Vérification du compte",
     "backButtonLabel": "Retour à la connexion",
     "title": " Vérification de votre compte...",
+    "success": "Redirection vers la connexion...",
+    "error": "Le jeton est manquant."
+  },
+  "VerifyRequestPage": {
+    "pageTitle": "Check your email",
+    "headerLabel": "A sign in link has been sent to your email address Please click on to login in your account.",
+    "backButtonLabel": "Retour à la connexion",
+    "title": "Check your email",
     "success": "Redirection vers la connexion...",
     "error": "Le jeton est manquant."
   },

@@ -40,8 +40,11 @@
     "enterCode": "Voer je tweestapsverificatiecode in",
     "resendBtn": "Code opnieuw verzenden",
     "resendTxt": "Opnieuw verzenden...",
-    "forgotpwd": "Wachtwoord vergeten?",
-    "btn": "Aanmelden"
+    "forgotPwd": "Forgot password?",
+    "btn": "Aanmelden",
+    "btnLink": "Send Login Link",
+    "loginPwd": "Login with Password Instead",
+    "loginLink": "Login with Link Instead"
   },
   "RegistrationPage": {
     "pageTitle": "Account aanmaken",
@@ -98,6 +101,14 @@
     "headerLabel": "Verificatie account",
     "backButtonLabel": "Terug naar inloggen",
     "title": " Verifiëren van je account...",
+    "success": "Omleiden naar inloggen...",
+    "error": "Token ontbreekt."
+  },
+  "VerifyRequestPage": {
+    "pageTitle": "Check your email",
+    "headerLabel": "A sign in link has been sent to your email address Please click on to login in your account.",
+    "backButtonLabel": "Terug naar inloggen",
+    "title": "Check your email",
     "success": "Omleiden naar inloggen...",
     "error": "Token ontbreekt."
   },
