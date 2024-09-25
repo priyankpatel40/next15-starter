@@ -190,6 +190,15 @@ export const loginWithLink = async (
     });
     return null;
   } catch (error) {
-    return { error: true, message: 'Something went wrong, please try again!' };
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return { error: true, message: 'Invalid credentials' };
+        default:
+          return { error: true, message: 'Something went wrong' };
+      }
+    }
+    throw error;
   }
+  return { success: true };
 };
