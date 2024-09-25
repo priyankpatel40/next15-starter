@@ -1,7 +1,9 @@
 import 'animate.css';
 
+import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { FcDeployment } from 'react-icons/fc';
 
 import ThemeSwitch from '@/components/themeSwtich';
 import BackgroundImage from '@/components/ui/background';
@@ -53,7 +55,8 @@ export default function Web() {
               with TypeScript.
             </p>
             <div className="flex justify-center space-x-3">
-              <Button className="rounded-lg bg-gradient-to-r from-green-400 to-blue-500 px-6 py-3 text-lg text-black transition-transform hover:from-green-500 hover:to-blue-600">
+              <Button className="flex items-center rounded-lg bg-gradient-to-r from-green-400 to-blue-500 px-6 py-3 text-lg text-black transition-transform hover:from-green-500 hover:to-blue-600">
+                <GitHubLogoIcon className="mr-2 size-6" />
                 <Link href="https://github.com/priyankpatel40/next15-starter">
                   Get started
                 </Link>
@@ -62,6 +65,7 @@ export default function Web() {
                 variant="outline"
                 className="rounded-lg border  border-gray-300 text-gray-800 transition-transform hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
               >
+                <FcDeployment className="mr-2 size-6" />
                 <Link href="https://vercel.com/new/git/external?repository-url=https://github.com/priyankpatel40/next15-starter">
                   Deploy Now
                 </Link>
