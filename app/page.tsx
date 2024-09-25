@@ -1,7 +1,9 @@
 import 'animate.css';
 
+import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { FcDeployment } from 'react-icons/fc';
 
 import ThemeSwitch from '@/components/themeSwtich';
 import BackgroundImage from '@/components/ui/background';
@@ -29,8 +31,16 @@ export default function Web() {
   return (
     <>
       <section className="animate__animated animate__fadeIn bg-gradient-to-r from-gray-900 to-gray-700 transition duration-500 ease-in-out dark:from-gray-800 dark:to-gray-600">
-        <div className="flex items-start justify-end">
-          <ThemeSwitch />
+        <div className="mx-auto flex items-center justify-end p-4">
+          <Link
+            href="/login"
+            className="mr-4 text-lg text-white transition duration-300 hover:text-gray-300 hover:underline"
+          >
+            View Demo
+          </Link>
+          <div className="flex items-center">
+            <ThemeSwitch />
+          </div>
         </div>
         <div className="mx-auto grid max-w-screen-xl px-4 py-8 text-center lg:py-16">
           <div className="mx-auto place-self-center">
@@ -45,7 +55,8 @@ export default function Web() {
               with TypeScript.
             </p>
             <div className="flex justify-center space-x-3">
-              <Button className="rounded-lg bg-gradient-to-r from-green-400 to-blue-500 px-6 py-3 text-lg text-black transition-transform hover:from-green-500 hover:to-blue-600">
+              <Button className="flex items-center rounded-lg bg-gradient-to-r from-green-400 to-blue-500 px-6 py-3 text-lg text-black transition-transform hover:from-green-500 hover:to-blue-600">
+                <GitHubLogoIcon className="mr-2 size-6" />
                 <Link href="https://github.com/priyankpatel40/next15-starter">
                   Get started
                 </Link>
@@ -54,6 +65,7 @@ export default function Web() {
                 variant="outline"
                 className="rounded-lg border  border-gray-300 text-gray-800 transition-transform hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
               >
+                <FcDeployment className="mr-2 size-6" />
                 <Link href="https://vercel.com/new/git/external?repository-url=https://github.com/priyankpatel40/next15-starter">
                   Deploy Now
                 </Link>
