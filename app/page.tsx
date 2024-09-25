@@ -29,8 +29,16 @@ export default function Web() {
   return (
     <>
       <section className="animate__animated animate__fadeIn bg-gradient-to-r from-gray-900 to-gray-700 transition duration-500 ease-in-out dark:from-gray-800 dark:to-gray-600">
-        <div className="flex items-start justify-end">
-          <ThemeSwitch />
+        <div className="mx-auto flex items-center justify-end p-4">
+          <Link
+            href="/login"
+            className="mr-4 text-lg text-white transition duration-300 hover:text-gray-300 hover:underline"
+          >
+            View Demo
+          </Link>
+          <div className="flex items-center">
+            <ThemeSwitch />
+          </div>
         </div>
         <div className="mx-auto grid max-w-screen-xl px-4 py-8 text-center lg:py-16">
           <div className="mx-auto place-self-center">
