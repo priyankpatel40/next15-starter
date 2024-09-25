@@ -6,8 +6,16 @@ const withNextIntl = createNextIntlPlugin('./i18n/requests.ts');
 const nextConfig = {
   experimental: {
     ppr: "incremental",
-   serverComponentsExternalPackages: ['pino'],
+    serverExternalPackages: ['pino',
+      '@react-email/components',
+            '@react-email/render',
+            '@react-email/tailwind'],
   },
+   transpilePackages: [
+    '@react-email/components',
+    '@react-email/render',
+    '@react-email/html',
+  ],
    images: {
     domains: ['avatars.githubusercontent.com','lh3.googleusercontent.com'],
   },

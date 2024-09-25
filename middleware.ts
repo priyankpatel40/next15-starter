@@ -17,6 +17,7 @@ import {
 
 const { auth } = NextAuth(authConfig);
 
+
 export default auth(async (req: any) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
@@ -97,4 +98,5 @@ export default auth(async (req: any) => {
 // Optionally, don't invoke Middleware on some paths
 export const config = {
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  unstable_allowDynamic: ['**/node_modules/.pnpm/@react-email*/**/*.mjs*'],
 };
