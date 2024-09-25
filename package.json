@@ -45,6 +45,7 @@
     "@stripe/stripe-js": "^4.5.0",
     "@types/js-cookie": "^3.0.6",
     "@types/ua-parser-js": "^0.7.39",
+    "animate.css": "^4.1.1",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
