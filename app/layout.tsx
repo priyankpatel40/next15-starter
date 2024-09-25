@@ -11,11 +11,62 @@ import Providers from '@/components/providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: 'Company',
-  description: 'Company',
-};
-
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://yourcompany.com'),
+    title: 'NextJS 15 Enterprise Starter-kit',
+    description:
+      'Kickstart your enterprise-grade project with our robust, secure, and scalable Next.js 15 boilerplate',
+    authors: [
+      {
+        name: 'Priyank Patel',
+        url: 'https://github.com/priyankpatel40',
+      },
+    ],
+    twitter: {
+      card: 'summary_large_image',
+      creator: 'Priyank Patel',
+      images: '../public/logo-light.png',
+    },
+    robots: 'index, follow',
+    alternates: {
+      canonical: process.env.NEXT_PUBLIC_APP_URL || 'https://yourcompany.com',
+      languages: {
+        'en-US': '/',
+      },
+    },
+    openGraph: {
+      type: 'website',
+      url: process.env.NEXT_PUBLIC_APP_URL || 'https://yourcompany.com',
+      title: 'NextJS 15 Enterprise Starter-kit',
+      description:
+        'Kickstart your enterprise-grade project with our robust, secure, and scalable Next.js 15 boilerplate',
+      siteName: 'NextJS 15 Enterprise Starter-kit',
+      images: [
+        {
+          url: '../public/logo-light.png',
+        },
+      ],
+    },
+    assets: '../public/logo-light.png',
+    keywords: [
+      'nextjs',
+      'nextjs15',
+      'next-auth',
+      'authjs',
+      'next-authv5',
+      'prisma',
+      'boilerplate',
+      'starterkit',
+      'enterprise',
+      'magiclink',
+      'dashboard',
+      'adminpanel',
+      'typescript',
+      'tailwind',
+    ],
+  };
+}
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   const locale = await getLocale();
