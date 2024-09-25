@@ -1,6 +1,6 @@
-# Next Auth v5 and Next.js 15 - Comprehensive Enterprise ready Starter Kit with Typescript and Tailwind CSS
+# Next Auth v5 and Next.js 15 - Comprehensive Enterprise-ready Starter Kit with TypeScript and Tailwind CSS
 
-This repository serves as a robust starter kit for implementing advanced authentication features using Next Auth v5 within a Next.js 15 application. It is meticulously designed to enable developers to swiftly establish a secure and feature-rich authentication system for any enterprise software.
+This repository serves as a robust starter kit for implementing advanced authentication features using Next Auth v5 within a Next.js 15 application. It is meticulously designed to enable developers to swiftly establish a secure and feature-rich authentication system for enterprise-grade software.
 
 ## Table of Contents
 
@@ -38,17 +38,21 @@ This repository serves as a robust starter kit for implementing advanced authent
   <a href="https://next-intl-docs.vercel.app/" target="_blank">
     <img src="https://img.shields.io/badge/Next%20Intl-FF3D00?style=for-the-badge&logo=next.js&logoColor=white" alt="Next Intl" width="160" height="40"/>
   </a>
+  <a href="https://resend.com/" target="_blank">
+    <img src="https://img.shields.io/badge/Resend-000000?style=for-the-badge&logo=resend&logoColor=white" alt="Resend" width="160" height="40"/>
+  </a>
 </p>
 
 ## Key Features
 
 - 🔒 Advanced authentication with NextAuth v5 (Auth.js)
-- 🔥 Type checking TypeScript
+- 🔥 Type checking with TypeScript
 - ⚡ Seamless integration with Next.js 15 App Router and server actions
 - 📦 Type-safe ORM with Prisma and PostgreSQL
 - 🔴 Validation library with Zod
 - 🔑 Support for Credentials Provider and OAuth integration (Google & GitHub)
 - 📨 Email verification and change functionality
+- 🔗 Login with Magic Link using Resend for email delivery
 - 🛡️ Two-factor authentication support with configurable settings
 - 👤 Role-based access control (Admin & User) with Admin-only content rendering
 - 🚪 Versatile login component (modal or redirect) and user registration component
@@ -67,6 +71,14 @@ This repository serves as a robust starter kit for implementing advanced authent
 ## Styling and Theming
 
 This project utilizes Tailwind CSS, a utility-first CSS framework, to facilitate the creation of responsive and customizable user interfaces. The application supports both dark and light themes, allowing users to select their preferred visual style. Theme-specific styles can be implemented using Tailwind's dark mode classes.
+
+### Important: Environment Setup
+Before starting the server, ensure that your environment variables are properly configured. This project relies on several external modules and services that require keys or secrets to function correctly.
+
+1. Check the .env.sample file: This file provides a reference template with all the required environment variables.
+2. Create your own .env file: Use the .env.sample as a guide, and replace the placeholder values with your actual credentials and secrets.
+
+Note: Failure to set up these variables properly may result in runtime errors or failure to connect to essential services like databases, authentication providers, and third-party APIs.
 
 ### Translation (i18n) Setup
 
@@ -171,19 +183,16 @@ If you're still experiencing problems, please open an issue in this repository.
 
 ## Email Configuration
 
-This project employs Google SMTP for sending emails and utilizes react-email for creating email templates. To set up email functionality:
+This project uses Resend for sending emails, including the new Login with Link feature. To set up email functionality:
 
-1. Ensure you have a Google account.
-2. Enable "Less secure app access" or use App Passwords if you have 2-factor authentication enabled.
+1. Sign up for an account at [Resend](https://resend.com/).
+2. Obtain your API key from the Resend dashboard.
 3. Add the following to your `.env` file:
    ```
-   SMTP_SERVER_HOST='smtp.gmail.com'
-   SMTP_SERVER_USERNAME="your-email@gmail.com"
-   SMTP_SERVER_PASSWORD="xxxx xxxx xxxx xxxx"
-   SMTP_SERVER_PORT=587
+   RESEND_API_KEY=your_resend_api_key_here
    ```
 
-Replace the values with your actual Google account details.
+Replace `your_resend_api_key_here` with your actual Resend API key.
 
 ### Email Templates
 

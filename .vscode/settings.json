@@ -33,5 +33,7 @@
   "i18n-ally.pathMatcher": "{locale}.json",
   "i18n-ally.fullReloadOnChanged": true,
   "i18n-ally.extract.autoDetect": true,
-  "i18n-ally.extract.keyMaxLength": 50
+  "i18n-ally.extract.keyMaxLength": 50,
+  "WillLuke.nextjs.addTypesOnSave": true,
+  "WillLuke.nextjs.hasPrompted": true
 }
