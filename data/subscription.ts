@@ -1,5 +1,4 @@
 import { db } from '@/lib/db';
-import logger from '@/lib/logger';
 
 export const createSubscription = async ({
   userId,
@@ -69,7 +68,6 @@ export const createSubscription = async ({
 
     return 'Subscription created successfully';
   } catch (e) {
-    logger.error('Error updating subscription:', e);
     throw new Error('Failed to update subscription');
   }
 };
@@ -108,7 +106,6 @@ export const updateSubscriptionData = async ({
 
     return 'Subscription updated successfully';
   } catch (e) {
-    logger.error('Error updating subscription:', e);
     throw new Error('Failed to update subscription');
   }
   // Removed unreachable return statement
@@ -137,7 +134,6 @@ export const deleteSubscription = async ({
 
     return { success: true, message: 'Subscription updated successfully' };
   } catch (e) {
-    logger.error('Error updating subscription:', e);
     // throw new Error('Failed to update subscription');
     return { error: true, message: 'Failed to update subscription details' };
   }
@@ -153,9 +149,8 @@ export const getSubscription = async (cid: string) => {
     }
     return null;
   } catch (error) {
-    logger.info(error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'; // Handle unknown error type
-    logger.info('Error in updating the subscription:', errorMessage);
+
     return { error: true, message: errorMessage };
   }
 };

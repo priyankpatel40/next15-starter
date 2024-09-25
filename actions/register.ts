@@ -7,7 +7,6 @@ import type * as z from 'zod';
 import { getUserByEmail } from '@/data/user';
 import { sendVerificationEmail } from '@/emails/mail';
 import { db } from '@/lib/db';
-import logger from '@/lib/logger';
 import { generateVerificationToken } from '@/lib/tokens';
 import { RegisterSchema } from '@/schemas';
 
@@ -41,7 +40,7 @@ const register = async (values: z.infer<typeof RegisterSchema>) => {
       email: string;
       token: string;
     };
-    logger.info('verificationToken', verificationToken);
+
     await sendVerificationEmail({
       email: verificationToken.email,
       token: verificationToken.token,
@@ -53,7 +52,7 @@ const register = async (values: z.infer<typeof RegisterSchema>) => {
   } catch (e) {
     // Error handling
     let errorMessage: string = 'Something went wrong, unable to create your account.';
-    logger.error('Error during user registration:', e);
+
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       // The .code property can be accessed in a type-safe manner
       if (e.code === 'P2002') {

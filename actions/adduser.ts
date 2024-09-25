@@ -8,7 +8,6 @@ import { auth } from '@/auth';
 import { getUserByEmail } from '@/data/user';
 import { sendVerificationEmail } from '@/emails/mail';
 import { db } from '@/lib/db';
-import logger from '@/lib/logger';
 import { generateVerificationToken } from '@/lib/tokens';
 import { CreateUserSchema } from '@/schemas';
 
@@ -71,7 +70,7 @@ export const addUser = async (values: z.infer<typeof CreateUserSchema>) => {
   } catch (e) {
     // Error handling
     let errorMessage: string = 'Something went wrong, unable to add your user.';
-    logger.error('Error during user registration:', e);
+
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       // The .code property can be accessed in a type-safe manner
       if (e.code === 'P2002') {

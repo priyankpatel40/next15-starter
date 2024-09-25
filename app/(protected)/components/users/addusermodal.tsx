@@ -28,7 +28,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { showToast } from '@/components/ui/toast';
-import logger from '@/lib/logger';
 import { CreateUserSchema } from '@/schemas';
 
 interface AddUserModalProps {
@@ -57,7 +56,7 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
     setError('');
     setSuccess('');
     setIsPending(true);
-    logger.info(values);
+
     try {
       const data = await addUser(values);
       if (data.success) {
@@ -72,7 +71,6 @@ export default function AddUserModal({ onClose, onUserAdded }: AddUserModalProps
         setError(data.error);
       }
     } catch (err) {
-      logger.error('Error updating user:', err);
       setError(t('error'));
     }
     setIsPending(false);

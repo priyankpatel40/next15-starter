@@ -3,7 +3,6 @@
 'use server';
 
 import { UsersIcon } from '@heroicons/react/24/outline';
-import type { User } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
@@ -14,7 +13,6 @@ import FilterSelect from '@/components/ui/filterselect';
 import { UserTableSkeleton } from '@/components/ui/skeletons';
 import TextSearch from '@/components/ui/textSearch';
 import { getCompanyUsers } from '@/data/user';
-import logger from '@/lib/logger';
 import type { UsersTableArray } from '@/utils/types';
 
 import AddUserButton from './addUserButton';
@@ -54,10 +52,9 @@ const AllUsers = async ({ searchParams }: AllUsersProps) => {
   const userCount = users.filter((user) => user.role === 'USER').length;
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
-  const handleUserAdded = (user: User) => {
+  const handleUserAdded = () => {
     'use server';
 
-    logger.info('🚀 ~ handleUserAdded ~ user:', user);
     revalidatePath('/admin/users');
     redirect('/admin/users');
   };

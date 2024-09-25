@@ -3,7 +3,6 @@
 'use server';
 
 import { db } from '@/lib/db';
-import logger from '@/lib/logger';
 
 export const getCompanyByName = async (companyName: string) => {
   try {
@@ -236,8 +235,7 @@ export const deleteCompanyById = async (id: string) => {
       data: { isActive: false, isDeleted: true },
     });
   } catch (error) {
-    logger.error('Error deleting company:', error);
-    throw error;
+    return { error: true };
   }
   return { success: true };
 };
@@ -253,8 +251,7 @@ export const toggleCompanyStatusById = async (id: string) => {
       data: { isActive: !company.isActive },
     });
   } catch (error) {
-    logger.error('Error updating company status:', error);
-    throw error;
+    return { error: true };
   }
   return { success: true };
 };

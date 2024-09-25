@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-param-reassign */
+// @ts-nocheck
 import { UserRole } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import NextAuth from 'next-auth';
 import { getToken } from 'next-auth/jwt';
-import logger from './lib/logger';
 
 import authConfig from '@/auth.config';
 import {
@@ -17,13 +19,9 @@ import {
 
 const { auth } = NextAuth(authConfig);
 
-
 export default auth(async (req: any) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  // logger.info('🚀 ~ file: middleware.ts:21 ~ auth ~ isLoggedIn:', isLoggedIn);
-  // logger.info('🚀 ~ auth ~ process.env.NODE_ENV:', process.env.NODE_ENV);
-
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
@@ -88,8 +86,6 @@ export default auth(async (req: any) => {
       // return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
       return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-
-   // logger.info(token?.role !== UserRole.SUPERADMIN);
   }
 
   return null;

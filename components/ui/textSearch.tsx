@@ -3,8 +3,6 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
 
-import logger from '@/lib/logger';
-
 import { Input } from './input';
 
 export default function TextSearch({ placeholder }: { placeholder: string }) {
@@ -13,7 +11,6 @@ export default function TextSearch({ placeholder }: { placeholder: string }) {
   const pathname = usePathname();
 
   const handleSearch = useDebouncedCallback((term: string) => {
-    logger.info(`Searching... ${term}`);
     const params = new URLSearchParams(searchParams);
     params.set('page', '1');
     if (term) {

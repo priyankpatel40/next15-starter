@@ -23,7 +23,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import logger from '@/lib/logger';
 import { type LoginLinkSchema, LoginSchema } from '@/schemas';
 
 import { FormError } from '../form-error';
@@ -168,7 +167,6 @@ const LoginForm = () => {
   useEffect(() => {
     const parser = new UAParser();
     const userAgentInfo = parser.getResult();
-    logger.info('User agent info:', userAgentInfo);
 
     Cookies.set('userAgent', JSON.stringify(userAgentInfo), { expires: 1 });
   }, []);

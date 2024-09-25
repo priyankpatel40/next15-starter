@@ -58,7 +58,6 @@
     "next-nprogress-bar": "^2.3.13",
     "next-themes": "^0.2.1",
     "nodemailer": "^6.9.15",
-    "pino": "^9.4.0",
     "pino-pretty": "^11.2.2",
     "react": "19.0.0-rc-fb9a90fa48-20240614",
     "react-datepicker": "^7.3.0",

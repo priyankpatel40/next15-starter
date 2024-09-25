@@ -11,7 +11,6 @@ import { getUserById, getUserLoginStatus, saveLoginActivity } from '@/data/user'
 import { db } from '@/lib/db';
 
 import { getAccountByUserId } from './data/account';
-import logger from './lib/logger';
 
 export const {
   handlers: { GET, POST },
@@ -33,7 +32,6 @@ export const {
       });
     },
     async signIn(message) {
-      logger.info('🚀 ~ signIn ~ message:', message);
       await saveLoginActivity(message.user.id);
     },
   },
@@ -83,13 +81,11 @@ export const {
         const loginActivity = await getUserLoginStatus(session.user.id);
 
         session.user.loginId = loginActivity?.id;
-        // logger.info('🚀 ~ session ~ loginActivity:', session);
       }
       if (token.company) {
         session.user.company = token.company;
       }
 
-      // logger.info('🚀 ~ file: auth.ts:76 ~ session ~ session:', session);
       return session;
     },
     async jwt({ token, trigger, session }) {
@@ -112,8 +108,6 @@ export const {
       if (existingUser.company) {
         token.company = existingUser.company;
       }
-
-      // logger.info('🚀 ~ jwt ~ token:', token);
       return token;
     },
   },
