@@ -76,6 +76,9 @@ importers:
       '@types/ua-parser-js':
         specifier: ^0.7.39
         version: 0.7.39
+      animate.css:
+        specifier: ^4.1.1
+        version: 4.1.1
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
@@ -3333,6 +3336,12 @@ packages:
     resolution:
       {
         integrity: sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==,
+      }
+
+  animate.css@4.1.1:
+    resolution:
+      {
+        integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==,
       }
 
   ansi-escapes@4.3.2:
@@ -11451,6 +11460,8 @@ snapshots:
       fast-uri: 3.0.1
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
+
+  animate.css@4.1.1: {}
 
   ansi-escapes@4.3.2:
     dependencies:
