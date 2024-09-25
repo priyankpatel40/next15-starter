@@ -17,17 +17,11 @@ import {
   YAxis,
 } from 'recharts';
 
-import logger from '@/lib/logger';
-
 export const DailyCompaniesChart = ({
   dailyActiveCompanies,
 }: {
   dailyActiveCompanies: any;
 }) => {
-  logger.info(
-    '🚀 ~ file: dailyCompaniesChart.tsx:18 ~ dailyActiveCompanies:',
-    dailyActiveCompanies,
-  );
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart

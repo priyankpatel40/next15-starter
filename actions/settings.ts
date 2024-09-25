@@ -6,7 +6,6 @@ import { unstable_update } from '@/auth';
 import { getUserById } from '@/data/user';
 import { currentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
-import logger from '@/lib/logger';
 import type { SettingsSchema } from '@/schemas';
 
 export const settings = async (values: z.infer<typeof SettingsSchema>) => {
@@ -34,14 +33,14 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
       },
     });
 
-    const updatedSession = await unstable_update({
+    await unstable_update({
       user: {
         name: updatedUser.name,
         email: updatedUser.email,
         isTwoFactorEnabled: updatedUser.isTwoFactorEnabled,
       },
     });
-    logger.info('updatedSession', updatedSession);
+
     return { success: 'Profile settings updated!' };
   } catch (error) {
     return { error: 'Something went wrong!' };

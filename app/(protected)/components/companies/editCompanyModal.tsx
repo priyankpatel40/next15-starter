@@ -27,7 +27,6 @@ import { Loader } from '@/components/ui/loader';
 import { Switch } from '@/components/ui/switch';
 import { showToast } from '@/components/ui/toast';
 import { getCompanyById } from '@/data/company';
-import logger from '@/lib/logger';
 import { EditCompanySchema } from '@/schemas';
 import { cn } from '@/utils/helpers';
 
@@ -72,7 +71,7 @@ const EditCompanyModal = ({ id, onClose, onCompanyUpdate }: EditCompanyModalProp
   const onSubmit = async (values: z.infer<typeof EditCompanySchema>) => {
     setError('');
     setSuccess('');
-    logger.info(values);
+
     startTransition(() => {
       updateCompany(values, id).then((data) => {
         if (data.success) {

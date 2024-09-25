@@ -34,7 +34,6 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { showToast } from '@/components/ui/toast';
 import { updateUser } from '@/data/user';
-import logger from '@/lib/logger';
 import { EditUserSchema } from '@/schemas';
 
 interface UserData {
@@ -81,7 +80,6 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
     setError('');
     setSuccess('');
     setIsPending(true);
-    logger.info('Form values:', values);
 
     try {
       const data = await updateUser(values, userData.id);
@@ -97,7 +95,6 @@ const EditUserModal = ({ userData, onClose, onUserUpdated }: EditUserModalProps)
         setError(data.message || t('error'));
       }
     } catch (err) {
-      logger.error('Error updating user:', err);
       setError(t('error'));
     }
     setIsPending(false);

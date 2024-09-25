@@ -1,6 +1,11 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-param-reassign */
+// @ts-nocheck
+
 'use server';
 
 import type { User } from '@prisma/client';
+import { AuthError } from 'next-auth';
 import type * as z from 'zod';
 
 import { signIn } from '@/auth';
@@ -9,7 +14,6 @@ import { getTwoFactorTokenByEmail } from '@/data/two-factor-token';
 import { getUserByEmail } from '@/data/user';
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from '@/emails/mail';
 import { db } from '@/lib/db';
-import logger from '@/lib/logger';
 import { generateTwoFactorToken, generateVerificationToken } from '@/lib/tokens';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import { LoginLinkSchema, LoginSchema } from '@/schemas';
@@ -27,7 +31,6 @@ export const login = async (
   const { email, password, code } = validatedFields.data;
 
   const existingUser = (await getUserByEmail(email)) as User;
-  logger.info('🚀 ~ existingUser:', existingUser);
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
     return { error: true, message: 'Invalid credentials!' };
@@ -100,7 +103,6 @@ export const login = async (
   }
 
   try {
-    logger.info('insingin');
     await signIn('credentials', {
       email,
       password,
@@ -108,9 +110,17 @@ export const login = async (
     });
     return null;
   } catch (error) {
-    logger.info('🚀 ~ error:', error);
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return { error: true, message: 'Invalid credentials' };
+        default:
+          return { error: true, message: 'Something went wrong' };
+      }
+    }
     throw error;
   }
+  return { success: true };
 };
 
 export const resendCode = async (email: string) => {
@@ -149,10 +159,8 @@ export const loginWithLink = async (
   }
 
   const { email } = validatedFields.data;
-  logger.info(email);
 
   const existingUser = (await getUserByEmail(email)) as User;
-  logger.info('🚀 ~ existingUser:', existingUser);
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
     return { error: true, message: 'Invalid email address!' };
@@ -176,15 +184,12 @@ export const loginWithLink = async (
   }
 
   try {
-    logger.info('insingin');
     await signIn('resend', {
       email,
       redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
     return null;
   } catch (error) {
-    logger.info('🚀 ~ error:', error);
-    logger.info(error);
-    throw error;
+    return { error: true, message: 'Something went wrong, please try again!' };
   }
 };

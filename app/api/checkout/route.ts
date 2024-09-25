@@ -3,11 +3,9 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 import { auth } from '@/auth';
-import logger from '@/lib/logger';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  logger.info(body);
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2024-06-20',

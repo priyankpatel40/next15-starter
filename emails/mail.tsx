@@ -3,8 +3,6 @@
 import { render } from '@react-email/components';
 import React from 'react';
 
-import logger from '@/lib/logger';
-
 import { sendEmail } from '../lib/sendmail';
 import AccountVerifyEmail from './accountVerify';
 import MagicLinkEmail from './magicLink';
@@ -18,19 +16,9 @@ export const sendTwoFactorTokenEmail = async (
   token: string,
   username: string,
 ) => {
-  logger.info(
-    '🚀 ~ file: mail.ts:72 ~ sendTwoFactorTokenEmail ~ userData:',
-    email,
-    username,
-    token,
-  );
   try {
     const emailContent = await render(
       <TwoFactorEmail username={username} code={token} />,
-    );
-    logger.info(
-      '🚀 ~ file: mail.ts:85 ~ sendTwoFactorTokenEmail ~ emailContent:',
-      emailContent,
     );
 
     await sendEmail({
@@ -40,7 +28,6 @@ export const sendTwoFactorTokenEmail = async (
     });
     return true;
   } catch (error) {
-    logger.info('🚀 ~ file: mail.ts:89 ~ sendTwoFactorTokenEmail ~ error:', error);
     return false;
   }
 };
@@ -51,18 +38,10 @@ export const sendPasswordResetEmail = async (
   username: string,
 ) => {
   const resetLink = `${domain}/new-password?token=${token}`;
-  logger.info(
-    '🚀 ~ file: mail.ts:72 ~ sendVerificationEmail ~ userData:',
-    email,
-    username,
-  );
+
   try {
     const emailContent = await render(
       <ResetPasswordEmail username={username} link={resetLink} />,
-    );
-    logger.info(
-      '🚀 ~ file: mail.ts:85 ~ sendVerificationEmail ~ emailContent:',
-      emailContent,
     );
 
     await sendEmail({
@@ -72,13 +51,11 @@ export const sendPasswordResetEmail = async (
     });
     return true;
   } catch (error) {
-    logger.info('🚀 ~ file: mail.ts:89 ~ sendVerificationEmail ~ error:', error);
     return false;
   }
 };
 
 export const sendVerificationEmail = async (userData: any) => {
-  logger.info('🚀 ~ file: mail.ts:72 ~ sendVerificationEmail ~ userData:', userData);
   try {
     const confirmLink = `${domain}/new-verification?token=${userData.token}`;
     const emailContent = await render(
@@ -90,10 +67,6 @@ export const sendVerificationEmail = async (userData: any) => {
         invitedByEmail={userData.invitedByEmail}
       />,
     );
-    logger.info(
-      '🚀 ~ file: mail.ts:85 ~ sendVerificationEmail ~ emailContent:',
-      emailContent,
-    );
 
     await sendEmail({
       sendTo: userData.email,
@@ -102,7 +75,6 @@ export const sendVerificationEmail = async (userData: any) => {
     });
     return true;
   } catch (error) {
-    logger.info('🚀 ~ file: mail.ts:89 ~ sendVerificationEmail ~ error:', error);
     return false;
   }
 };
@@ -111,14 +83,9 @@ export const sendVerificationRequest = async (params: {
   identifier: string;
   url: string;
 }) => {
-  logger.info('🚀 ~ file: mail.ts:72 ~ sendVerificationEmail ~ userData:', params);
   const { identifier: to, url } = params;
 
   const emailContent = await render(<MagicLinkEmail username={to} link={url} />);
-  logger.info(
-    '🚀 ~ file: mail.ts:85 ~ sendVerificationEmail ~ emailContent:',
-    emailContent,
-  );
 
   await sendEmail({
     sendTo: to,

@@ -9,7 +9,6 @@ import { auth } from '@/auth';
 import ProductList from '@/components/productList';
 import { ProductListSkeleton } from '@/components/ui/skeletons';
 import { getSubscription } from '@/data/subscription';
-import logger from '@/lib/logger';
 import { formatDate } from '@/utils/helpers'; // Assuming this import is needed for formatDate
 import { stripe } from '@/utils/stripe';
 
@@ -39,7 +38,7 @@ const SubscriptionPage = async () => {
   let subscriptionData;
   const session = await auth();
   const t = await getTranslations('SubscriptionPage');
-  logger.info('🚀 ~ file: page.tsx:10 ~ SubscriptionPage ~ session:', session);
+
   const subscription = (await getSubscription(session.user.cid)) as Subscription;
   if (subscription !== null) {
     subscriptionData = {
@@ -47,10 +46,6 @@ const SubscriptionPage = async () => {
       ...JSON.parse(subscription.subscriptionObj),
     };
   }
-  // logger.info(
-  //   '🚀 ~ file: page.tsx:35 ~ SubscriptionPage ~ subscription:',
-  //   subscriptionData,
-  // );
 
   const products = await stripe.products.list({
     active: true,

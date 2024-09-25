@@ -19,7 +19,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import logger from '@/lib/logger';
 import { RegisterSchema } from '@/schemas';
 
 import { Card } from '../ui/card';
@@ -46,7 +45,7 @@ const RegisterForm = () => {
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     setError('');
     setSuccess('');
-    logger.info(values);
+
     startTransition(() => {
       register(values).then((data) => {
         if (data.success) {

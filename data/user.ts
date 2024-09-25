@@ -6,7 +6,6 @@ import { cookies } from 'next/headers';
 import type { z } from 'zod';
 
 import { db } from '@/lib/db';
-import logger from '@/lib/logger';
 import type { EditUserSchema } from '@/schemas';
 
 export const getUserByEmail = async (email: string) => {
@@ -14,11 +13,9 @@ export const getUserByEmail = async (email: string) => {
     const user = await db.user.findUnique({
       where: { email },
     });
-    logger.info('🚀 ~ getUserByEmail ~ user:', user);
 
     return user;
   } catch (error) {
-    logger.info('🚀 ~ getUserByEmail ~ error:', error);
     return null;
   }
 };
@@ -26,7 +23,7 @@ export const getUserByEmail = async (email: string) => {
 export const getUserById = async (id: string) => {
   try {
     const user = await db.user.findUnique({ where: { id } });
-    logger.info(user);
+
     if (user?.cid) {
       const usercompany = await db.company.findUnique({
         where: { id: user.cid },
@@ -46,7 +43,6 @@ export const getUserById = async (id: string) => {
     }
     return user;
   } catch (error) {
-    logger.info('🚀 ~ getUserById ~ error:', error);
     return null;
   }
 };
@@ -122,7 +118,6 @@ export const getCompanyUsers = async ({
     }
     return null;
   } catch (error) {
-    logger.info('🚀 ~ getCompanyUsers ~ error:', error);
     return null;
   }
 };
@@ -184,7 +179,6 @@ export const getCompanyUsersForReports = async ({
       ` as Promise<Array<{ date: string; users: number }>>,
       ]);
 
-    logger.info('🚀 ~ getCompanyUsersForReports ~ dailyActiveUsers:', dailyActiveUsers);
     // Fetch creator names
     const creatorIds = users
       .map((user) => user.createdBy)
@@ -216,13 +210,11 @@ export const getCompanyUsersForReports = async ({
       dailyActiveUsers,
     };
   } catch (error) {
-    logger.info('🚀 ~ getCompanyUsersForReports ~ error:', error);
     return null;
   }
 };
 
 export const updateUser = async (values: z.infer<typeof EditUserSchema>, id: string) => {
-  logger.info('🚀 ~ file: user.ts:225 ~ values:', values);
   try {
     const user = await db.user.update({
       where: { id },
@@ -231,7 +223,6 @@ export const updateUser = async (values: z.infer<typeof EditUserSchema>, id: str
 
     return { success: true, user };
   } catch (error) {
-    logger.info('🚀 ~ updateUser ~ error:', error);
     return { error: true, message: 'Error updating user' };
   }
 };
@@ -247,8 +238,7 @@ export const toggleUserStatusById = async (id: string) => {
       data: { isActive: !user.isActive },
     });
   } catch (error) {
-    logger.error('Error updating user status:', error);
-    throw error;
+    return { error: true };
   }
   return { success: true };
 };
@@ -257,7 +247,7 @@ export const saveLoginActivity = async (userId: string) => {
   try {
     const cookieStore = cookies();
     const userAgent = JSON.parse(cookieStore.get('userAgent')?.value || '{}');
-    logger.info('🚀 ~ file: user.ts:247 ~ saveLoginActivity ~ userAgent:', userAgent);
+
     const loginActivity = await db.loginActivity.create({
       data: {
         userId,
@@ -275,7 +265,6 @@ export const saveLoginActivity = async (userId: string) => {
     cookieStore.delete('userAgent');
     return loginActivity.id;
   } catch (error) {
-    logger.error('Error saving login activity:', error);
     return false;
   }
 };
@@ -293,7 +282,6 @@ export const getBrowserData = async () => {
     }));
     return browserData;
   } catch (error) {
-    logger.error('Error getting browser data:', error);
     return null;
   }
 };
@@ -310,7 +298,6 @@ export const getOsData = async () => {
     }));
     return osData;
   } catch (error) {
-    logger.error('Error getting OS data:', error);
     return null;
   }
 };
@@ -327,7 +314,6 @@ export const getDeviceData = async () => {
     }));
     return deviceData;
   } catch (error) {
-    logger.error('Error getting device data:', error);
     return null;
   }
 };
@@ -344,7 +330,6 @@ export const getCpuData = async () => {
     }));
     return cpuData;
   } catch (error) {
-    logger.error('Error getting CPU data:', error);
     return null;
   }
 };
@@ -357,19 +342,14 @@ export const updateUserLoginStatus = async (id: string) => {
       });
     }
   } catch (error) {
-    logger.error('Error setting logout:', error);
+    return false;
   }
   return true;
 };
 export const getUserLoginStatus = async (id: string) => {
-  try {
-    const user = await db.loginActivity.findFirst({
-      where: { userId: id },
-      orderBy: { loggedIn: 'desc' }, // Order by loggedIn in descending order
-    });
-    return user;
-  } catch (error) {
-    logger.error('Error getting user login status:', error);
-    return null;
-  }
+  const user = await db.loginActivity.findFirst({
+    where: { userId: id },
+    orderBy: { loggedIn: 'desc' }, // Order by loggedIn in descending order
+  });
+  return user;
 };

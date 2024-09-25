@@ -3,7 +3,6 @@
 import type { z } from 'zod';
 
 import { deleteSubscription, updateSubscriptionData } from '@/data/subscription';
-import logger from '@/lib/logger';
 import { SubscriptionSchema } from '@/schemas';
 import { stripe } from '@/utils/stripe';
 
@@ -15,10 +14,6 @@ export const createSession = async (values: z.infer<typeof SubscriptionSchema>) 
   }
 
   const { cid, userId, priceId, productId, email, quantity } = validatedFields.data;
-  logger.info(
-    '🚀 ~ file: subscribe.ts:12 ~ createSession ~ validatedFields.data:',
-    validatedFields.data,
-  );
 
   const baseurl = process.env.NEXT_PUBLIC_APP_URL;
   if (!priceId) {
@@ -51,7 +46,7 @@ export const createSession = async (values: z.infer<typeof SubscriptionSchema>) 
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error && error.message ? error.message : 'Unknown error';
-    logger.error('Error in creating the subscription:', errorMessage);
+
     return { error: errorMessage };
   }
 };
@@ -67,10 +62,6 @@ export const updateStripeSubscription = async (
   }
 
   const { userId, priceId, productId, quantity } = validatedFields.data;
-  logger.info(
-    '🚀 ~ file: subscribe.ts:12 ~ updateStripeSubscription ~ validatedFields.data:',
-    validatedFields.data,
-  );
 
   try {
     const currentSubscription = await stripe.subscriptions.retrieve(subscriptionId);
@@ -103,7 +94,7 @@ export const updateStripeSubscription = async (
         return { success: true };
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        logger.error('Error in updating the subscription:', errorMessage);
+
         return { error: errorMessage };
       }
     }
@@ -111,7 +102,7 @@ export const updateStripeSubscription = async (
     return { error: 'Failed to update subscription' };
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    logger.error('Error in updating the subscription:', errorMessage);
+
     return { error: errorMessage };
   }
 };
@@ -130,7 +121,7 @@ export const cancelStripeSubscription = async (subscriptionId: string) => {
         return { success: true };
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        logger.error('Error in deleting the subscription data:', errorMessage);
+
         return { error: errorMessage };
       }
     }
@@ -138,7 +129,7 @@ export const cancelStripeSubscription = async (subscriptionId: string) => {
     return { error: 'Failed to cancel subscription' };
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    logger.error('Error in cancelling the subscription:', errorMessage);
+
     return { error: errorMessage };
   }
 };

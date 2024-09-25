@@ -8,14 +8,11 @@ import { auth } from '@/auth';
 import { getCompanyByName } from '@/data/company';
 import { getUserByEmail } from '@/data/user';
 import { db } from '@/lib/db';
-import logger from '@/lib/logger';
 import { CompanySchema, EditCompanySchema } from '@/schemas';
 
 export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
-  logger.info('🚀 ~ createCompany ~ values:', values);
   const validatedFields = CompanySchema.safeParse(values);
   const currentSession = await auth();
-  logger.info('🚀 ~ createCompany ~ session:', currentSession);
 
   if (!validatedFields.success) {
     return { error: 'Invalid fields!' };
@@ -27,7 +24,7 @@ export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
   if (existingUser && existingUser.cid === null) {
     try {
       const apiKey = await randomBytes(16).toString('base64');
-      logger.error('apikey', apiKey);
+
       // Use Prisma transaction to ensure both operations succeed or fail together
       await db.$transaction(async (transaction) => {
         // Create the organization
@@ -40,7 +37,7 @@ export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
           },
         })) as Company;
         company = createdCompany; // Ensure company is not null
-        logger.info('company', company);
+
         // Associate user with organization
         if (company) {
           await transaction.company.update({
@@ -57,7 +54,7 @@ export const createCompany = async (values: z.infer<typeof CompanySchema>) => {
     } catch (e) {
       // Error handling
       let errorMessage: string = 'Something went wrong, unable to create your account.';
-      logger.error('Error during user and organization registration:', e);
+
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         // The .code property can be accessed in a type-safe manner
         if (e.code === 'P2002') {
@@ -77,10 +74,7 @@ export const updateCompany = async (
   values: z.infer<typeof EditCompanySchema>,
   id: string,
 ) => {
-  logger.info('🚀 ~ updateCompany ~ values:', values);
   const validatedFields = EditCompanySchema.safeParse(values);
-  const currentSession = await auth();
-  logger.info('🚀 ~ updateCompany ~ session:', currentSession);
 
   if (!validatedFields.success) {
     return { error: 'Invalid fields!' };
@@ -105,7 +99,6 @@ export const updateCompany = async (
   } catch (e) {
     // Error handling
     let errorMessage: string = 'Something went wrong, unable to create your account.';
-    logger.error('Error during user and organization registration:', e);
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       // The .code property can be accessed in a type-safe manner
       if (e.code === 'P2002') {

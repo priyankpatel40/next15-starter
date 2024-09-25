@@ -6,8 +6,6 @@ import { getTwoFactorTokenByEmail } from '@/data/two-factor-token';
 import { getVerificationTokenByEmail } from '@/data/verificiation-token';
 import { db } from '@/lib/db';
 
-import logger from './logger';
-
 export const generateTwoFactorToken = async (email: string) => {
   const token = crypto.randomInt(100_000, 1_000_000).toString();
   const expires = new Date(new Date().getTime() + 10 * 60 * 1000);
@@ -56,7 +54,6 @@ export const generatePasswordResetToken = async (email: string) => {
 
     return passwordResetToken;
   } catch (error) {
-    logger.error(error);
     return error;
   }
 };
@@ -84,7 +81,6 @@ export const generateVerificationToken = async (email: string) => {
     });
     return verficationToken;
   } catch (error) {
-    logger.error(error);
     return error;
   }
 };
