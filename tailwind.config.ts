@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      backgroundImage: {
+        'custom-bg': "url('/background.png')", // Update with your image path
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -89,16 +92,27 @@ const config = {
           },
           to: { opacity: '1', transform: 'translate(-50%, -50%) scale(1)' },
         },
+        'pulse-glow': {
+          '0%, 100%': {
+            transform: 'scale(1)',
+            boxShadow: '0 0 0 rgba(255, 255, 255, 0)',
+          },
+          '50%': {
+            transform: 'scale(1.05)',
+            boxShadow: '0 0 10px rgba(255, 20, 147, 1)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         overlayShow: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
         contentShow: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'pulse-glow': 'pulse-glow 1.5s infinite',
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [],
 } satisfies Config;
 
 export default config;

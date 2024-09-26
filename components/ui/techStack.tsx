@@ -11,14 +11,22 @@ const logos = [
   { src: '/logos/zod.svg', alt: 'zod Logo' },
 ];
 
-const BackgroundImage = () => {
+const TechStack = () => {
   return (
-    <div className="relative h-auto bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 py-4">
+    <div className="relative h-auto bg-gradient-to-r from-[#7073cc] to-[#0fc399] py-8">
+      <p className="animate__animated animate__fadeIn animate__delay-1s mb-6 items-center justify-center text-center font-light text-white md:text-lg lg:mb-8 lg:text-xl">
+        Kickstart your enterprise-grade project with our robust, secure, and scalable
+        Next.js 15 boilerplate! Equipped with advanced authentication, seamless Stripe
+        integration, internationalization support, and optimized for high performance.
+        Enjoy rapid UI development and comprehensive type checking with TypeScript.
+      </p>
+
       <div className="flex flex-wrap items-center justify-center px-4">
-        {logos.map((logo) => (
+        {logos.map((logo, index) => (
           <div
             key={logo.src}
-            className="m-2 flex w-1/12 items-center justify-center sm:w-1/2 md:w-1/5 lg:w-1/12"
+            className="animate__animated animate__fadeIn m-2 flex w-1/12 items-center justify-center sm:w-1/2 md:w-1/5 lg:w-1/12"
+            style={{ animationDelay: `${index * 0.2}s` }} // Staggered delay
           >
             <Image
               src={logo.src}
@@ -35,4 +43,4 @@ const BackgroundImage = () => {
   );
 };
 
-export default BackgroundImage;
+export default TechStack;
