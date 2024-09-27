@@ -93,37 +93,35 @@ const features = [
 
 const WhyBlock: React.FC = () => {
   return (
-    <div className="mx-auto my-12 bg-gradient-to-r from-gray-50 via-gray-100 to-gray-200 p-8">
-      <h2 className="mb-12 text-center text-4xl font-bold tracking-wide text-gray-800">
-        Why Use It?
-      </h2>
+    <div className="mx-auto my-12 p-8">
+      <h2 className="mb-12 text-center text-4xl font-bold tracking-wide">Why Use It?</h2>
 
       <div className="flex flex-col gap-10 md:flex-row">
         {/* Left Side: Tasks */}
-        <div className="rounded-xl bg-white p-8 shadow-lg md:w-1/2">
-          <h3 className="mb-6 text-2xl font-bold text-gray-900">Time Saving</h3>
+        <div className="rounded-xl p-8 shadow-lg dark:bg-gray-800 md:w-1/2">
+          <h3 className="mb-6 text-2xl font-bold ">Time Saving</h3>
           <ul className="space-y-6">
             {tasks.map((task) => (
               <li key={task.description} className="flex items-center space-x-6">
                 <span className={`text-4xl ${task.color}`}>{task.icon}</span>
                 <div>
-                  <p className="text-xl font-semibold text-gray-800">{task.hours}</p>
-                  <p className="text-gray-600">{task.description}</p>
+                  <p className="text-xl font-semibold ">{task.hours}</p>
+                  <p className="">{task.description}</p>
                 </div>
               </li>
             ))}
           </ul>
           <div className="mt-8 flex items-center justify-center rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-4">
-            <span className="text-2xl font-semibold text-white ">
+            <span className="text-2xl font-semibold  text-white">
               Saves ~ 200 hours of work
             </span>
           </div>
         </div>
 
         {/* Right Side: Features */}
-        <div className="rounded-xl bg-white p-8 shadow-lg md:w-1/2">
-          <h3 className="mb-6 text-2xl font-bold text-gray-900">Prebuilt Features</h3>
-          <ul className="list-inside list-disc space-y-4 text-gray-700">
+        <div className="rounded-xl p-8 shadow-lg dark:bg-gray-800 md:w-1/2">
+          <h3 className="mb-6 text-2xl font-bold ">Prebuilt Features</h3>
+          <ul className="list-inside list-disc space-y-4">
             {features.map((feature) => (
               <li key={feature} className="text-lg font-medium">
                 {feature}

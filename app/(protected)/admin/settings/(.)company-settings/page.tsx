@@ -8,7 +8,7 @@ const CompanySettingsPage = async () => {
         Company Settings
       </h1>
       <h3 className="items-center justify-center py-5 text-center text-2xl">
-        Coming Soon...
+        Add the settings you want for your APP in this page.
       </h3>
     </section>
   );

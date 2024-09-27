@@ -19,8 +19,8 @@ import ProfileDropDown from './profile-dropdown';
 
 const navigation = [
   {
-    name: 'Visitors',
-    href: '/visitors',
+    name: 'Sample Page',
+    href: '/sample',
     isAdmin: false,
     isSaOnly: false,
     visibleToAll: true,
