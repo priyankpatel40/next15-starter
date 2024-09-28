@@ -30,7 +30,15 @@ const nextConfig = {
       "thread-stream": "commonjs thread-stream"
     });
     return config;
-  }
+  },
+   async rewrites() {
+    return [
+      {
+        source: '/',
+        destination: '/home', // This maps '/' to '/home'
+      },
+    ];
+  },
   
 };
  

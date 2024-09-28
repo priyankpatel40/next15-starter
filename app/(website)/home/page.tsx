@@ -5,21 +5,17 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FcDeployment } from 'react-icons/fc';
 
-import ThemeSwitch from '@/components/themeSwtich';
 import { Button } from '@/components/ui/button';
-import FaqSection from '@/components/ui/faq';
 import Features from '@/components/ui/features';
-import Footer from '@/components/ui/footer';
 import TechStack from '@/components/ui/techStack';
-import WhyBlock from '@/components/ui/whyBlock';
 
 export const metadata: Metadata = {
-  title: 'Next.js Enterprise Boilerplate',
+  title: 'NextJS 15 Enterprise Starter Kit',
   twitter: {
     card: 'summary_large_image',
   },
   openGraph: {
-    url: 'https://nexttest-nine-lake.vercel.app/',
+    url: process.env.NEXT_PUBLIC_APP_URL,
     images: [
       {
         width: 1200,
@@ -30,40 +26,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Web() {
+const HomePage = () => {
   return (
-    <div className="dark:bg-gray-900">
-      <section className="animate__animated animate__fadeIn bg-[#fafafa]  bg-contain bg-right-top bg-no-repeat pb-14 transition duration-500 ease-in-out dark:from-gray-800 dark:to-gray-600 lg:bg-custom-bg">
-        <div className="mx-auto flex items-center justify-end p-4">
-          <Link
-            href="/login"
-            className="mr-4 rounded-md bg-black px-4 text-lg text-white transition duration-300 hover:underline"
-          >
-            View Demo
-          </Link>
-          <div className="flex items-center">
-            <ThemeSwitch />
-          </div>
-        </div>
-        <div className="w-full px-4 py-8 text-left lg:w-1/2 lg:py-16">
-          <div className="mx-auto place-self-start">
-            <h1 className="animate__animated animate__fadeIn mb-4 text-4xl font-extrabold leading-tight tracking-tight text-black dark:text-black md:text-5xl xl:text-6xl">
+    <div className="pt-16 dark:bg-gray-900">
+      <section className="animate__animated animate__fadeIn bg-[#fafafa] bg-contain bg-right-top bg-no-repeat pb-14 transition duration-500 ease-in-out dark:bg-[#fafafa] lg:bg-custom-bg">
+        <div className=" mx-auto px-4 py-8 lg:py-24">
+          <div className="flex flex-col items-start text-left">
+            {' '}
+            {/* Ensure text is left-aligned */}
+            <h1 className="animate__animated animate__bounceInUp mb-4 text-4xl font-extrabold leading-tight tracking-tight text-black  md:text-5xl xl:text-6xl">
               Next.js Enterprise Starter Kit
             </h1>
-
-            <h2 className="mb-6 p-4 text-left text-2xl font-extrabold text-black dark:text-black md:text-3xl">
+            <h2 className="mb-4 py-4 text-2xl font-extrabold text-black md:text-3xl">
               Launch Your Enterprise Product{' '}
-              <span className="animate-pulse-glow rounded-md bg-gradient-to-r from-orange-500 to-pink-500 px-2  text-white">
+              <span className="animate-pulse-glow rounded-md bg-gradient-to-r from-orange-500 to-pink-500 px-2 text-white">
                 In Hours
               </span>{' '}
-              with Next.js Starter Kits
+              with Next.js Starter Kit
             </h2>
-
-            <p className="mb-6 max-w-lg text-left text-base text-black dark:text-black md:text-lg">
+            <p className="text-md mb-6 flex items-center text-black md:text-lg">
               Accelerate your development process with our robust and scalable starter kit
               designed for enterprise applications.
             </p>
-
             <div className="flex flex-col items-center space-y-4 md:flex-row md:space-x-4 md:space-y-0">
               <Button className="flex items-center rounded-lg bg-gradient-to-r from-green-400 to-blue-500 px-6 py-3 text-lg text-white transition-transform hover:from-green-500 hover:to-blue-600">
                 <GitHubLogoIcon className="mr-2 size-6" />
@@ -98,13 +82,14 @@ export default function Web() {
       <section className="bg-white transition duration-500 ease-in-out dark:bg-gray-900">
         <Features />
       </section>
-      <section className="bg-white transition duration-500 ease-in-out dark:bg-gray-900">
+      {/* <section className="bg-white transition duration-500 ease-in-out dark:bg-gray-900">
         <WhyBlock />
-      </section>
-      <section className="bg-white transition duration-500 ease-in-out dark:bg-gray-900">
+      </section> */}
+      {/* <section className="bg-white transition duration-500 ease-in-out dark:bg-gray-900">
         <FaqSection />
-      </section>
-      <Footer />
+      </section> */}
     </div>
   );
-}
+};
+
+export default HomePage;

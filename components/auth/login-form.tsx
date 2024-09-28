@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import { type LoginLinkSchema, LoginSchema } from '@/schemas';
 
 import { FormError } from '../form-error';
@@ -32,7 +33,6 @@ const LoginForm = () => {
   const t = useTranslations('LoginPage');
   const g = useTranslations('General');
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') ?? undefined;
   const urlError =
     searchParams.get('error') === 'OAuthAccountNotLinked'
       ? 'Email already in use with different provider!'
@@ -47,6 +47,7 @@ const LoginForm = () => {
   const [cooldown, setCooldown] = useState(0);
   const [isValidating, setIsValidating] = useState(false);
   const [loginMethod, setLoginMethod] = useState<'link' | 'password'>('link');
+  const router = useRouter();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -71,7 +72,7 @@ const LoginForm = () => {
 
     startTransition(async () => {
       try {
-        const data = await loginWithLink(values, callbackUrl);
+        const data = await loginWithLink(values);
         form.reset();
 
         if (data?.error) {
@@ -79,7 +80,7 @@ const LoginForm = () => {
         }
 
         if (data?.success) {
-          setSuccess(data.message);
+          setSuccess('An email with a link to login has been sent!');
         }
       } catch {
         setError('Something went wrong');
@@ -97,8 +98,8 @@ const LoginForm = () => {
         if (loginMethod === 'link') {
           await handleLinkSubmit({ email: values.email });
         } else {
-          const data = await login(values, callbackUrl);
-          form.reset();
+          const data = await login(values);
+          console.log('🚀 ~ startTransition ~ login:', data);
 
           if (data?.error) {
             setError(data.message);
@@ -106,6 +107,7 @@ const LoginForm = () => {
 
           if (data?.success) {
             setSuccess(data.message);
+            router.push(DEFAULT_LOGIN_REDIRECT);
           }
 
           if (data?.twoFactor) {
@@ -125,15 +127,17 @@ const LoginForm = () => {
     setError(undefined);
     setSuccess(undefined);
     setIsValidating(true);
-
+    console.log('🚀 ~ onCodeSubmit ~ data:', form.getValues());
     try {
-      const data = await login({ ...form.getValues(), code }, callbackUrl);
+      const data = await login({ ...form.getValues(), code });
+      console.log('🚀 ~ onCodeSubmit ~ data:', data);
 
       if (data?.error) {
         setError(data.message);
         setResetCode(true);
       } else if (data?.success) {
         setSuccess(data.message);
+        router.push(DEFAULT_LOGIN_REDIRECT);
       }
     } catch {
       setError('Something went wrong');
@@ -294,31 +298,34 @@ const LoginForm = () => {
               </>
             )}
           </div>
-
-          <Button
-            disabled={isPending || isValidating}
-            type="submit"
-            isLoading={isPending}
-            className="w-full rounded-md bg-primary py-0 text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90"
-          >
-            {loginMethod === 'link' ? t('btnLink') : t('btn')}
-          </Button>
+          {!showTwoFactor && (
+            <Button
+              disabled={isPending || isValidating}
+              type="submit"
+              isLoading={isPending}
+              className="w-full rounded-md bg-primary py-0 text-sm font-semibold text-primary-foreground transition-colors duration-200 hover:bg-primary/90"
+            >
+              {loginMethod === 'link' ? t('btnLink') : t('btn')}
+            </Button>
+          )}
 
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
         </form>
       </Form>
 
-      <div className="mt-0 text-center">
-        <Button
-          type="button"
-          variant="link"
-          onClick={toggleLoginMethod}
-          className="text-sm font-normal text-primary hover:text-primary/80 dark:text-blue-400 dark:hover:text-blue-300"
-        >
-          {loginMethod === 'link' ? t('loginPwd') : t('loginLink')}
-        </Button>
-      </div>
+      {!showTwoFactor && (
+        <div className="mt-0 text-center">
+          <Button
+            type="button"
+            variant="link"
+            onClick={toggleLoginMethod}
+            className="text-sm font-normal text-primary hover:text-primary/80 dark:text-blue-400 dark:hover:text-blue-300"
+          >
+            {loginMethod === 'link' ? t('loginPwd') : t('loginLink')}
+          </Button>
+        </div>
+      )}
     </CardWrapper>
   );
 };

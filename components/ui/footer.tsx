@@ -36,10 +36,10 @@ const FooterComponent = () => (
   <footer className="bg-gray-100 dark:bg-gray-800">
     <div className="mx-auto max-w-screen-xl space-y-8 overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
       <nav className="-mx-5 -my-2 flex flex-wrap justify-center">
-        <FooterLink href="#" text="About" />
-        <FooterLink href="#" text="Pricing" />
-        <FooterLink href="#" text="Contact" />
-        <FooterLink href="#" text="Terms" />
+        <FooterLink href="/about" text="About" />
+        <FooterLink href="/pricing" text="Pricing" />
+        <FooterLink href="contact" text="Contact" />
+        <FooterLink href="terms" text="Terms" />
       </nav>
 
       <div className="mt-8 flex justify-center space-x-6 ">

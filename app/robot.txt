@@ -1,0 +1,18 @@
+# robots.txt for Session Replay Tool
+
+User-agent: *
+# Allow crawling of all content
+Allow: /
+
+# Disallow crawling of sensitive pages (like login, admin, etc.)
+Disallow: /admin/
+Disallow: /login/
+Disallow: /register/
+Disallow: /create-company/
+Disallow: /user-profile/
+
+# Disallow crawling of API routes
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://yourwebsite.com/sitemap.xml

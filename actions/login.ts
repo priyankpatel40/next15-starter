@@ -15,13 +15,10 @@ import { getUserByEmail } from '@/data/user';
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from '@/emails/mail';
 import { db } from '@/lib/db';
 import { generateTwoFactorToken, generateVerificationToken } from '@/lib/tokens';
-import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import { LoginLinkSchema, LoginSchema } from '@/schemas';
 
-export const login = async (
-  values: z.infer<typeof LoginSchema>,
-  callbackUrl?: string | null,
-) => {
+export async function login(values: z.infer<typeof LoginSchema>) {
+  console.log('🚀 ~ login ~ values:', values);
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -106,22 +103,23 @@ export const login = async (
     await signIn('credentials', {
       email,
       password,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+      redirect: false,
     });
-    return null;
+    return { success: true };
   } catch (error) {
     if (error instanceof AuthError) {
+      console.error(error.type);
       switch (error.type) {
         case 'CredentialsSignin':
-          return { error: true, message: 'Invalid credentials' };
+          return { error: true, message: 'Invalid credentials.' };
         default:
-          return { error: true, message: 'Something went wrong' };
+          return { error: true, message: 'Something went wrong.' };
       }
     }
     throw error;
   }
   return { success: true };
-};
+}
 
 export const resendCode = async (email: string) => {
   const existingUser = await getUserByEmail(email);
@@ -148,10 +146,7 @@ export const resendCode = async (email: string) => {
   }
 };
 
-export const loginWithLink = async (
-  values: z.infer<typeof LoginLinkSchema>,
-  callbackUrl?: string | null,
-) => {
+export const loginWithLink = async (values: z.infer<typeof LoginLinkSchema>) => {
   const validatedFields = LoginLinkSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -186,16 +181,17 @@ export const loginWithLink = async (
   try {
     await signIn('resend', {
       email,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+      redirect: false,
     });
-    return null;
+    return { success: true };
   } catch (error) {
     if (error instanceof AuthError) {
+      console.error(error.type);
       switch (error.type) {
         case 'CredentialsSignin':
-          return { error: true, message: 'Invalid credentials' };
+          return { error: true, message: 'Invalid credentials.' };
         default:
-          return { error: true, message: 'Something went wrong' };
+          return { error: true, message: 'Something went wrong.' };
       }
     }
     throw error;
