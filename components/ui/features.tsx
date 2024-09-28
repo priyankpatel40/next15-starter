@@ -19,7 +19,7 @@ const Features = () => {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="mb-2 flex size-16 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900">
-                <div className="size-10">{singleItem.icon}</div>
+                {singleItem.icon}
               </div>
               <div className="text-center">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
