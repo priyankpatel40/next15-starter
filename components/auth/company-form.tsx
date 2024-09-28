@@ -95,7 +95,7 @@ const CompanyForm = () => {
     <section className="flex min-h-screen items-center justify-center p-4 sm:p-6 md:p-8 ">
       <div className="w-full max-w-[90%] rounded-lg border border-gray-200 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-800 sm:max-w-md sm:p-8 md:max-w-lg md:p-10 lg:max-w-xl">
         <div className="mb-8 text-center">
-          {/* Add your company logo here */}
+          {/* Add Speculum logo here */}
           <div className="mx-auto mb-4 flex size-20 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-900">
             <svg
               className="size-12 text-gray-600 dark:text-gray-400"

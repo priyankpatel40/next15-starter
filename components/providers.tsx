@@ -7,7 +7,7 @@ import { ThemeProvider } from 'next-themes';
 
 import { ToastProvider } from '@/components/ui/toast';
 
-const Providers = ({ children }: { children: React.ReactNode }) => {
+const Providers = async ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

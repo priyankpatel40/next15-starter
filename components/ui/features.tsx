@@ -19,7 +19,7 @@ const Features = () => {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="mb-2 flex size-16 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900">
-                {singleItem.icon}
+                <div className="size-10">{singleItem.icon}</div>
               </div>
               <div className="text-center">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -36,6 +36,11 @@ const Features = () => {
               )}
             </div>
           ))}
+        </div>
+        <div className="mx-auto mt-16 max-w-2xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-blue-600 dark:text-blue-400 sm:text-4xl">
+            and many more...
+          </h2>
         </div>
       </div>
     </div>

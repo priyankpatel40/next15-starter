@@ -57,16 +57,16 @@ const ProfileForm = ({
       startTransition(() => {
         settings(values)
           .then((data) => {
+            console.log('🚀 ~ .then ~ data:', data);
             if (data.error) {
-              setError(data.error);
+              setError(data.message);
             }
             if (data.success) {
-              update();
-
               showToast({
-                message: data.success,
+                message: data.message,
                 type: 'success',
               });
+              update();
             }
           })
           .catch(() => setError('Something went wrong!'));

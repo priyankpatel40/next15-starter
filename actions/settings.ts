@@ -41,8 +41,8 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
       },
     });
 
-    return { success: 'Profile settings updated!' };
+    return { success: true, message: 'Profile settings updated!' };
   } catch (error) {
-    return { error: 'Something went wrong!' };
+    return { error: true, message: 'Something went wrong!' };
   }
 };

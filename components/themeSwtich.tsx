@@ -14,7 +14,7 @@ export default function ThemeSwitch() {
 
   if (!mounted) return null;
 
-  const tooltipText = `Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`;
+  const tooltipText = `Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'}`;
 
   return (
     <div className="group relative">
@@ -32,9 +32,9 @@ export default function ThemeSwitch() {
           />
         )}
       </Button>
-      <span className="absolute left-1/2 top-full mt-2 hidden -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white group-hover:inline-block dark:bg-gray-200 dark:text-gray-800">
+      <span className="absolute right-full top-1/2 mr-2 hidden -translate-y-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white group-hover:inline-block dark:bg-gray-200 dark:text-black">
         {tooltipText}
-        <span className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-800 dark:border-b-gray-200" />
+        <span className="absolute right-[-6px] top-1/2 translate-y-[-50%] border-4 border-transparent border-l-gray-800 dark:border-l-gray-200" />
       </span>
     </div>
   );
