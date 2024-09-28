@@ -214,4 +214,4 @@ This project employs ESLint and Prettier for consistent code formatting.
 
 Made with ♥ 
 
-[![Sponsor Next-15 starter](https://cdn.buymeacoffee.com/buttons/default-red.png)](https://github.com/sponsors/ppriyank40)
+[![Sponsor Next-15 starter](https://cdn.buymeacoffee.com/buttons/default-red.png)](https://github.com/sponsors/priyankpatel40)
