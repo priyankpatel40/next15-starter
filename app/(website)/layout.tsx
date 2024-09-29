@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     verification: {
-    google: "ioGHJouKXs042dZWKBuZ6EpCNrwrq20iYK4Kzs896Ps",
+   google: 'ioGHJouKXs042dZWKBuZ6EpCNrwrq20iYK4Kzs896Ps'
   },
     authors: [
       {
