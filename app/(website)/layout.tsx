@@ -86,6 +86,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
+        <meta name="google-site-verification" content="ioGHJouKXs042dZWKBuZ6EpCNrwrq20iYK4Kzs896Ps" />
       </head>
       <body className={inter.className}>
         <Providers>
