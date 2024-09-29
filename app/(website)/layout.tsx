@@ -15,12 +15,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const logoPath = '../public/logo-light.png';
   const title = 'NextJS 15 Enterprise Starter-kit';
   const description =
-    'Kickstart your enterprise-grade project with our robust, secure, and scalable Next.js 15 boilerplate';
+    'Kickstart your enterprise-grade project with our robust, secure, and scalable Next.js 15 boilerplate and Next-auth';
   return {
     metadataBase: new URL(baseUrl),
     title,
     description,
-     verification: {
+    verification: {
       google: 'ioGHJouKXs042dZWKBuZ6EpCNrwrq20iYK4Kzs896Ps',
     },
     authors: [
