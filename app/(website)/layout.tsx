@@ -20,9 +20,9 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(baseUrl),
     title,
     description,
-    verification: {
-   google: 'ioGHJouKXs042dZWKBuZ6EpCNrwrq20iYK4Kzs896Ps',
-  },
+     verification: {
+      google: 'ioGHJouKXs042dZWKBuZ6EpCNrwrq20iYK4Kzs896Ps',
+    },
     authors: [
       {
         name: 'Priyank Patel',
